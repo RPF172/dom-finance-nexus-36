@@ -125,26 +125,14 @@ const SlidingBottomNav = () => {
         />
       )}
 
-      {/* Sliding Menu */}
+      {/* Sliding Menu Container */}
       <div className="fixed bottom-0 left-0 right-0 z-50">
-        {/* Collapsed State - Toggle Button */}
-        {!isExpanded && (
-          <div className="flex justify-center">
-            <button
-              onClick={() => setIsExpanded(true)}
-              className="bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-t-xl shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
-            >
-              <ChevronUp className="h-5 w-5" />
-            </button>
-          </div>
-        )}
-
-        {/* Expanded State */}
+        {/* Expanded Menu Content */}
         <div
-          className={`bg-card/95 backdrop-blur-lg border-t border-border transition-all duration-300 ${
+          className={`bg-card/95 backdrop-blur-lg border-t border-border transform transition-transform duration-300 ease-out ${
             isExpanded 
-              ? 'translate-y-0 opacity-100' 
-              : 'translate-y-full opacity-0'
+              ? 'translate-y-0' 
+              : 'translate-y-full'
           }`}
         >
           {/* Header with Close Button */}
@@ -292,6 +280,18 @@ const SlidingBottomNav = () => {
             </div>
           </div>
         </div>
+
+        {/* Collapsed State - Toggle Button (appears over the menu) */}
+        {!isExpanded && (
+          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
+            <button
+              onClick={() => setIsExpanded(true)}
+              className="bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-t-xl shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
+            >
+              <ChevronUp className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
