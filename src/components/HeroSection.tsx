@@ -28,6 +28,7 @@ const HeroSection: React.FC = () => {
           <Button 
             size="lg"
             className="bg-white/10 border border-white/30 text-white hover:bg-white/20 backdrop-blur-sm px-8 py-3"
+            onClick={() => window.location.href = '/doctrine'}
           >
             Preview the Doctrine
           </Button>
