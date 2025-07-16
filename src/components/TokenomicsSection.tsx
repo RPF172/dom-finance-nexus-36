@@ -28,76 +28,33 @@ const TokenomicsSection: React.FC = () => {
     <section id="tokenomics" className="py-24 bg-gradient-to-b from-domtoken-obsidian to-domtoken-slate/30">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Tokenomics & Distribution</h2>
-          <p className="text-domtoken-silver max-w-2xl mx-auto">
-            $DOM has a total supply of 1 billion tokens, strategically allocated to ensure 
-            sustainable growth and community-driven governance.
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+            🐛 WHO SHOULD <span className="text-domtoken-crimson">APPLY</span>?
+          </h2>
+          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
+            <p>You shouldn't.<br />But if you must:</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div ref={chartRef} className="w-full h-80 md:h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={tokenomicsData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  innerRadius={50}
-                  fill="#8884d8"
-                  dataKey="value"
-                  paddingAngle={2}
-                >
-                  {tokenomicsData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomTooltip />} />
-              </PieChart>
-            </ResponsiveContainer>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Those who crave order in chaos</h3>
           </div>
+          <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Those who ache to be claimed</h3>
+          </div>
+          <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Those who dream of chains, but fear the lock</h3>
+          </div>
+          <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Those who know their place — and need it reinforced</h3>
+          </div>
+        </div>
 
-          <div>
-            <h3 className="text-2xl font-bold mb-6 text-white">Token Allocation</h3>
-            <div className="space-y-6">
-              {tokenomicsData.map((item, index) => (
-                <div key={index} className="flex items-center">
-                  <div 
-                    className="w-4 h-4 rounded-full mr-4" 
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <div className="flex-1">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-medium text-white">{item.name}</span>
-                      <span className="text-domtoken-silver">{item.value}%</span>
-                    </div>
-                    <div className="h-2 w-full bg-domtoken-slate/30 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full rounded-full" 
-                        style={{ 
-                          width: `${item.value}%`, 
-                          backgroundColor: item.color 
-                        }} 
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12 p-6 bg-domtoken-slate/30 rounded-lg border border-domtoken-slate/50">
-              <h4 className="text-xl font-bold mb-4 text-domtoken-crimson">Vesting Schedule</h4>
-              <p className="text-domtoken-silver mb-4">
-                Team & Core Contributor tokens are subject to a 4-year vesting period with a 1-year cliff, 
-                ensuring long-term alignment with project success.
-              </p>
-              <p className="text-domtoken-silver">
-                Strategic Partners receive tokens with milestone-based unlock schedules, while Community 
-                & Rewards tokens are distributed according to platform engagement metrics.
-              </p>
-            </div>
+        <div className="text-center">
+          <div className="text-lg text-domtoken-silver space-y-2">
+            <p>You don't join MAGAT University.</p>
+            <p>You confess your need for it.</p>
           </div>
         </div>
       </div>

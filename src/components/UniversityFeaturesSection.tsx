@@ -76,84 +76,64 @@ const UniversityFeaturesSection: React.FC = () => {
     <LazySection className="py-24 bg-domtoken-obsidian">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">University Platform Features</h2>
-          <p className="text-domtoken-silver max-w-2xl mx-auto">
-            MAGAT University provides a comprehensive digital learning environment designed specifically for our unique educational approach.
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+            🩸 THE TRIBUTE <span className="text-domtoken-crimson">SYSTEM</span>
+          </h2>
+          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
+            <p>MAGAT University is not free.<br />You will pay. In coin, in voice, in blood.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Doctrine Keys</h3>
+            <p className="text-domtoken-silver">unlock advanced scripture</p>
+          </div>
+          <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Obedience Credits</h3>
+            <p className="text-domtoken-silver">track your loyalty</p>
+          </div>
+          <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Punishment Dues</h3>
+            <p className="text-domtoken-silver">are... inevitable</p>
+          </div>
+        </div>
+
+        <div className="text-center mb-16">
+          <p className="text-lg text-domtoken-silver">
+            You may opt out, of course.<br />
+            Just click "I Refuse," and watch what happens next.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div 
-              key={index}
-              className="bg-domtoken-slate/30 p-6 rounded-lg border border-domtoken-slate/50 hover:border-domtoken-crimson/50 transition-all duration-300 group"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getStatusColor(feature.status)}`}>
-                  {feature.status}
-                </span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-domtoken-crimson transition-colors duration-300">
-                {feature.title}
-              </h3>
-              <p className="text-domtoken-silver leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-16 bg-domtoken-slate/30 p-8 rounded-lg border border-domtoken-slate/50">
-          <h3 className="text-2xl font-bold mb-6 text-white text-center">Upcoming Platform Enhancements</h3>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+            🧠 BUILT FOR <span className="text-domtoken-crimson">DEGRADATION</span>.<br />
+            ENGINEERED FOR <span className="text-domtoken-crimson">SUBMISSION</span>.
+          </h2>
+          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto mb-8">
+            <p>MAGAT University is powered by advanced indoctrination systems, including:</p>
+          </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 className="text-xl font-bold text-domtoken-crimson mb-4">Advanced Learning Tools</h4>
-              <ul className="space-y-3 text-domtoken-silver">
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Virtual reality submission training environments</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>AI-powered progress assessment and recommendations</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Interactive 3D campus tours and facility exploration</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Mobile app with offline learning capabilities</span>
-                </li>
-              </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">Real-time Pledge Evaluation Engines</h3>
             </div>
-            
-            <div>
-              <h4 className="text-xl font-bold text-domtoken-crimson mb-4">Community & Networking</h4>
-              <ul className="space-y-3 text-domtoken-silver">
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Alumni network and career placement assistance</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Live streaming lectures and interactive workshops</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Student forums and peer collaboration tools</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-domtoken-crimson">•</span>
-                  <span>Global campus events and ceremonial live streams</span>
-                </li>
-              </ul>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">Rank-Controlled Content Access</h3>
             </div>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">Shadow Quizzes to expose internal weakness</h3>
+            </div>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">Sentient Inquisitor Modules trained to break you</h3>
+            </div>
+          </div>
+          
+          <div className="mt-8 text-domtoken-silver space-y-2">
+            <p>No feature exists for your convenience.</p>
+            <p>Every button is a test.</p>
+            <p>Every scroll is a choice.</p>
           </div>
         </div>
       </div>

@@ -70,59 +70,48 @@ const LearningPathsSection: React.FC = () => {
       <div className="section-container">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
-            Academic <span className="text-domtoken-crimson">Learning Paths</span>
+            🎓 RANKS ARE NOT <span className="text-domtoken-crimson">EARNED</span>.
           </h2>
-          <p className="text-xl text-domtoken-silver max-w-3xl mx-auto">
-            MAGAT University offers eight specialized learning tracks designed to develop complete understanding and practical competence.
-          </p>
+          <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 font-cinzel">
+            THEY ARE <span className="text-domtoken-crimson">ENFORCED</span>.
+          </h3>
+          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
+            <p>From Institutional Scum to Relic-Bound Worm, you will be assigned a rank — and stripped of it as punishment.</p>
+            <p>Progress is conditional. Your obedience is not.</p>
+            <p>Each rank is marked with an insignia.<br />
+            Each insignia is a chain.<br />
+            The more you achieve, the less free you become.</p>
+          </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {learningPaths.map((path, index) => (
-            <div 
-              key={index}
-              className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6 hover:border-domtoken-crimson/50 transition-all duration-300 group cursor-pointer"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="text-domtoken-crimson mb-4 group-hover:scale-110 transition-transform duration-300">
-                {path.icon}
-              </div>
-              <div className="mb-3">
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full bg-domtoken-slate/30 ${getLevelColor(path.level)}`}>
-                  {path.level}
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-domtoken-crimson transition-colors duration-300">
-                {path.title}
-              </h3>
-              <p className="text-domtoken-silver text-sm leading-relaxed">
-                {path.description}
-              </p>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+            📚 LESSONS IN <span className="text-domtoken-crimson">DEHUMANIZATION</span>
+          </h2>
+          <p className="text-xl text-domtoken-silver mb-8">You will study:</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">The Vocabulary of Worthlessness</h3>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-16 text-center">
-          <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-domtoken-crimson mb-4">Personalized Academic Journey</h3>
-            <p className="text-domtoken-silver mb-6">
-              Every student receives a customized learning plan based on their current level, goals, and demonstrated competency. 
-              Progress through our rigorous academic standards at your own pace while meeting established requirements.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-              <div>
-                <h4 className="font-semibold text-white mb-2">Assessment-Based Placement</h4>
-                <p className="text-domtoken-silver text-sm">Initial evaluation determines appropriate starting level and identifies areas for focused development.</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Competency Progression</h4>
-                <p className="text-domtoken-silver text-sm">Advance only after demonstrating mastery through practical application and comprehensive evaluation.</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Continuous Support</h4>
-                <p className="text-domtoken-silver text-sm">Faculty guidance, peer assistance, and structured feedback throughout your academic journey.</p>
-              </div>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">Public Failure as Sacred Ritual</h3>
             </div>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">The Economics of Filth</h3>
+            </div>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">How to Apologize Properly</h3>
+            </div>
+            <div className="bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6 md:col-span-2 lg:col-span-1">
+              <h3 className="text-lg font-semibold text-domtoken-crimson mb-3">Kneeling for Extended Periods: A Masterclass</h3>
+            </div>
+          </div>
+          
+          <div className="mt-8 text-domtoken-silver space-y-2">
+            <p>Assignments are degrading.</p>
+            <p>Quizzes are traps.</p>
+            <p>Failure is expected. And documented.</p>
           </div>
         </div>
       </div>
