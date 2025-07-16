@@ -376,6 +376,19 @@ const LessonView = () => {
                       })}
                     </div>
                   )}
+
+                  {currentQuiz.type === 'fill_in_the_blank' && (
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        placeholder="Type your answer here..."
+                        value={selectedAnswers.get(currentQuiz.id) || ''}
+                        onChange={(e) => handleAnswerSelect(currentQuiz.id, e.target.value)}
+                        disabled={quizAnswered}
+                        className="w-full px-3 py-2 text-sm bg-background border border-muted rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent disabled:opacity-50"
+                      />
+                    </div>
+                  )}
                   
                   {!quizAnswered && (
                     <Button 
