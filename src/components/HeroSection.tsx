@@ -35,6 +35,7 @@ const HeroSection: React.FC = () => {
           <Button 
             size="lg"
             className="bg-domtoken-crimson hover:bg-domtoken-crimson/90 text-white px-8 py-3"
+            onClick={() => window.location.href = '/auth'}
           >
             Register
           </Button>
