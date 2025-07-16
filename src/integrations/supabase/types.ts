@@ -258,33 +258,197 @@ export type Database = {
         }
         Relationships: []
       }
-      profiles: {
+      post_comments: {
         Row: {
-          age_verified: boolean
-          created_at: string | null
-          display_name: string | null
+          content: string
+          created_at: string
           id: string
-          terms_accepted: boolean
-          updated_at: string | null
+          likes_count: number
+          parent_comment_id: string | null
+          post_id: string
+          updated_at: string
           user_id: string
         }
         Insert: {
-          age_verified?: boolean
-          created_at?: string | null
-          display_name?: string | null
+          content: string
+          created_at?: string
           id?: string
-          terms_accepted?: boolean
-          updated_at?: string | null
+          likes_count?: number
+          parent_comment_id?: string | null
+          post_id: string
+          updated_at?: string
           user_id: string
         }
         Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          parent_comment_id?: string | null
+          post_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "post_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          comments_count: number
+          content: string
+          created_at: string
+          id: string
+          is_pinned: boolean
+          likes_count: number
+          link_description: string | null
+          link_image_url: string | null
+          link_title: string | null
+          link_url: string | null
+          location: string | null
+          media_urls: string[] | null
+          post_type: Database["public"]["Enums"]["post_type"]
+          privacy_level: Database["public"]["Enums"]["privacy_level"]
+          shares_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comments_count?: number
+          content: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          likes_count?: number
+          link_description?: string | null
+          link_image_url?: string | null
+          link_title?: string | null
+          link_url?: string | null
+          location?: string | null
+          media_urls?: string[] | null
+          post_type?: Database["public"]["Enums"]["post_type"]
+          privacy_level?: Database["public"]["Enums"]["privacy_level"]
+          shares_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comments_count?: number
+          content?: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          likes_count?: number
+          link_description?: string | null
+          link_image_url?: string | null
+          link_title?: string | null
+          link_url?: string | null
+          location?: string | null
+          media_urls?: string[] | null
+          post_type?: Database["public"]["Enums"]["post_type"]
+          privacy_level?: Database["public"]["Enums"]["privacy_level"]
+          shares_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          age_verified: boolean
+          avatar_url: string | null
+          bio: string | null
+          cover_photo_url: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string
+          interests: string[] | null
+          is_premium: boolean
+          location: string | null
+          premium_color: string | null
+          social_links: Json | null
+          terms_accepted: boolean
+          updated_at: string | null
+          user_id: string
+          website: string | null
+        }
+        Insert: {
           age_verified?: boolean
+          avatar_url?: string | null
+          bio?: string | null
+          cover_photo_url?: string | null
           created_at?: string | null
           display_name?: string | null
           id?: string
+          interests?: string[] | null
+          is_premium?: boolean
+          location?: string | null
+          premium_color?: string | null
+          social_links?: Json | null
+          terms_accepted?: boolean
+          updated_at?: string | null
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          age_verified?: boolean
+          avatar_url?: string | null
+          bio?: string | null
+          cover_photo_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          interests?: string[] | null
+          is_premium?: boolean
+          location?: string | null
+          premium_color?: string | null
+          social_links?: Json | null
           terms_accepted?: boolean
           updated_at?: string | null
           user_id?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -401,6 +565,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_connections: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       user_lesson_progress: {
         Row: {
           assignment_submitted: boolean
@@ -480,6 +668,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      are_users_connected: {
+        Args: { user1_id: string; user2_id: string }
+        Returns: boolean
+      }
       check_email_exists: {
         Args: { email_to_check: string }
         Returns: boolean
@@ -492,6 +684,10 @@ export type Database = {
           approved_count: number
           rejected_count: number
         }[]
+      }
+      get_user_premium_status: {
+        Args: { user_id: string }
+        Returns: boolean
       }
       has_role: {
         Args: {
@@ -516,6 +712,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user" | "pledge"
+      post_type: "text" | "image" | "video" | "link"
+      privacy_level: "public" | "friends" | "private"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -644,6 +842,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "pledge"],
+      post_type: ["text", "image", "video", "link"],
+      privacy_level: ["public", "friends", "private"],
     },
   },
 } as const

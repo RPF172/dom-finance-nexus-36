@@ -11,7 +11,8 @@ import {
   Trophy,
   Clock,
   Target,
-  Settings
+  Settings,
+  MessageSquare
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -50,6 +51,7 @@ const SlidingBottomNav = () => {
     { path: '/lesson', icon: Target, label: 'Lessons', category: 'learning' },
     
     // Social & Activities
+    { path: '/social', icon: MessageSquare, label: 'Social Feed', category: 'social' },
     { path: '/pledgehall', icon: Users, label: 'Pledge Hall', category: 'social' },
     { path: '/tribute', icon: DollarSign, label: 'Tribute', category: 'social' },
   ];

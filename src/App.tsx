@@ -11,6 +11,7 @@ import LessonView from "./pages/LessonView";
 import Assignments from "./pages/Assignments";
 import Tribute from "./pages/Tribute";
 import Profile from "./pages/Profile";
+import Social from "./pages/Social";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/assignments" element={<Assignments />} />
           <Route path="/tribute" element={<Tribute />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/social" element={<Social />} />
           <Route path="/admin/*" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
