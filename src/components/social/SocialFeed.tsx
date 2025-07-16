@@ -50,8 +50,9 @@ export const SocialFeed: React.FC<SocialFeedProps> = ({ currentUser }) => {
         setLoading(true);
       }
 
-      // First get posts
-      const { data: postsData, error: postsError } = await supabase
+      // First get posts with enhanced algorithm for friends
+      const { data: { user } } = await supabase.auth.getUser();
+      let postsQuery = supabase
         .from('posts')
         .select(`
           id,
@@ -65,10 +66,23 @@ export const SocialFeed: React.FC<SocialFeedProps> = ({ currentUser }) => {
           created_at,
           user_id
         `)
-        .order('is_pinned', { ascending: false })
-        .order('created_at', { ascending: false })
         .limit(20);
 
+      // If user is logged in, get their friend connections for prioritization
+      let friendIds: string[] = [];
+      if (user) {
+        const { data: connections } = await supabase
+          .from('user_connections')
+          .select('follower_id, following_id')
+          .eq('status', 'accepted')
+          .or(`follower_id.eq.${user.id},following_id.eq.${user.id}`);
+
+        friendIds = (connections || []).map(conn => 
+          conn.follower_id === user.id ? conn.following_id : conn.follower_id
+        );
+      }
+
+      const { data: postsData, error: postsError } = await postsQuery;
       if (postsError) throw postsError;
 
       // Get unique user IDs
@@ -87,13 +101,52 @@ export const SocialFeed: React.FC<SocialFeedProps> = ({ currentUser }) => {
         profilesData?.map(profile => [profile.user_id, profile]) || []
       );
 
-      // Combine posts with profiles
-      const transformedPosts: Post[] = (postsData || [])
+      // Combine posts with profiles and apply algorithm
+      let transformedPosts: Post[] = (postsData || [])
         .filter(post => profilesMap.has(post.user_id))
         .map(post => ({
           ...post,
           profiles: profilesMap.get(post.user_id)!
         }));
+
+      // Enhanced algorithm: Prioritize posts based on relationship and engagement
+      transformedPosts.sort((a, b) => {
+        // First priority: Pinned posts
+        if (a.is_pinned !== b.is_pinned) {
+          return a.is_pinned ? -1 : 1;
+        }
+
+        // Second priority: Friend posts (if user is logged in)
+        if (user && friendIds.length > 0) {
+          const aIsFriend = friendIds.includes(a.user_id);
+          const bIsFriend = friendIds.includes(b.user_id);
+          
+          if (aIsFriend !== bIsFriend) {
+            return aIsFriend ? -1 : 1;
+          }
+        }
+
+        // Third priority: User's own posts
+        if (user) {
+          const aIsOwn = a.user_id === user.id;
+          const bIsOwn = b.user_id === user.id;
+          
+          if (aIsOwn !== bIsOwn) {
+            return aIsOwn ? -1 : 1;
+          }
+        }
+
+        // Fourth priority: Engagement score (likes + comments * 2)
+        const aScore = a.likes_count + (a.comments_count * 2);
+        const bScore = b.likes_count + (b.comments_count * 2);
+        
+        if (aScore !== bScore) {
+          return bScore - aScore; // Higher engagement first
+        }
+
+        // Final priority: Recency
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
 
       setPosts(transformedPosts);
     } catch (error) {
@@ -160,6 +213,7 @@ export const SocialFeed: React.FC<SocialFeedProps> = ({ currentUser }) => {
               userProfile={post.profiles}
               isOwnPost={currentUser?.id === post.user_id}
               onPostUpdate={handlePostUpdate}
+              currentUser={currentUser}
             />
           ))
         )}

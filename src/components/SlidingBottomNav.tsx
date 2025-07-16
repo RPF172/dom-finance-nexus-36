@@ -52,6 +52,7 @@ const SlidingBottomNav = () => {
     
     // Social & Activities
     { path: '/social', icon: MessageSquare, label: 'Social Feed', category: 'social' },
+    { path: '/friends', icon: Users, label: 'Friends', category: 'social' },
     { path: '/pledgehall', icon: Users, label: 'Pledge Hall', category: 'social' },
     { path: '/tribute', icon: DollarSign, label: 'Tribute', category: 'social' },
   ];

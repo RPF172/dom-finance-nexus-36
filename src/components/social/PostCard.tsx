@@ -7,6 +7,7 @@ import { Heart, MessageCircle, Share2, MapPin, MoreHorizontal, Pin } from 'lucid
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { CommentsList } from './CommentsList';
 
 interface PostCardProps {
   post: {
@@ -29,17 +30,24 @@ interface PostCardProps {
   };
   isOwnPost?: boolean;
   onPostUpdate?: () => void;
+  currentUser?: {
+    id: string;
+    display_name: string;
+    avatar_url?: string;
+  };
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ 
   post, 
   userProfile, 
   isOwnPost = false,
-  onPostUpdate 
+  onPostUpdate,
+  currentUser
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [isLiking, setIsLiking] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -223,7 +231,12 @@ export const PostCard: React.FC<PostCardProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex items-center space-x-1 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowComments(!showComments)}
+                className={`flex items-center space-x-1 ${
+                  showComments 
+                    ? 'text-primary hover:text-primary/80' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
               >
                 <MessageCircle className="h-4 w-4" />
                 <span className="text-xs">{post.comments_count}</span>
@@ -239,6 +252,13 @@ export const PostCard: React.FC<PostCardProps> = ({
               </Button>
             </div>
           </div>
+
+          {/* Comments Section */}
+          {showComments && (
+            <div className="pt-4 border-t border-border/50">
+              <CommentsList postId={post.id} currentUser={currentUser} />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
