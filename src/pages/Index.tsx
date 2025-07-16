@@ -10,7 +10,7 @@ import TokenomicsSection from '@/components/TokenomicsSection';
 import AcademicRoadmapSection from '@/components/AcademicRoadmapSection';
 import InteractiveLessonPreview from '@/components/InteractiveLessonPreview';
 import TeamSection from '@/components/TeamSection';
-import FAQSection from '@/components/FAQSection';
+
 import FooterSection from '@/components/FooterSection';
 import StatsCounter from '@/components/StatsCounter';
 import InvestorModal from '@/components/InvestorModal';
@@ -70,7 +70,6 @@ const Index = () => {
         <TokenomicsSection />
         <AcademicRoadmapSection />
         <TeamSection />
-        <FAQSection />
       </main>
       <FooterSection />
       <SlidingBottomNav />
