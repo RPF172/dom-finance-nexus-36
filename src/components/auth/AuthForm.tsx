@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -15,6 +17,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,6 +26,34 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   });
   
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Redirect authenticated users to pledge hall
+        if (session?.user) {
+          navigate('/pledgehall');
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        navigate('/pledgehall');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const validateForm = () => {
     if (!formData.email || !formData.password) {
@@ -82,10 +114,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           onSuccess?.();
         }
       } else {
+        const redirectUrl = `${window.location.origin}/pledgehall`;
+        
         const { error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
           options: {
+            emailRedirectTo: redirectUrl,
             data: {
               collar_name: formData.collarName,
               rank: 'Initiate Whelp',
