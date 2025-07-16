@@ -122,7 +122,7 @@ const SlidingBottomNav = () => {
       {/* Dashboard Toggle Button - Fixed in Upper Left */}
       <button
         onClick={() => setIsExpanded(true)}
-        className="fixed top-4 left-4 z-50 bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-lg shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
+        className="fixed top-4 left-4 z-[9999] bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-lg shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105 pointer-events-auto"
       >
         <LayoutDashboard className="h-5 w-5" />
       </button>
@@ -130,16 +130,16 @@ const SlidingBottomNav = () => {
       {/* Backdrop */}
       {isExpanded && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/50 z-[9998] backdrop-blur-sm"
           onClick={() => setIsExpanded(false)}
         />
       )}
 
       {/* Sliding Menu Container - Left Side */}
-      <div className="fixed left-0 top-0 bottom-0 z-50">
+      <div className="fixed left-0 top-0 bottom-0 z-[9999] pointer-events-none">
         {/* Expanded Menu Content */}
         <div
-          className={`bg-card/95 backdrop-blur-lg border-r border-border transform transition-transform duration-300 ease-out w-80 h-full overflow-y-auto ${
+          className={`bg-card/95 backdrop-blur-lg border-r border-border transform transition-transform duration-300 ease-out w-80 h-full overflow-y-auto pointer-events-auto ${
             isExpanded 
               ? 'translate-x-0' 
               : '-translate-x-full'

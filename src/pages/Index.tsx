@@ -43,7 +43,7 @@ const Index = () => {
   return (
     <div className="flex flex-col min-h-screen bg-domtoken-obsidian relative">
       <Header />
-      <main className={showModal ? 'pointer-events-none' : ''}>
+      <main className={showModal ? 'pointer-events-none' : 'relative z-10'}>
         <HeroSection />
         <StatsCounter />
         <WhyMagatSection />
