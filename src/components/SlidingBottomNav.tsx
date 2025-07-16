@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ChevronRight, 
-  ChevronLeft, 
+  LayoutDashboard, 
+  X, 
   Home, 
   BookOpen, 
   Users, 
@@ -119,6 +119,14 @@ const SlidingBottomNav = () => {
 
   return (
     <>
+      {/* Dashboard Toggle Button - Fixed in Upper Left */}
+      <button
+        onClick={() => setIsExpanded(true)}
+        className="fixed top-4 left-4 z-50 bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-lg shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
+      >
+        <LayoutDashboard className="h-5 w-5" />
+      </button>
+
       {/* Backdrop */}
       {isExpanded && (
         <div 
@@ -144,7 +152,7 @@ const SlidingBottomNav = () => {
               onClick={() => setIsExpanded(false)}
               className="p-2 hover:bg-muted rounded-full transition-colors"
             >
-              <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+              <X className="h-5 w-5 text-muted-foreground" />
             </button>
           </div>
 
@@ -283,17 +291,6 @@ const SlidingBottomNav = () => {
           </div>
         </div>
 
-        {/* Collapsed State - Toggle Button (appears on the left edge) */}
-        {!isExpanded && (
-          <div className="absolute top-1/2 -translate-y-1/2 -right-10">
-            <button
-              onClick={() => setIsExpanded(true)}
-              className="bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-r-xl shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-        )}
       </div>
     </>
   );
