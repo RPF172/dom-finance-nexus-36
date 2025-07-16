@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import BottomNav from '@/components/BottomNav';
 
 interface UserProfile {
   id: string;
@@ -243,40 +244,10 @@ const PledgeHall: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#333]">
-        <div className="grid grid-cols-5 h-16">
-          <button 
-            onClick={() => navigate('/doctrine')}
-            className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors"
-          >
-            <BookOpen className="w-4 h-4" />
-            <span className="text-xs font-mono">Doctrine</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors">
-            <AlertTriangle className="w-4 h-4" />
-            <span className="text-xs font-mono">Tasks</span>
-          </button>
-          <button 
-            onClick={() => navigate('/pledgehall')}
-            className="flex flex-col items-center justify-center gap-1 bg-[#A1001F]/20 text-[#A1001F]"
-          >
-            <User className="w-4 h-4" />
-            <span className="text-xs font-mono">Hall</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors">
-            <CreditCard className="w-4 h-4" />
-            <span className="text-xs font-mono">Tribute</span>
-          </button>
-          <button className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors">
-            <Award className="w-4 h-4" />
-            <span className="text-xs font-mono">More</span>
-          </button>
-        </div>
-      </div>
+      <BottomNav />
 
       {/* Bottom padding for fixed nav */}
-      <div className="h-16"></div>
+      <div className="h-20"></div>
     </div>
   );
 };

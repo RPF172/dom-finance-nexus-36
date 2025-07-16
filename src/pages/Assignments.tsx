@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Video, Clock, AlertTriangle } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 interface Assignment {
   id: string;
@@ -203,31 +204,10 @@ const Assignments: React.FC = () => {
         ))}
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/30 p-2">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          <button className="flex flex-col items-center gap-1 p-2">
-            <span className="text-xs">📜</span>
-            <span className="text-xs">Doctrine</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 p-2 bg-primary/20 rounded">
-            <span className="text-xs">📝</span>
-            <span className="text-xs">Assignments</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 p-2">
-            <span className="text-xs">🏛️</span>
-            <span className="text-xs">Pledgehall</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 p-2">
-            <span className="text-xs">💸</span>
-            <span className="text-xs">Tribute</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 p-2">
-            <span className="text-xs">☰</span>
-            <span className="text-xs">More</span>
-          </button>
-        </div>
-      </div>
+      <BottomNav />
+      
+      {/* Bottom padding for fixed nav */}
+      <div className="h-20"></div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useLesson, useQuizzes } from '@/hooks/useLessons';
 import { useUserProgress, useUpdateProgress } from '@/hooks/useProgress';
 import { useToast } from '@/hooks/use-toast';
+import BottomNav from '@/components/BottomNav';
 
 const LessonView = () => {
   const { id } = useParams<{ id: string }>();
@@ -442,33 +443,7 @@ const LessonView = () => {
           </Card>
         </div>
 
-        {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-muted">
-          <div className="max-w-md mx-auto px-4 py-3">
-            <div className="flex justify-around text-xs">
-              <button className="flex flex-col items-center gap-1 text-accent">
-                <Flame className="h-4 w-4" />
-                <span>Doctrine</span>
-              </button>
-              <button className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground">
-                <span className="h-4 w-4 flex items-center justify-center">🧷</span>
-                <span>Assignments</span>
-              </button>
-              <button className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground">
-                <span className="h-4 w-4 flex items-center justify-center">🏛️</span>
-                <span>Pledgehall</span>
-              </button>
-              <button className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground">
-                <span className="h-4 w-4 flex items-center justify-center">💸</span>
-                <span>Tribute</span>
-              </button>
-              <button className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground">
-                <span className="h-4 w-4 flex items-center justify-center">☰</span>
-                <span>More</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <BottomNav />
 
         {/* Spacing for fixed footer */}
         <div className="h-20" />

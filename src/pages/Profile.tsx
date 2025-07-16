@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { 
   ArrowLeft, 
   Crown, 
-  MessageCircle, 
+  MessageCircle,
   DollarSign,
   BookOpen,
   ClipboardList,
@@ -18,6 +18,7 @@ import {
   Eye,
   Gift
 } from 'lucide-react';
+import BottomNav from '@/components/BottomNav';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -221,60 +222,12 @@ const Profile: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Footer Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-          <div className="flex justify-around py-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex flex-col items-center gap-1 text-xs"
-              onClick={() => navigate('/doctrine')}
-            >
-              <BookOpen className="h-4 w-4" />
-              📜 Doctrine
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex flex-col items-center gap-1 text-xs"
-              onClick={() => navigate('/assignments')}
-            >
-              <ClipboardList className="h-4 w-4" />
-              🧷 Assignments
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex flex-col items-center gap-1 text-xs"
-              onClick={() => navigate('/pledgehall')}
-            >
-              <Crown className="h-4 w-4" />
-              🏛️ Pledgehall
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex flex-col items-center gap-1 text-xs"
-              onClick={() => navigate('/tribute')}
-            >
-              <DollarSign className="h-4 w-4" />
-              💸 Tribute
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex flex-col items-center gap-1 text-xs"
-              onClick={() => navigate('/profile')}
-            >
-              <Eye className="h-4 w-4" />
-              ☰ More
-            </Button>
-          </div>
-        </div>
-
-        {/* Bottom spacing to account for fixed navigation */}
-        <div className="h-20"></div>
       </div>
+
+      <BottomNav />
+      
+      {/* Bottom padding for fixed nav */}
+      <div className="h-20"></div>
     </div>
   );
 };
