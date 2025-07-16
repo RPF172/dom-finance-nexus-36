@@ -368,6 +368,39 @@ export type Database = {
         }
         Relationships: []
       }
+      tributes: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string | null
+          id: string
+          status: string
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string | null
+          id?: string
+          status?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string | null
+          id?: string
+          status?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_lesson_progress: {
         Row: {
           assignment_submitted: boolean

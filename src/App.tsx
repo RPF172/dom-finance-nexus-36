@@ -9,6 +9,7 @@ import PledgeHall from "./pages/PledgeHall";
 import DoctrineReader from "./pages/DoctrineReader";
 import LessonView from "./pages/LessonView";
 import Assignments from "./pages/Assignments";
+import Tribute from "./pages/Tribute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/doctrine" element={<DoctrineReader />} />
           <Route path="/lesson/:id" element={<LessonView />} />
           <Route path="/assignments" element={<Assignments />} />
+          <Route path="/tribute" element={<Tribute />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
