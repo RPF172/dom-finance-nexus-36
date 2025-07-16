@@ -33,7 +33,7 @@ const lessonSchema = z.object({
   body_text: z.string().optional(),
   assignment_text: z.string().optional(),
   ritual_text: z.string().optional(),
-  module_id: z.string().nullable(),
+  module_id: z.string().nullable().transform(val => val === "none" ? null : val),
   order_index: z.number().min(0),
   estimated_time: z.number().min(1).max(300),
   published: z.boolean(),
@@ -58,7 +58,7 @@ const LessonEditor = () => {
       body_text: "",
       assignment_text: "",
       ritual_text: "",
-      module_id: null,
+      module_id: "none",
       order_index: 0,
       estimated_time: 45,
       published: false,
@@ -120,7 +120,7 @@ const LessonEditor = () => {
         body_text: lesson.body_text || "",
         assignment_text: lesson.assignment_text || "",
         ritual_text: lesson.ritual_text || "",
-        module_id: lesson.module_id,
+        module_id: lesson.module_id || "none",
         order_index: lesson.order_index,
         estimated_time: lesson.estimated_time || 45,
         published: lesson.published,
@@ -303,14 +303,14 @@ const LessonEditor = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Module</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <Select onValueChange={field.onChange} value={field.value || "none"}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select module" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">No Module</SelectItem>
+                              <SelectItem value="none">No Module</SelectItem>
                               {modules?.map((module) => (
                                 <SelectItem key={module.id} value={module.id}>
                                   {module.title}
