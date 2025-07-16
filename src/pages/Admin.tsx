@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import LessonList from "@/components/admin/content/LessonList";
+import LessonEditor from "@/components/admin/content/LessonEditor";
+import ModuleManager from "@/components/admin/content/ModuleManager";
 
 const Admin = () => {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -63,7 +66,14 @@ const Admin = () => {
 
   return (
     <AdminLayout>
-      <AdminDashboard />
+      <Routes>
+        <Route index element={<AdminDashboard />} />
+        <Route path="content" element={<LessonList />} />
+        <Route path="content/new" element={<LessonEditor />} />
+        <Route path="content/edit/:id" element={<LessonEditor />} />
+        <Route path="content/modules" element={<ModuleManager />} />
+        {/* Add other admin routes here */}
+      </Routes>
     </AdminLayout>
   );
 };
