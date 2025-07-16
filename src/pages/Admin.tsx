@@ -39,6 +39,14 @@ const Admin = () => {
           });
           setIsAdmin(false);
         } else {
+          console.log('Admin role check result:', hasAdminRole, 'for user:', session.user.email);
+          if (!hasAdminRole) {
+            toast({
+              title: "Access Denied",
+              description: "You need admin privileges to access this area. Please contact an administrator.",
+              variant: "destructive",
+            });
+          }
           setIsAdmin(hasAdminRole);
         }
       } catch (error) {
