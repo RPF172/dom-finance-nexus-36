@@ -28,7 +28,7 @@ const InvestorModal: React.FC<InvestorModalProps> = ({ open, onOpenChange }) => 
     
     try {
       const { error } = await supabase
-        .from('dom_token')
+        .from('dom_token' as any)
         .insert([{ email, message }]);
 
       if (error) throw error;
