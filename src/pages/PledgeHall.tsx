@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 interface UserProfile {
   id: string;
@@ -244,7 +244,7 @@ const PledgeHall: React.FC = () => {
         </div>
       </div>
 
-      <BottomNav />
+      <SlidingBottomNav />
 
       {/* Bottom padding for fixed nav */}
       <div className="h-20"></div>

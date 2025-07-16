@@ -18,7 +18,7 @@ import {
   Eye,
   Gift
 } from 'lucide-react';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -224,7 +224,7 @@ const Profile: React.FC = () => {
 
       </div>
 
-      <BottomNav />
+      <SlidingBottomNav />
       
       {/* Bottom padding for fixed nav */}
       <div className="h-20"></div>

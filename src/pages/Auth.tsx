@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthForm from '@/components/auth/AuthForm';
 import { supabase } from '@/integrations/supabase/client';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 const Auth: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Auth: React.FC = () => {
       <div className="w-full max-w-md">
         <AuthForm onSuccess={handleAuthSuccess} />
       </div>
-      <BottomNav />
+      <SlidingBottomNav />
       {/* Bottom padding for fixed nav */}
       <div className="h-20"></div>
     </div>

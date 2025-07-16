@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useLesson, useQuizzes } from '@/hooks/useLessons';
 import { useUserProgress, useUpdateProgress } from '@/hooks/useProgress';
 import { useToast } from '@/hooks/use-toast';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 const LessonView = () => {
   const { id } = useParams<{ id: string }>();
@@ -443,7 +443,7 @@ const LessonView = () => {
           </Card>
         </div>
 
-        <BottomNav />
+        <SlidingBottomNav />
 
         {/* Spacing for fixed footer */}
         <div className="h-20" />

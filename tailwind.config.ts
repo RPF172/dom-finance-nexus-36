@@ -129,6 +129,22 @@ export default {
 					'100%': {
 						transform: 'rotate(360deg)'
 					}
+				},
+				'slide-up': {
+					'0%': {
+						transform: 'translateY(100%)'
+					},
+					'100%': {
+						transform: 'translateY(0)'
+					}
+				},
+				'slide-down': {
+					'0%': {
+						transform: 'translateY(0)'
+					},
+					'100%': {
+						transform: 'translateY(100%)'
+					}
 				}
 			},
 			animation: {
@@ -137,7 +153,9 @@ export default {
 				'fade-in': 'fade-in 0.6s ease-out',
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
 				'float': 'float 6s ease-in-out infinite',
-				'spin-slow': 'spin-slow 15s linear infinite'
+				'spin-slow': 'spin-slow 15s linear infinite',
+				'slide-up': 'slide-up 0.3s ease-out',
+				'slide-down': 'slide-down 0.3s ease-out'
 			},
 			backgroundImage: {
 				'circuit-pattern': "url('/public/lovable-uploads/69a25420-4be6-4397-8cf4-f9ccf9407440.png')",

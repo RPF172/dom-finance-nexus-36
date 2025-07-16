@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Video, Clock, AlertTriangle } from 'lucide-react';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 interface Assignment {
   id: string;
@@ -204,7 +204,7 @@ const Assignments: React.FC = () => {
         ))}
       </div>
 
-      <BottomNav />
+      <SlidingBottomNav />
       
       {/* Bottom padding for fixed nav */}
       <div className="h-20"></div>

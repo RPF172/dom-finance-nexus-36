@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useLessons, useModules } from '@/hooks/useLessons';
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { Link } from 'react-router-dom';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 const DoctrineReader = () => {
   const { data: lessons, isLoading } = useLessons();
@@ -195,7 +195,7 @@ const DoctrineReader = () => {
           </p>
         </div>
 
-        <BottomNav />
+        <SlidingBottomNav />
       </div>
     </div>
   );

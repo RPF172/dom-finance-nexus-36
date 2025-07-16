@@ -14,7 +14,7 @@ import FAQSection from '@/components/FAQSection';
 import FooterSection from '@/components/FooterSection';
 import StatsCounter from '@/components/StatsCounter';
 import InvestorModal from '@/components/InvestorModal';
-import BottomNav from '@/components/BottomNav';
+import SlidingBottomNav from '@/components/SlidingBottomNav';
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -73,7 +73,7 @@ const Index = () => {
         <FAQSection />
       </main>
       <FooterSection />
-      <BottomNav />
+      <SlidingBottomNav />
       <InvestorModal 
         open={showModal} 
         onOpenChange={setShowModal}
