@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <section 
       className="pt-24 min-h-screen flex items-center justify-center relative overflow-hidden"
@@ -29,7 +32,7 @@ const HeroSection: React.FC = () => {
           <Button 
             size="lg"
             className="bg-domtoken-crimson hover:bg-domtoken-crimson/90 text-white px-8 py-3"
-            onClick={() => window.location.href = '/auth'}
+            onClick={() => navigate('/auth')}
           >
             SUBMIT TO THE SYSTEM
           </Button>
