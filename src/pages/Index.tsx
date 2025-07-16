@@ -15,6 +15,7 @@ import FooterSection from '@/components/FooterSection';
 import StatsCounter from '@/components/StatsCounter';
 import InvestorModal from '@/components/InvestorModal';
 import SlidingBottomNav from '@/components/SlidingBottomNav';
+import BlinkingArrow from '@/components/BlinkingArrow';
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -71,6 +72,7 @@ const Index = () => {
         <AcademicRoadmapSection />
         <TeamSection />
       </main>
+      <BlinkingArrow />
       <FooterSection />
       <SlidingBottomNav />
       <InvestorModal 
