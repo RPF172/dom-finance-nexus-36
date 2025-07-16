@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ChevronUp, 
-  ChevronDown, 
+  ChevronRight, 
+  ChevronLeft, 
   Home, 
   BookOpen, 
   Users, 
@@ -10,7 +10,8 @@ import {
   PenTool,
   Trophy,
   Clock,
-  Target
+  Target,
+  Settings
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -41,6 +42,7 @@ const SlidingBottomNav = () => {
     // Primary Navigation
     { path: '/', icon: Home, label: 'Home', category: 'primary' },
     { path: '/profile', icon: User, label: 'Profile', category: 'primary' },
+    { path: '/admin', icon: Settings, label: 'Admin Panel', category: 'primary' },
     
     // Learning
     { path: '/doctrine', icon: BookOpen, label: 'Doctrine', category: 'learning' },
@@ -125,14 +127,14 @@ const SlidingBottomNav = () => {
         />
       )}
 
-      {/* Sliding Menu Container */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* Sliding Menu Container - Left Side */}
+      <div className="fixed left-0 top-0 bottom-0 z-50">
         {/* Expanded Menu Content */}
         <div
-          className={`bg-card/95 backdrop-blur-lg border-t border-border transform transition-transform duration-300 ease-out ${
+          className={`bg-card/95 backdrop-blur-lg border-r border-border transform transition-transform duration-300 ease-out w-80 h-full overflow-y-auto ${
             isExpanded 
-              ? 'translate-y-0' 
-              : 'translate-y-full'
+              ? 'translate-x-0' 
+              : '-translate-x-full'
           }`}
         >
           {/* Header with Close Button */}
@@ -142,7 +144,7 @@ const SlidingBottomNav = () => {
               onClick={() => setIsExpanded(false)}
               className="p-2 hover:bg-muted rounded-full transition-colors"
             >
-              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+              <ChevronLeft className="h-5 w-5 text-muted-foreground" />
             </button>
           </div>
 
@@ -208,14 +210,14 @@ const SlidingBottomNav = () => {
             {/* Primary Navigation */}
             <div className="mb-6">
               <h4 className="text-sm font-medium text-muted-foreground mb-3">Primary</h4>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
                 {groupedItems.primary.map((item) => {
                   const active = isActive(item.path);
                   return (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 w-full ${
                         active 
                           ? 'bg-primary/20 text-primary border border-primary/30' 
                           : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -232,14 +234,14 @@ const SlidingBottomNav = () => {
             {/* Learning Navigation */}
             <div className="mb-6">
               <h4 className="text-sm font-medium text-muted-foreground mb-3">Learning</h4>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="space-y-2">
                 {groupedItems.learning.map((item) => {
                   const active = isActive(item.path);
                   return (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 w-full ${
                         active 
                           ? 'bg-primary/20 text-primary border border-primary/30' 
                           : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -257,14 +259,14 @@ const SlidingBottomNav = () => {
             {/* Social Navigation */}
             <div>
               <h4 className="text-sm font-medium text-muted-foreground mb-3">Community</h4>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="space-y-2">
                 {groupedItems.social.map((item) => {
                   const active = isActive(item.path);
                   return (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 w-full ${
                         active 
                           ? 'bg-primary/20 text-primary border border-primary/30' 
                           : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -281,14 +283,14 @@ const SlidingBottomNav = () => {
           </div>
         </div>
 
-        {/* Collapsed State - Toggle Button (appears over the menu) */}
+        {/* Collapsed State - Toggle Button (appears on the left edge) */}
         {!isExpanded && (
-          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
+          <div className="absolute top-1/2 -translate-y-1/2 -right-10">
             <button
               onClick={() => setIsExpanded(true)}
-              className="bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-t-xl shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
+              className="bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-r-xl shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105"
             >
-              <ChevronUp className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         )}
