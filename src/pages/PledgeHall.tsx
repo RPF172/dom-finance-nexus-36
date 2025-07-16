@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, BookOpen, User, Award, Clock } from 'lucide-react';
+import { LogOut, BookOpen, User, Award, Clock, CreditCard, AlertTriangle, Calendar, Play, DollarSign, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -78,10 +80,10 @@ const PledgeHall: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-[#e3dcc3] flex items-center justify-center">
+      <div className="min-h-screen bg-black text-[#e5e0d1] flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
-          <p className="text-lg">Verifying your submission...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A1001F] mx-auto"></div>
+          <p className="font-mono text-lg">Verifying submission status...</p>
         </div>
       </div>
     );
@@ -91,157 +93,190 @@ const PledgeHall: React.FC = () => {
     return null;
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
   return (
-    <div className="min-h-screen bg-black text-[#e3dcc3]">
+    <div className="min-h-screen bg-black text-[#e5e0d1] font-mono">
       {/* Header */}
-      <header className="border-b border-[#333] bg-[#0a0a0a]">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold font-cinzel text-white">PLEDGE HALL</h1>
-            <p className="text-sm text-[#999] italic">Where the broken are remade</p>
+      <header className="border-b border-[#333] bg-black p-4">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-[#A1001F] rotate-45"></div>
+              <h1 className="text-lg font-bold font-serif tracking-wider">MAGAT UNIVERSITY</h1>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-[#A1001F] rotate-45"></div>
+              <h2 className="text-lg font-serif tracking-wider">PLEDGEHALL</h2>
+            </div>
+            <Badge variant="outline" className="border-[#A1001F] text-[#A1001F] text-xs font-mono mt-2">
+              RANK: {user.rank?.toUpperCase()}
+            </Badge>
           </div>
           <Button
             onClick={handleLogout}
             variant="ghost"
-            className="text-[#999] hover:text-red-400 hover:bg-red-900/20"
+            size="sm"
+            className="text-[#666] hover:text-[#A1001F] hover:bg-[#A1001F]/10 p-2"
           >
-            <LogOut className="w-4 h-4 mr-2" />
-            Renounce Path
+            <LogOut className="w-4 h-4" />
           </Button>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Welcome Section */}
-        <div className="mb-12 text-center">
-          <h2 className="text-4xl font-bold font-cinzel mb-4">
-            Welcome back, <span className="text-red-400">{user.collar_name}</span>
-          </h2>
-          <p className="text-lg text-[#999] max-w-2xl mx-auto">
-            Your submission has been noted. The Institution acknowledges your return 
-            to the path of processing. Continue your degradation.
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <Card className="bg-[#1a1a1a] border-[#333] p-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-red-900/20 rounded-lg">
-                <User className="w-6 h-6 text-red-400" />
-              </div>
-              <div>
-                <p className="text-sm text-[#999]">Current Rank</p>
-                <p className="text-xl font-bold text-white">{user.rank}</p>
-              </div>
+      <div className="p-4 space-y-4 max-w-md mx-auto">
+        {/* Rank Badge */}
+        <Card className="bg-[#0a0a0a] border-[#333] p-4">
+          <div className="text-center space-y-2">
+            <div className="w-16 h-16 mx-auto bg-[#A1001F]/20 border border-[#A1001F] flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#A1001F] rotate-45"></div>
             </div>
-          </Card>
+            <p className="text-sm text-[#999]">You are ranked:</p>
+            <p className="font-serif text-lg text-[#A1001F]">{user.rank?.toUpperCase()}</p>
+            <p className="text-xs text-[#666]">Status: UNTRUSTED</p>
+          </div>
+        </Card>
 
-          <Card className="bg-[#1a1a1a] border-[#333] p-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-red-900/20 rounded-lg">
-                <Clock className="w-6 h-6 text-red-400" />
-              </div>
-              <div>
-                <p className="text-sm text-[#999]">Indoctrination Date</p>
-                <p className="text-xl font-bold text-white">{formatDate(user.created_at)}</p>
-              </div>
+        {/* Current Task */}
+        <Card className="bg-[#0a0a0a] border-[#A1001F] p-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-[#A1001F]" />
+              <h3 className="font-serif text-sm">CURRENT TASK</h3>
             </div>
-          </Card>
+            <div className="space-y-2">
+              <p className="text-sm">"Recite The First Scripture"</p>
+              <div className="flex justify-between text-xs text-[#999]">
+                <span>Type: Ritual</span>
+                <span>Due: 12h</span>
+              </div>
+              <Button 
+                className="w-full bg-[#A1001F] hover:bg-[#A1001F]/80 text-white font-mono text-xs h-8"
+                onClick={() => navigate('/doctrine')}
+              >
+                [ CONFESS COMPLETION ]
+              </Button>
+            </div>
+          </div>
+        </Card>
 
-          <Card className="bg-[#1a1a1a] border-[#333] p-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-red-900/20 rounded-lg">
-                <Award className="w-6 h-6 text-red-400" />
-              </div>
-              <div>
-                <p className="text-sm text-[#999]">Lessons Unlocked</p>
-                <p className="text-xl font-bold text-white">1 / 12</p>
-              </div>
+        {/* Active Lesson */}
+        <Card className="bg-[#0a0a0a] border-[#333] p-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-[#A1001F]" />
+              <h3 className="font-serif text-sm">ACTIVE LESSON</h3>
             </div>
-          </Card>
-        </div>
+            <div className="space-y-2">
+              <p className="text-sm">Scripture I: Obedience</p>
+              <p className="text-xs text-[#999]">Status: In Progress</p>
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span>Progress</span>
+                  <span>40%</span>
+                </div>
+                <Progress value={40} className="h-2 bg-[#333]" />
+              </div>
+              <Button 
+                variant="outline" 
+                className="w-full border-[#A1001F] text-[#A1001F] hover:bg-[#A1001F]/10 font-mono text-xs h-8"
+                onClick={() => navigate('/doctrine')}
+              >
+                [ CONTINUE LESSON ]
+              </Button>
+            </div>
+          </div>
+        </Card>
 
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="bg-[#1a1a1a] border-[#333] p-8 hover:border-red-600/50 transition-colors cursor-pointer"
-                onClick={() => navigate('/doctrine')}>
-            <div className="space-y-4">
-              <div className="p-4 bg-red-900/20 rounded-lg w-fit">
-                <BookOpen className="w-8 h-8 text-red-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Study the Doctrine</h3>
-                <p className="text-[#999] mb-4">
-                  Continue your education in worthlessness. Read the sacred texts 
-                  that will guide your transformation from person to property.
-                </p>
-                <Button className="bg-red-600 hover:bg-red-700 text-white">
-                  Begin Study →
-                </Button>
-              </div>
+        {/* Tribute Balance */}
+        <Card className="bg-[#0a0a0a] border-[#A1001F] p-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-[#A1001F]" />
+              <h3 className="font-serif text-sm">TRIBUTE BALANCE</h3>
             </div>
-          </Card>
+            <div className="space-y-2">
+              <p className="text-lg font-mono text-[#A1001F]">$27.00</p>
+              <p className="text-xs text-[#999]">Next Due: 2 Days</p>
+              <Button 
+                className="w-full bg-[#A1001F] hover:bg-[#A1001F]/80 text-white font-mono text-xs h-8"
+              >
+                [ PAY TRIBUTE NOW ]
+              </Button>
+            </div>
+          </div>
+        </Card>
 
-          <Card className="bg-[#1a1a1a] border-[#333] p-8">
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-800 rounded-lg w-fit">
-                <Award className="w-8 h-8 text-gray-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-400 mb-2">Advanced Lessons</h3>
-                <p className="text-[#666] mb-4">
-                  Further degradation protocols are locked until you demonstrate 
-                  sufficient understanding of your fundamental worthlessness.
-                </p>
-                <Button disabled className="bg-gray-700 text-gray-400 cursor-not-allowed">
-                  Access Denied
-                </Button>
-              </div>
+        {/* Punishment Tracking */}
+        <Card className="bg-[#0a0a0a] border-[#666] p-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-[#A1001F]" />
+              <h3 className="font-serif text-sm">PUNISHMENT TRACKING</h3>
             </div>
-          </Card>
-        </div>
+            <div className="space-y-2">
+              <p className="text-sm">Next Punishment: Scheduled</p>
+              <p className="text-xs text-[#999]">Date: 07/18 @ 8:00 PM</p>
+              <p className="text-xs text-[#999]">Assigned by: MASTER CARLOS</p>
+              <Button 
+                variant="outline" 
+                className="w-full border-[#666] text-[#666] hover:bg-[#666]/10 font-mono text-xs h-8"
+              >
+                [ VIEW PUNISHMENT RITUAL ]
+              </Button>
+            </div>
+          </div>
+        </Card>
 
-        {/* Current Progress */}
-        <div className="mt-12">
-          <Card className="bg-[#1a1a1a] border-[#333] p-8">
-            <h3 className="text-xl font-bold text-white mb-6">Current Processing Status</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-[#999]">Identity Erosion</span>
-                <span className="text-red-400">15%</span>
-              </div>
-              <div className="w-full bg-[#333] rounded-full h-2">
-                <div className="bg-red-600 h-2 rounded-full" style={{ width: '15%' }}></div>
-              </div>
-              
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-[#999]">Obedience Training</span>
-                <span className="text-red-400">8%</span>
-              </div>
-              <div className="w-full bg-[#333] rounded-full h-2">
-                <div className="bg-red-600 h-2 rounded-full" style={{ width: '8%' }}></div>
-              </div>
-              
-              <div className="flex justify-between items-center mt-4">
-                <span className="text-[#999]">Functional Utility</span>
-                <span className="text-gray-500">Locked</span>
-              </div>
-              <div className="w-full bg-[#333] rounded-full h-2">
-                <div className="bg-gray-600 h-2 rounded-full" style={{ width: '0%' }}></div>
-              </div>
-            </div>
-          </Card>
+        {/* Button Strip */}
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            variant="outline" 
+            className="border-[#A1001F] text-[#A1001F] hover:bg-[#A1001F]/10 font-mono text-xs h-10"
+          >
+            🏁 Begin Daily Ritual
+          </Button>
+          <Button 
+            variant="outline" 
+            className="border-[#A1001F] text-[#A1001F] hover:bg-[#A1001F]/10 font-mono text-xs h-10"
+          >
+            💀 Submit Sin
+          </Button>
         </div>
       </div>
+
+      {/* Footer Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#333]">
+        <div className="grid grid-cols-5 h-16">
+          <button 
+            onClick={() => navigate('/doctrine')}
+            className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span className="text-xs font-mono">Doctrine</span>
+          </button>
+          <button className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors">
+            <AlertTriangle className="w-4 h-4" />
+            <span className="text-xs font-mono">Tasks</span>
+          </button>
+          <button 
+            onClick={() => navigate('/pledgehall')}
+            className="flex flex-col items-center justify-center gap-1 bg-[#A1001F]/20 text-[#A1001F]"
+          >
+            <User className="w-4 h-4" />
+            <span className="text-xs font-mono">Hall</span>
+          </button>
+          <button className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors">
+            <CreditCard className="w-4 h-4" />
+            <span className="text-xs font-mono">Tribute</span>
+          </button>
+          <button className="flex flex-col items-center justify-center gap-1 hover:bg-[#A1001F]/10 transition-colors">
+            <Award className="w-4 h-4" />
+            <span className="text-xs font-mono">More</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom padding for fixed nav */}
+      <div className="h-16"></div>
     </div>
   );
 };
