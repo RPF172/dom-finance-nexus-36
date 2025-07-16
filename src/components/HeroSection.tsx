@@ -7,13 +7,14 @@ const HeroSection: React.FC = () => {
     <section 
       className="pt-24 min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{
-        backgroundImage: `url(/lovable-uploads/29b2e657-3f9e-4c6c-be36-64645480d368.png)`,
+        backgroundImage: `url(/lovable-uploads/54ed4a47-5f2d-46e6-947d-6576c40de655.png)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
       }}
     >
-      <div className="absolute inset-0 bg-black/30"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
       
       <div className="relative z-10 text-center space-y-8 max-w-4xl mx-auto px-4">
         <h1 className="text-6xl md:text-7xl lg:text-8xl font-thin text-white tracking-wide animate-fade-in">
