@@ -20,9 +20,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				brawler: ['Cinzel Decorative', 'serif'], // Brawler Gothic substitute
-				inter: ['Inter Tight', 'sans-serif'],
-				locker: ['Cinzel Decorative', 'serif'], // LockerScript substitute
+				institutional: ['Bebas Neue', 'Arial Black', 'sans-serif'],
+				inter: ['Inter', 'system-ui', 'sans-serif'],
+				mono: ['Space Mono', 'Consolas', 'monospace'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -68,19 +68,12 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Alpha Format Brand Colors
-				'alpha-black': '#0D0D0D',
-				'cumlog-chrome': '#AFAFAF',
-				'sweat-green': '#00FF66',
-				'frat-red': '#CC1122',
-				'jockstrap-beige': '#E8D6BA',
-				// Legacy colors for compatibility
-				domtoken: {
-					obsidian: '#0D0D0D',
-					silver: '#AFAFAF',
-					crimson: '#CC1122',
-					slate: '#282828',
-				}
+				// Institutional Format Brand Colors
+				'alpha-steel': '#2B2F3A',
+				'obedience-white': '#F7F9FA',
+				'control-blue': '#567DAE',
+				'command-black': '#101214',
+				'target-red': '#B0151C',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
