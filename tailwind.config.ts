@@ -20,8 +20,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				cinzel: ['Cinzel Decorative', 'serif'],
-				neue: ['Neue Haas Grotesk', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+				brawler: ['Cinzel Decorative', 'serif'], // Brawler Gothic substitute
+				inter: ['Inter Tight', 'sans-serif'],
+				locker: ['Cinzel Decorative', 'serif'], // LockerScript substitute
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -67,10 +68,17 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// Alpha Format Brand Colors
+				'alpha-black': '#0D0D0D',
+				'cumlog-chrome': '#AFAFAF',
+				'sweat-green': '#00FF66',
+				'frat-red': '#CC1122',
+				'jockstrap-beige': '#E8D6BA',
+				// Legacy colors for compatibility
 				domtoken: {
-					obsidian: '#0E0E0E',
-					silver: '#CCCCCC',
-					crimson: '#920000',
+					obsidian: '#0D0D0D',
+					silver: '#AFAFAF',
+					crimson: '#CC1122',
 					slate: '#282828',
 				}
 			},

@@ -41,36 +41,10 @@ const Index = () => {
   }, [hasScrolledToTrigger]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-domtoken-obsidian relative">
+    <div className="flex flex-col min-h-screen bg-alpha-black relative">
       <Header />
       <main className={showModal ? 'pointer-events-none' : 'relative z-10'}>
         <HeroSection />
-        <StatsCounter />
-        <WhyMagatSection />
-        <LearningPathsSection />
-        <TraditionalVsMagatSection />
-        <UniversityFeaturesSection />
-        
-        {/* Interactive Preview Section */}
-        <section className="py-20 bg-domtoken-slate/10">
-          <div className="section-container">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
-                Experience <span className="text-domtoken-crimson">MAGAT</span> Learning
-              </h2>
-              <p className="text-xl text-domtoken-silver max-w-2xl mx-auto">
-                Try our interactive lesson system and see how MAGAT University transforms traditional education.
-              </p>
-            </div>
-            <div className="max-w-4xl mx-auto">
-              <InteractiveLessonPreview />
-            </div>
-          </div>
-        </section>
-
-        <TokenomicsSection />
-        <AcademicRoadmapSection />
-        <TeamSection />
       </main>
       <BlinkingArrow />
       <FooterSection />
