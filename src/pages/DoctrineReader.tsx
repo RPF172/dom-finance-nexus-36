@@ -16,7 +16,7 @@ const DoctrineReader = () => {
       <div className="min-h-screen bg-background text-foreground font-mono flex items-center justify-center">
         <div className="text-center">
           <Flame className="h-8 w-8 text-accent animate-pulse mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Loading scriptures...</p>
+          <p className="text-sm text-muted-foreground">Loading chapters...</p>
         </div>
       </div>
     );
@@ -110,13 +110,13 @@ const DoctrineReader = () => {
           <div className="page-header animate-fade-in">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-6 h-6 bg-accent animate-pulse"></div>
-              <h1 className="text-3xl font-institutional uppercase tracking-wide">The Doctrine</h1>
+              <h1 className="text-3xl font-institutional uppercase tracking-wide">MAGAT UNIVERSITY: INITIATION WEEK</h1>
             </div>
             <div className="text-sm text-muted-foreground font-mono">
-              RANK: INITIATE WHELP
+              RANK: FRESHMAN PLEDGE
             </div>
             <div className="text-sm text-muted-foreground">
-              Progress: <span className="text-accent font-medium">{completedLessons}</span> / {totalLessons} Scriptures Completed
+              Progress: <span className="text-accent font-medium">{completedLessons}</span> / {totalLessons} Chapters Read
             </div>
             <div className="w-full bg-muted h-2 rounded-full mt-4 overflow-hidden">
               <div 
@@ -126,7 +126,7 @@ const DoctrineReader = () => {
             </div>
           </div>
 
-          {/* Scripture Cards */}
+          {/* Chapter Cards */}
           <div className="grid-cards">
             {lessons?.map((lesson, index) => {
               const status = getLessonStatus(lesson.id, index);
