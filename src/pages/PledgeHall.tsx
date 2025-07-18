@@ -95,20 +95,16 @@ const PledgeHall: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-[#e5e0d1] font-mono">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="border-b border-[#333] bg-black p-4">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-[#A1001F] rotate-45"></div>
-              <h1 className="text-lg font-bold font-serif tracking-wider">MAGAT UNIVERSITY</h1>
+      <header className="institutional-header p-4 pt-20">
+        <div className="section-container !py-4 flex justify-between items-start">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="w-4 h-4 bg-accent"></div>
+              <h1 className="text-xl font-institutional tracking-wider uppercase">PLEDGE HALL</h1>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-[#A1001F] rotate-45"></div>
-              <h2 className="text-lg font-serif tracking-wider">PLEDGEHALL</h2>
-            </div>
-            <Badge variant="outline" className="border-[#A1001F] text-[#A1001F] text-xs font-mono mt-2">
+            <Badge variant="outline" className="border-accent text-accent font-mono">
               RANK: {user.rank?.toUpperCase()}
             </Badge>
           </div>
@@ -116,138 +112,140 @@ const PledgeHall: React.FC = () => {
             onClick={handleLogout}
             variant="ghost"
             size="sm"
-            className="text-[#666] hover:text-[#A1001F] hover:bg-[#A1001F]/10 p-2"
+            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
           >
             <LogOut className="w-4 h-4" />
           </Button>
         </div>
       </header>
 
-      <div className="p-4 space-y-4 max-w-md mx-auto">
-        {/* Rank Badge */}
-        <Card className="bg-[#0a0a0a] border-[#333] p-4">
-          <div className="text-center space-y-2">
-            <div className="w-16 h-16 mx-auto bg-[#A1001F]/20 border border-[#A1001F] flex items-center justify-center">
-              <div className="w-8 h-8 bg-[#A1001F] rotate-45"></div>
+      <div className="section-container space-y-6">
+        {/* Status Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="institutional-card p-6 text-center">
+            <div className="w-12 h-12 mx-auto bg-accent/20 border border-accent flex items-center justify-center mb-3">
+              <div className="w-6 h-6 bg-accent"></div>
             </div>
-            <p className="text-sm text-[#999]">You are ranked:</p>
-            <p className="font-serif text-lg text-[#A1001F]">{user.rank?.toUpperCase()}</p>
-            <p className="text-xs text-[#666]">Status: UNTRUSTED</p>
-          </div>
-        </Card>
+            <p className="text-sm text-muted-foreground mb-1">Current Rank</p>
+            <p className="font-institutional text-lg text-accent uppercase">{user.rank}</p>
+            <p className="text-xs text-muted-foreground mt-1">Status: ACTIVE</p>
+          </Card>
+
+          <Card className="institutional-card p-6 text-center">
+            <User className="w-12 h-12 mx-auto text-accent mb-3" />
+            <p className="text-sm text-muted-foreground mb-1">Compliance Level</p>
+            <p className="font-institutional text-lg text-foreground">85%</p>
+            <p className="text-xs text-muted-foreground mt-1">Status: SATISFACTORY</p>
+          </Card>
+
+          <Card className="institutional-card p-6 text-center">
+            <Award className="w-12 h-12 mx-auto text-accent mb-3" />
+            <p className="text-sm text-muted-foreground mb-1">Days Active</p>
+            <p className="font-institutional text-lg text-foreground">42</p>
+            <p className="text-xs text-muted-foreground mt-1">Status: PROGRESSING</p>
+          </Card>
+        </div>
 
         {/* Current Task */}
-        <Card className="bg-[#0a0a0a] border-[#A1001F] p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-[#A1001F]" />
-              <h3 className="font-serif text-sm">CURRENT TASK</h3>
+        <Card className="institutional-card p-6 border-accent">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 text-accent" />
+              <h3 className="font-institutional text-base uppercase tracking-wide">Current Assignment</h3>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm">"Recite The First Scripture"</p>
-              <div className="flex justify-between text-xs text-[#999]">
-                <span>Type: Ritual</span>
-                <span>Due: 12h</span>
+            <div className="space-y-3">
+              <p className="text-foreground font-medium">"Complete Initial Doctrine Reading"</p>
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Type: SCRIPTURE STUDY</span>
+                <span>Due: 12 HOURS</span>
               </div>
               <Button 
-                className="w-full bg-[#A1001F] hover:bg-[#A1001F]/80 text-white font-mono text-xs h-8"
+                className="w-full institutional-button font-mono"
                 onClick={() => navigate('/doctrine')}
               >
-                [ CONFESS COMPLETION ]
+                PROCEED TO ASSIGNMENT
               </Button>
             </div>
           </div>
         </Card>
 
-        {/* Active Lesson */}
-        <Card className="bg-[#0a0a0a] border-[#333] p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-[#A1001F]" />
-              <h3 className="font-serif text-sm">ACTIVE LESSON</h3>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm">Scripture I: Obedience</p>
-              <p className="text-xs text-[#999]">Status: In Progress</p>
-              <div className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span>Progress</span>
-                  <span>40%</span>
+        {/* Progress Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Active Lesson */}
+          <Card className="institutional-card p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <BookOpen className="w-5 h-5 text-accent" />
+                <h3 className="font-institutional text-base uppercase tracking-wide">Active Lesson</h3>
+              </div>
+              <div className="space-y-3">
+                <p className="text-foreground font-medium">Scripture I: Foundational Obedience</p>
+                <p className="text-sm text-muted-foreground">Status: IN PROGRESS</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Progress</span>
+                    <span className="text-accent">40%</span>
+                  </div>
+                  <Progress value={40} className="h-2" />
                 </div>
-                <Progress value={40} className="h-2 bg-[#333]" />
+                <Button 
+                  variant="outline" 
+                  className="w-full border-accent text-accent hover:bg-accent/10 font-mono"
+                  onClick={() => navigate('/doctrine')}
+                >
+                  CONTINUE LESSON
+                </Button>
               </div>
-              <Button 
-                variant="outline" 
-                className="w-full border-[#A1001F] text-[#A1001F] hover:bg-[#A1001F]/10 font-mono text-xs h-8"
-                onClick={() => navigate('/doctrine')}
-              >
-                [ CONTINUE LESSON ]
-              </Button>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        {/* Tribute Balance */}
-        <Card className="bg-[#0a0a0a] border-[#A1001F] p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#A1001F]" />
-              <h3 className="font-serif text-sm">TRIBUTE BALANCE</h3>
+          {/* Tribute Status */}
+          <Card className="institutional-card p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <DollarSign className="w-5 h-5 text-accent" />
+                <h3 className="font-institutional text-base uppercase tracking-wide">Tribute Status</h3>
+              </div>
+              <div className="space-y-3">
+                <p className="text-2xl font-mono text-accent">$27.00</p>
+                <p className="text-sm text-muted-foreground">Next Due: 2 DAYS</p>
+                <Button 
+                  className="w-full institutional-button font-mono"
+                  onClick={() => navigate('/tribute')}
+                >
+                  PAY TRIBUTE
+                </Button>
+              </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-lg font-mono text-[#A1001F]">$27.00</p>
-              <p className="text-xs text-[#999]">Next Due: 2 Days</p>
-              <Button 
-                className="w-full bg-[#A1001F] hover:bg-[#A1001F]/80 text-white font-mono text-xs h-8"
-              >
-                [ PAY TRIBUTE NOW ]
-              </Button>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
 
-        {/* Punishment Tracking */}
-        <Card className="bg-[#0a0a0a] border-[#666] p-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-[#A1001F]" />
-              <h3 className="font-serif text-sm">PUNISHMENT TRACKING</h3>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm">Next Punishment: Scheduled</p>
-              <p className="text-xs text-[#999]">Date: 07/18 @ 8:00 PM</p>
-              <p className="text-xs text-[#999]">Assigned by: MASTER CARLOS</p>
-              <Button 
-                variant="outline" 
-                className="w-full border-[#666] text-[#666] hover:bg-[#666]/10 font-mono text-xs h-8"
-              >
-                [ VIEW PUNISHMENT RITUAL ]
-              </Button>
-            </div>
-          </div>
-        </Card>
-
-        {/* Button Strip */}
-        <div className="grid grid-cols-2 gap-2">
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 gap-4">
           <Button 
             variant="outline" 
-            className="border-[#A1001F] text-[#A1001F] hover:bg-[#A1001F]/10 font-mono text-xs h-10"
+            className="border-accent text-accent hover:bg-accent/10 font-mono p-4 h-auto"
+            onClick={() => navigate('/assignments')}
           >
-            🏁 Begin Daily Ritual
+            <div className="flex flex-col items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              <span>DAILY RITUAL</span>
+            </div>
           </Button>
           <Button 
             variant="outline" 
-            className="border-[#A1001F] text-[#A1001F] hover:bg-[#A1001F]/10 font-mono text-xs h-10"
+            className="border-muted-foreground text-muted-foreground hover:bg-muted/20 font-mono p-4 h-auto"
+            onClick={() => navigate('/social')}
           >
-            💀 Submit Sin
+            <div className="flex flex-col items-center gap-2">
+              <Zap className="w-5 h-5" />
+              <span>COMMUNITY</span>
+            </div>
           </Button>
         </div>
       </div>
 
       <SlidingBottomNav />
-
-      {/* Bottom padding for fixed nav */}
-      <div className="h-20"></div>
     </div>
   );
 };

@@ -103,51 +103,54 @@ const DoctrineReader = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-mono">
-      <div className="max-w-md mx-auto p-4 space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2 pb-6 border-b border-muted">
-          <div className="flex items-center justify-center gap-2 text-2xl font-bold">
-            <Flame className="h-6 w-6 text-accent" />
-            THE DOCTRINE
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="pt-20">
+        <div className="section-container space-y-6">
+          {/* Header */}
+          <div className="page-header">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-6 h-6 bg-accent"></div>
+              <h1 className="text-3xl font-institutional uppercase tracking-wide">The Doctrine</h1>
+            </div>
+            <div className="text-sm text-muted-foreground font-mono">
+              RANK: INITIATE WHELP
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Progress: {completedLessons} / {totalLessons} Scriptures Completed
+            </div>
           </div>
-          <div className="text-sm text-muted-foreground">
-            Rank: INITIATE WHELP
-          </div>
-          <div className="text-sm text-muted-foreground">
-            Progress: {completedLessons} / {totalLessons} Scriptures Claimed
-          </div>
-        </div>
 
-        {/* Scripture Cards */}
-        <div className="space-y-4">
-          {lessons?.map((lesson, index) => {
-            const status = getLessonStatus(lesson.id, index);
-            const progress = getLessonProgress(lesson.id);
-            
-            return (
-              <Card 
-                key={lesson.id} 
-                className={`bg-card border-muted transition-all duration-200 ${
-                  status === 'locked' 
-                    ? 'opacity-75 hover:opacity-90' 
-                    : 'hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10'
-                }`}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <Flame className="h-4 w-4 text-accent flex-shrink-0" />
-                      <h3 className="font-bold text-sm leading-tight">
-                        {lesson.title}
-                      </h3>
+          {/* Scripture Cards */}
+          <div className="grid-cards">
+            {lessons?.map((lesson, index) => {
+              const status = getLessonStatus(lesson.id, index);
+              const progress = getLessonProgress(lesson.id);
+              
+              return (
+                <Card 
+                  key={lesson.id} 
+                  className={`institutional-card ${
+                    status === 'locked' 
+                      ? 'opacity-60' 
+                      : status === 'complete'
+                      ? 'border-green-500/30 bg-green-50/10'
+                      : ''
+                  }`}
+                >
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-accent flex-shrink-0"></div>
+                        <h3 className="font-institutional text-base leading-tight uppercase tracking-wide">
+                          {lesson.title}
+                        </h3>
+                      </div>
+                      {getStatusIcon(status)}
                     </div>
-                    {getStatusIcon(status)}
-                  </div>
-                  <p className="text-xs text-muted-foreground italic leading-relaxed">
-                    "{lesson.objective || 'Learn the ways of the Institution'}"
-                  </p>
-                </CardHeader>
+                    <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                      {lesson.objective || 'Learn the institutional principles'}
+                    </p>
+                  </CardHeader>
                 
                 <CardContent className="pt-0 space-y-3">
                   <div className="flex items-center justify-between text-xs">
@@ -180,22 +183,25 @@ const DoctrineReader = () => {
           })}
         </div>
 
-        {/* Progress Footer */}
-        <div className="text-center space-y-2 pt-6 border-t border-muted">
-          <div className="flex justify-center gap-6 text-sm">
-            <span className="text-emerald-400">
-              🔓 Completed: {completedLessons}
-            </span>
-            <span className="text-muted-foreground">
-              🔒 Remaining: {totalLessons - completedLessons}
-            </span>
+          {/* Progress Summary */}
+          <div className="text-center space-y-4 pt-8 border-t border-border">
+            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+              <div className="institutional-card p-4 text-center">
+                <div className="text-2xl font-mono text-accent mb-1">{completedLessons}</div>
+                <div className="text-xs font-institutional uppercase tracking-wide">Completed</div>
+              </div>
+              <div className="institutional-card p-4 text-center">
+                <div className="text-2xl font-mono text-muted-foreground mb-1">{totalLessons - completedLessons}</div>
+                <div className="text-xs font-institutional uppercase tracking-wide">Remaining</div>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground font-mono">
+              Continue your institutional education
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground italic">
-            📖 Scroll to reveal deeper indoctrination
-          </p>
-        </div>
 
-        <SlidingBottomNav />
+          <SlidingBottomNav />
+        </div>
       </div>
     </div>
   );

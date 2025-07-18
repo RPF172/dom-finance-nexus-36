@@ -41,7 +41,7 @@ const Index = () => {
   }, [hasScrolledToTrigger]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-alpha-black relative">
+    <div className="flex flex-col min-h-screen bg-background relative">
       <Header />
       <main className={showModal ? 'pointer-events-none' : 'relative z-10'}>
         <HeroSection />

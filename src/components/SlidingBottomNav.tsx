@@ -125,7 +125,7 @@ const SlidingBottomNav = () => {
       {/* Dashboard Toggle Button - Fixed in Upper Left */}
       <button
         onClick={() => setIsExpanded(true)}
-        className="fixed top-4 left-4 z-[9999] bg-primary/90 backdrop-blur-sm text-primary-foreground p-3 rounded-lg shadow-lg hover:bg-primary transition-all duration-200 hover:scale-105 pointer-events-auto"
+        className="fixed top-20 left-4 z-[9999] bg-primary backdrop-blur-sm text-primary-foreground p-3 shadow-lg hover:bg-primary/90 transition-all duration-200 institutional-button"
       >
         <LayoutDashboard className="h-5 w-5" />
       </button>
@@ -142,7 +142,7 @@ const SlidingBottomNav = () => {
       <div className="fixed left-0 top-0 bottom-0 z-[9999] pointer-events-none">
         {/* Expanded Menu Content */}
         <div
-          className={`bg-card/95 backdrop-blur-lg border-r border-border transform transition-transform duration-300 ease-out w-80 h-full overflow-y-auto pointer-events-auto ${
+          className={`bg-secondary/95 backdrop-blur-lg border-r border-border transform transition-transform duration-300 ease-out w-80 h-full overflow-y-auto pointer-events-auto ${
             isExpanded 
               ? 'translate-x-0' 
               : '-translate-x-full'
@@ -150,12 +150,12 @@ const SlidingBottomNav = () => {
         >
           {/* Header with Close Button */}
           <div className="flex justify-between items-center p-4 border-b border-border">
-            <h3 className="text-lg font-semibold text-foreground">Quick Access</h3>
+            <h3 className="text-lg font-institutional text-secondary-foreground uppercase tracking-wide">Command Center</h3>
             <button
               onClick={() => setIsExpanded(false)}
-              className="p-2 hover:bg-muted rounded-full transition-colors"
+              className="p-2 hover:bg-accent/20 transition-colors"
             >
-              <X className="h-5 w-5 text-muted-foreground" />
+              <X className="h-5 w-5 text-secondary-foreground" />
             </button>
           </div>
 

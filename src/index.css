@@ -9,43 +9,52 @@
 
 @layer base {
   :root {
-    --background: 212 16% 98%;
-    --foreground: 215 28% 7%;
+    /* MAGAT Institutional Color System */
+    --background: 214 24% 97%; /* Obedience White */
+    --foreground: 215 24% 8%; /* Command Black */
 
-    --card: 212 16% 98%;
-    --card-foreground: 215 28% 7%;
+    --card: 0 0% 100%; /* Pure white for cards */
+    --card-foreground: 215 24% 8%; /* Command Black */
 
-    --popover: 212 16% 98%;
-    --popover-foreground: 215 28% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 24% 8%;
 
-    --primary: 213 45% 52%;
+    --primary: 213 45% 52%; /* Control Blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 216 18% 22%;
-    --secondary-foreground: 212 16% 98%;
+    --secondary: 220 24% 22%; /* Alpha Steel */
+    --secondary-foreground: 214 24% 97%;
 
-    --muted: 216 18% 22%;
-    --muted-foreground: 215 28% 7%;
+    --muted: 215 16% 93%; /* Light gray for subtle elements */
+    --muted-foreground: 215 16% 45%;
 
-    --accent: 216 18% 22%;
-    --accent-foreground: 212 16% 98%;
+    --accent: 213 45% 52%; /* Control Blue */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 356 75% 35%;
+    --destructive: 356 75% 42%; /* Target Red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 216 18% 22%;
-    --input: 216 18% 22%;
-    --ring: 213 45% 52%;
+    --border: 215 16% 87%; /* Subtle borders */
+    --input: 0 0% 100%; /* White inputs */
+    --ring: 213 45% 52%; /* Control Blue for focus */
 
-    --radius: 0rem;
+    --radius: 0rem; /* Sharp, institutional edges */
 
-    --sidebar-background: 216 18% 22%;
-    --sidebar-foreground: 212 16% 98%;
+    /* Institutional Brand Colors */
+    --alpha-steel: 220 24% 22%;
+    --obedience-white: 214 24% 97%;
+    --control-blue: 213 45% 52%;
+    --command-black: 215 24% 8%;
+    --target-red: 356 75% 42%;
+
+    /* Sidebar tokens */
+    --sidebar-background: 220 24% 22%;
+    --sidebar-foreground: 214 24% 97%;
     --sidebar-primary: 213 45% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 28% 7%;
-    --sidebar-accent-foreground: 212 16% 98%;
-    --sidebar-border: 216 18% 22%;
+    --sidebar-accent: 215 24% 8%;
+    --sidebar-accent-foreground: 214 24% 97%;
+    --sidebar-border: 220 24% 22%;
     --sidebar-ring: 213 45% 52%;
   }
 }
@@ -71,23 +80,53 @@
 }
 
 @layer components {
+  /* Institutional UI Components */
+  .institutional-header {
+    @apply bg-secondary text-secondary-foreground border-b border-border;
+  }
+
+  .institutional-card {
+    @apply bg-card border border-border shadow-sm transition-all duration-200;
+  }
+
+  .institutional-card:hover {
+    @apply shadow-md border-accent/30;
+  }
+
+  .institutional-button {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200;
+  }
+
+  .institutional-input {
+    @apply bg-input border border-border focus:border-accent focus:ring-1 focus:ring-accent;
+  }
+
+  .section-container {
+    @apply max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12;
+  }
+
+  .page-header {
+    @apply text-center space-y-2 pb-6 border-b border-border mb-8;
+  }
+
+  .grid-cards {
+    @apply grid gap-4 md:gap-6;
+  }
+
+  /* Legacy styles for backward compatibility */
   .dom-gradient {
-    background: linear-gradient(135deg, #0E0E0E 0%, #282828 100%);
+    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--alpha-steel)) 100%);
   }
 
   .crimson-glow {
-    box-shadow: 0 0 20px 2px rgba(146, 0, 0, 0.3);
+    box-shadow: 0 0 20px 2px hsl(var(--target-red) / 0.3);
   }
 
   .circuit-overlay {
     background-image: 
-      linear-gradient(0deg, rgba(14, 14, 14, 0.9) 0%, rgba(14, 14, 14, 0.8) 100%), 
+      linear-gradient(0deg, hsl(var(--secondary) / 0.9) 0%, hsl(var(--secondary) / 0.8) 100%), 
       url('/lovable-uploads/69a25420-4be6-4397-8cf4-f9ccf9407440.png');
     background-size: cover;
     background-position: center;
-  }
-
-  .section-container {
-    @apply max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24;
   }
 }
