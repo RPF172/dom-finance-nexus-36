@@ -112,25 +112,30 @@ const PledgeHall: React.FC = () => {
           </div>
 
           {/* Status Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="institutional-card p-6 text-center">
-              <div className="w-12 h-12 mx-auto bg-accent/20 border border-accent flex items-center justify-center mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="institutional-card p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-xl border-l-4 border-l-accent">
+              <div className="w-12 h-12 mx-auto bg-accent/20 border border-accent flex items-center justify-center mb-3 animate-pulse">
                 <div className="w-6 h-6 bg-accent"></div>
               </div>
               <p className="text-sm text-muted-foreground mb-1">Current Rank</p>
-              <p className="font-institutional text-lg text-accent uppercase">{user.rank}</p>
+              <p className="font-institutional text-lg text-accent uppercase animate-fade-in">{user.rank}</p>
               <p className="text-xs text-muted-foreground mt-1">Status: ACTIVE</p>
             </Card>
 
-            <Card className="institutional-card p-6 text-center">
-              <User className="w-12 h-12 mx-auto text-accent mb-3" />
+            <Card className="institutional-card p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-xl border-l-4 border-l-primary">
+              <User className="w-12 h-12 mx-auto text-primary mb-3 hover:scale-110 transition-transform" />
               <p className="text-sm text-muted-foreground mb-1">Compliance Level</p>
-              <p className="font-institutional text-lg text-foreground">85%</p>
+              <div className="relative">
+                <p className="font-institutional text-lg text-foreground">85%</p>
+                <div className="w-full bg-muted h-1 rounded-full mt-2">
+                  <div className="bg-primary h-1 rounded-full w-[85%] animate-pulse"></div>
+                </div>
+              </div>
               <p className="text-xs text-muted-foreground mt-1">Status: SATISFACTORY</p>
             </Card>
 
-            <Card className="institutional-card p-6 text-center">
-              <Award className="w-12 h-12 mx-auto text-accent mb-3" />
+            <Card className="institutional-card p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-xl border-l-4 border-l-secondary">
+              <Award className="w-12 h-12 mx-auto text-secondary mb-3 hover:scale-110 transition-transform" />
               <p className="text-sm text-muted-foreground mb-1">Days Active</p>
               <p className="font-institutional text-lg text-foreground">42</p>
               <p className="text-xs text-muted-foreground mt-1">Status: PROGRESSING</p>
@@ -138,50 +143,60 @@ const PledgeHall: React.FC = () => {
           </div>
 
           {/* Current Task */}
-          <Card className="institutional-card p-6 border-accent">
+          <Card className="institutional-card p-6 border-accent bg-gradient-to-r from-card to-accent/5 hover:shadow-lg transition-all duration-300">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <AlertTriangle className="w-5 h-5 text-accent" />
+                <AlertTriangle className="w-5 h-5 text-accent animate-pulse" />
                 <h3 className="font-institutional text-base uppercase tracking-wide">Current Assignment</h3>
+                <div className="ml-auto">
+                  <Clock className="w-4 h-4 text-accent animate-pulse" />
+                </div>
               </div>
               <div className="space-y-3">
-                <p className="text-foreground font-medium">"Complete Initial Doctrine Reading"</p>
+                <p className="text-foreground font-medium text-lg">"Complete Initial Doctrine Reading"</p>
                 <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Type: SCRIPTURE STUDY</span>
-                  <span>Due: 12 HOURS</span>
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3 h-3" />
+                    Type: SCRIPTURE STUDY
+                  </span>
+                  <span className="text-accent font-medium animate-pulse">Due: 12 HOURS</span>
                 </div>
                 <Button 
-                  className="w-full institutional-button font-mono"
+                  className="w-full institutional-button font-mono hover:scale-105 transition-all duration-300 relative overflow-hidden group"
                   onClick={() => navigate('/doctrine')}
                 >
-                  PROCEED TO ASSIGNMENT
+                  <span className="relative z-10">PROCEED TO ASSIGNMENT</span>
+                  <div className="absolute inset-0 bg-accent/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                 </Button>
               </div>
             </div>
           </Card>
 
           {/* Progress Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Active Lesson */}
-            <Card className="institutional-card p-6">
+            <Card className="institutional-card p-6 hover:scale-105 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-card to-primary/5">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <BookOpen className="w-5 h-5 text-accent" />
+                  <BookOpen className="w-5 h-5 text-primary hover:scale-110 transition-transform" />
                   <h3 className="font-institutional text-base uppercase tracking-wide">Active Lesson</h3>
                 </div>
                 <div className="space-y-3">
                   <p className="text-foreground font-medium">Scripture I: Foundational Obedience</p>
-                  <p className="text-sm text-muted-foreground">Status: IN PROGRESS</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                    <p className="text-sm text-muted-foreground">Status: IN PROGRESS</p>
+                  </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
-                      <span className="text-accent">40%</span>
+                      <span className="text-primary font-medium">40%</span>
                     </div>
-                    <Progress value={40} className="h-2" />
+                    <Progress value={40} className="h-3 overflow-hidden" />
                   </div>
                   <Button 
                     variant="outline" 
-                    className="w-full border-accent text-accent hover:bg-accent/10 font-mono"
+                    className="w-full border-primary text-primary hover:bg-primary/10 font-mono hover:scale-105 transition-all duration-300"
                     onClick={() => navigate('/doctrine')}
                   >
                     CONTINUE LESSON
@@ -191,20 +206,27 @@ const PledgeHall: React.FC = () => {
             </Card>
 
             {/* Tribute Status */}
-            <Card className="institutional-card p-6">
+            <Card className="institutional-card p-6 hover:scale-105 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-card to-accent/5">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <DollarSign className="w-5 h-5 text-accent" />
+                  <DollarSign className="w-5 h-5 text-accent hover:scale-110 transition-transform" />
                   <h3 className="font-institutional text-base uppercase tracking-wide">Tribute Status</h3>
                 </div>
                 <div className="space-y-3">
-                  <p className="text-2xl font-mono text-accent">$27.00</p>
-                  <p className="text-sm text-muted-foreground">Next Due: 2 DAYS</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-3xl font-mono text-accent">$27.00</p>
+                    <div className="flex flex-col">
+                      <div className="w-1 h-1 bg-accent rounded-full animate-pulse"></div>
+                      <div className="w-1 h-1 bg-accent rounded-full animate-pulse [animation-delay:0.5s]"></div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Next Due: <span className="text-accent font-medium">2 DAYS</span></p>
                   <Button 
-                    className="w-full institutional-button font-mono"
+                    className="w-full institutional-button font-mono hover:scale-105 transition-all duration-300 relative overflow-hidden group"
                     onClick={() => navigate('/tribute')}
                   >
-                    PAY TRIBUTE
+                    <span className="relative z-10">PAY TRIBUTE</span>
+                    <div className="absolute inset-0 bg-accent/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                   </Button>
                 </div>
               </div>
@@ -215,22 +237,22 @@ const PledgeHall: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <Button 
               variant="outline" 
-              className="border-accent text-accent hover:bg-accent/10 font-mono p-4 h-auto"
+              className="border-accent text-accent hover:bg-accent/10 font-mono p-6 h-auto hover:scale-105 transition-all duration-300 hover:shadow-lg"
               onClick={() => navigate('/assignments')}
             >
-              <div className="flex flex-col items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                <span>DAILY RITUAL</span>
+              <div className="flex flex-col items-center gap-3">
+                <Calendar className="w-6 h-6 hover:scale-110 transition-transform" />
+                <span className="text-sm">DAILY RITUAL</span>
               </div>
             </Button>
             <Button 
               variant="outline" 
-              className="border-muted-foreground text-muted-foreground hover:bg-muted/20 font-mono p-4 h-auto"
+              className="border-muted-foreground text-muted-foreground hover:bg-muted/20 font-mono p-6 h-auto hover:scale-105 transition-all duration-300 hover:shadow-lg"
               onClick={() => navigate('/social')}
             >
-              <div className="flex flex-col items-center gap-2">
-                <Zap className="w-5 h-5" />
-                <span>COMMUNITY</span>
+              <div className="flex flex-col items-center gap-3">
+                <Zap className="w-6 h-6 hover:scale-110 transition-transform" />
+                <span className="text-sm">COMMUNITY</span>
               </div>
             </Button>
           </div>

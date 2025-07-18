@@ -122,19 +122,24 @@ const Assignments: React.FC = () => {
       <div className="p-6">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-8 animate-fade-in">
             <div className="flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-2 text-xl font-institutional tracking-wider uppercase">
-                  📝 ASSIGNMENTS
+                <div className="flex items-center gap-3 text-xl font-institutional tracking-wider uppercase">
+                  <div className="w-6 h-6 bg-accent animate-pulse"></div>
+                  ASSIGNMENTS
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   Rank: INITIATE WHELP
                 </div>
+                <div className="w-32 bg-muted h-1 rounded-full mt-2 overflow-hidden">
+                  <div className="bg-accent h-1 rounded-full w-2/3 animate-pulse"></div>
+                </div>
               </div>
               <div className="text-right">
                 <div className="text-sm text-muted-foreground">Tasks Remaining</div>
-                <div className="text-2xl font-bold text-destructive">3</div>
+                <div className="text-3xl font-bold text-destructive animate-pulse">3</div>
+                <div className="text-xs text-destructive mt-1">URGENT</div>
               </div>
             </div>
           </div>
@@ -169,9 +174,14 @@ const Assignments: React.FC = () => {
           </div>
 
           {/* Assignment Cards */}
-          <div className="space-y-4">
-            {filteredAssignments.map((assignment) => (
-              <Card key={assignment.id} className="institutional-card">
+          <div className="space-y-4 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
+            {filteredAssignments.map((assignment, index) => (
+              <Card key={assignment.id} className={`institutional-card hover:scale-105 transition-all duration-300 hover:shadow-xl ${
+                assignment.status === 'missed' ? 'border-l-4 border-l-destructive bg-gradient-to-r from-card to-destructive/5' :
+                assignment.status === 'in_progress' ? 'border-l-4 border-l-accent bg-gradient-to-r from-card to-accent/5' :
+                assignment.status === 'completed' ? 'border-l-4 border-l-green-500 bg-gradient-to-r from-card to-green-500/5' :
+                'border-l-4 border-l-muted'
+              }`} style={{ animationDelay: `${0.5 + index * 0.1}s` }}>
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3 mb-3">
                     {getStatusIcon(assignment)}

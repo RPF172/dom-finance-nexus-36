@@ -107,16 +107,22 @@ const DoctrineReader = () => {
       <div className="p-6">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
-          <div className="page-header">
+          <div className="page-header animate-fade-in">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-6 h-6 bg-accent"></div>
+              <div className="w-6 h-6 bg-accent animate-pulse"></div>
               <h1 className="text-3xl font-institutional uppercase tracking-wide">The Doctrine</h1>
             </div>
             <div className="text-sm text-muted-foreground font-mono">
               RANK: INITIATE WHELP
             </div>
             <div className="text-sm text-muted-foreground">
-              Progress: {completedLessons} / {totalLessons} Scriptures Completed
+              Progress: <span className="text-accent font-medium">{completedLessons}</span> / {totalLessons} Scriptures Completed
+            </div>
+            <div className="w-full bg-muted h-2 rounded-full mt-4 overflow-hidden">
+              <div 
+                className="bg-accent h-2 rounded-full transition-all duration-500 animate-pulse"
+                style={{ width: `${totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0}%` }}
+              />
             </div>
           </div>
 
@@ -129,11 +135,13 @@ const DoctrineReader = () => {
               return (
                 <Card 
                   key={lesson.id} 
-                  className={`institutional-card ${
+                  className={`institutional-card hover:scale-105 transition-all duration-300 hover:shadow-xl ${
                     status === 'locked' 
-                      ? 'opacity-60' 
+                      ? 'opacity-60 hover:scale-100' 
                       : status === 'complete'
-                      ? 'border-green-500/30 bg-green-50/10'
+                      ? 'border-green-500/30 bg-green-50/10 border-l-4 border-l-green-500'
+                      : status === 'in_progress'
+                      ? 'border-l-4 border-l-accent bg-gradient-to-r from-card to-accent/5'
                       : ''
                   }`}
                 >

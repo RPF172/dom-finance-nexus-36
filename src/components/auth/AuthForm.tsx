@@ -170,12 +170,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex bg-[#1a1a1a] rounded-lg p-1">
+        <div className="flex bg-[#1a1a1a] rounded-lg p-1 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
           <button
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${
               isLogin 
-                ? 'bg-red-600 text-white' 
+                ? 'bg-red-600 text-white shadow-lg transform scale-105' 
                 : 'text-[#999] hover:text-[#e3dcc3]'
             }`}
           >
@@ -183,9 +183,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </button>
           <button
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${
               !isLogin 
-                ? 'bg-red-600 text-white' 
+                ? 'bg-red-600 text-white shadow-lg transform scale-105' 
                 : 'text-[#999] hover:text-[#e3dcc3]'
             }`}
           >
@@ -194,7 +194,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in [animation-delay:0.5s] opacity-0 [animation-fill-mode:forwards]">
           {/* Collar ID (Username for registration) */}
           {!isLogin && (
             <div className="space-y-2">
@@ -278,16 +278,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 font-medium"
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden group"
           >
-            {loading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Processing...
-              </div>
-            ) : (
-              isLogin ? 'Submit to Entry' : 'Begin Indoctrination →'
-            )}
+            <span className="relative z-10">
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Processing...
+                </div>
+              ) : (
+                isLogin ? 'Submit to Entry' : 'Begin Indoctrination →'
+              )}
+            </span>
+            <div className="absolute inset-0 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
           </Button>
         </form>
 

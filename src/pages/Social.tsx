@@ -63,12 +63,18 @@ export default function Social() {
     <AppLayout>
       <div className="p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-institutional uppercase tracking-wide">Social Feed</h1>
-            <p className="text-muted-foreground mt-2">Connect with the community</p>
+          <div className="mb-8 animate-fade-in">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-6 h-6 bg-accent animate-pulse"></div>
+              <h1 className="text-3xl font-institutional uppercase tracking-wide">Social Feed</h1>
+            </div>
+            <p className="text-muted-foreground">Connect with the community</p>
+            <div className="w-full bg-muted h-1 rounded-full mt-4 overflow-hidden">
+              <div className="bg-accent h-1 rounded-full w-1/3 animate-pulse"></div>
+            </div>
           </div>
 
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
             <SocialFeed currentUser={currentUser} />
           </div>
         </div>

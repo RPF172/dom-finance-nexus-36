@@ -36,12 +36,17 @@ const LessonView = () => {
 
   if (lessonLoading || quizzesLoading) {
     return (
-      <div className="min-h-screen bg-background text-foreground font-mono flex items-center justify-center">
-        <div className="text-center">
-          <Flame className="h-8 w-8 text-accent animate-pulse mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Loading lesson...</p>
+      <AppLayout>
+        <div className="min-h-screen bg-background text-foreground font-mono flex items-center justify-center">
+          <div className="text-center animate-fade-in">
+            <Flame className="h-8 w-8 text-accent animate-pulse mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">Loading lesson...</p>
+            <div className="w-32 bg-muted h-1 rounded-full mt-4 mx-auto overflow-hidden">
+              <div className="bg-accent h-1 rounded-full w-full animate-pulse"></div>
+            </div>
+          </div>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
@@ -154,50 +159,49 @@ const LessonView = () => {
     <AppLayout>
       <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-muted p-4 z-10">
+        <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-muted p-4 z-10 animate-fade-in">
           <div className="flex items-center gap-3 mb-2">
             <button 
-              className="p-1 hover:bg-muted/50 rounded"
+              className="p-1 hover:bg-muted/50 rounded transition-all duration-200 hover:scale-110"
               onClick={() => navigate('/doctrine')}
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
             <div className="flex-1">
-              <h1 className="font-bold text-lg leading-tight">
+              <h1 className="font-bold text-lg leading-tight animate-fade-in [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
                 {lesson.title}
               </h1>
             </div>
           </div>
           
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-sm animate-fade-in [animation-delay:0.4s] opacity-0 [animation-fill-mode:forwards]">
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs border-accent/50 text-accent">
+              <Badge variant="outline" className="text-xs border-accent/50 text-accent animate-pulse">
                 🔁 In Progress ({progressPercentage}%)
               </Badge>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground">
-              <Clock className="h-3 w-3" />
+              <Clock className="h-3 w-3 animate-pulse" />
               <span>Est: {lesson.estimated_time}min</span>
             </div>
           </div>
           
-            <div className="mt-2">
-            <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
+          <div className="mt-2 animate-fade-in [animation-delay:0.6s] opacity-0 [animation-fill-mode:forwards]">
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
               <div 
-                className="h-full bg-accent transition-all duration-300"
+                className="h-full bg-accent transition-all duration-500 animate-pulse"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
           </div>
         </div>
 
-        <div className="p-4 space-y-6">
-          {/* ... keep existing code (all lesson content) */}
+        <div className="p-4 space-y-6 animate-fade-in [animation-delay:0.8s] opacity-0 [animation-fill-mode:forwards]">
           {/* Doctrine Text */}
-          <Card className="bg-card border-muted">
+          <Card className="bg-card border-muted hover:shadow-lg transition-all duration-300 border-l-4 border-l-accent">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <Flame className="h-4 w-4 text-accent" />
+                <Flame className="h-4 w-4 text-accent animate-pulse" />
                 <h2 className="font-bold text-sm">DOCTRINE TEXT</h2>
               </div>
             </CardHeader>
@@ -211,8 +215,8 @@ const LessonView = () => {
           </Card>
 
           {/* Task Block */}
-          <Card className={`bg-card border-muted transition-all duration-200 ${
-            taskCompleted ? 'border-emerald-800 bg-emerald-950/30' : 'border-accent/50'
+          <Card className={`bg-card border-muted transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            taskCompleted ? 'border-emerald-800 bg-emerald-950/30 border-l-4 border-l-emerald-500' : 'border-accent/50 border-l-4 border-l-accent'
           }`}>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
