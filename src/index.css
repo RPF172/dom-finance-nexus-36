@@ -90,15 +90,15 @@
   }
 
   .institutional-card:hover {
-    @apply shadow-md border-accent/30;
+    @apply shadow-md border-accent/30 transform hover:scale-[1.02];
   }
 
   .institutional-button {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-105 active:scale-95;
   }
 
   .institutional-input {
-    @apply bg-input border border-border focus:border-accent focus:ring-1 focus:ring-accent;
+    @apply bg-input border border-border focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-200;
   }
 
   .section-container {
@@ -111,6 +111,23 @@
 
   .grid-cards {
     @apply grid gap-4 md:gap-6;
+  }
+
+  /* Micro-interactions */
+  .interactive-card {
+    @apply transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1 active:scale-98;
+  }
+
+  .button-glow {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700;
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  .press-effect {
+    @apply transition-transform duration-100 active:scale-95;
   }
 
   /* Legacy styles for backward compatibility */

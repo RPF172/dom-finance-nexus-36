@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -107,6 +106,36 @@ export default {
 						transform: 'translateY(0)'
 					}
 				},
+				'fade-out': {
+					'0%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					},
+					'100%': {
+						opacity: '0',
+						transform: 'translateY(-10px)'
+					}
+				},
+				'scale-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'scale(0.95)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					}
+				},
+				'scale-out': {
+					'0%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'100%': {
+						opacity: '0',
+						transform: 'scale(0.95)'
+					}
+				},
 				'pulse-slow': {
 					'0%, 100%': {
 						opacity: '1'
@@ -146,17 +175,38 @@ export default {
 					'100%': {
 						transform: 'translateY(100%)'
 					}
+				},
+				'shimmer': {
+					'0%': {
+						transform: 'translateX(-100%)'
+					},
+					'100%': {
+						transform: 'translateX(100%)'
+					}
+				},
+				'bounce-gentle': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-4px)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
+				'fade-out': 'fade-out 0.3s ease-out',
+				'scale-in': 'scale-in 0.2s ease-out',
+				'scale-out': 'scale-out 0.2s ease-out',
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
 				'float': 'float 6s ease-in-out infinite',
 				'spin-slow': 'spin-slow 15s linear infinite',
 				'slide-up': 'slide-up 0.3s ease-out',
-				'slide-down': 'slide-down 0.3s ease-out'
+				'slide-down': 'slide-down 0.3s ease-out',
+				'shimmer': 'shimmer 2s infinite',
+				'bounce-gentle': 'bounce-gentle 2s ease-in-out infinite'
 			},
 			backgroundImage: {
 				'circuit-pattern': "url('/public/lovable-uploads/69a25420-4be6-4397-8cf4-f9ccf9407440.png')",
