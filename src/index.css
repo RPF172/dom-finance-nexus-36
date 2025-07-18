@@ -130,6 +130,58 @@
     @apply transition-transform duration-100 active:scale-95;
   }
 
+  /* Mobile-first touch optimizations */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 safe-area-inset-bottom;
+  }
+
+  .thumb-zone {
+    @apply pb-safe-bottom;
+  }
+
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-card {
+    @apply p-4 mx-4 mb-4 rounded-lg bg-card border border-border shadow-sm touch-target;
+  }
+
+  .mobile-button {
+    @apply touch-target px-6 py-3 text-base font-medium rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  /* Responsive text sizes for mobile */
+  @media (max-width: 640px) {
+    .mobile-text-sm { font-size: 0.875rem; }
+    .mobile-text-base { font-size: 1rem; }
+    .mobile-text-lg { font-size: 1.125rem; }
+    .mobile-text-xl { font-size: 1.25rem; }
+    .mobile-text-2xl { font-size: 1.5rem; }
+  }
+
+  /* Thumb-friendly spacing */
+  .thumb-spacing {
+    @apply space-y-4 px-4;
+  }
+
+  .mobile-grid {
+    @apply grid gap-4 p-4;
+  }
+
+  /* Pull-to-refresh indicator */
+  .pull-to-refresh {
+    @apply fixed top-0 left-0 right-0 h-1 bg-primary transform -translate-y-full transition-transform duration-300 z-50;
+  }
+
+  .pull-to-refresh.active {
+    @apply translate-y-0;
+  }
+
   /* Legacy styles for backward compatibility */
   .dom-gradient {
     background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--alpha-steel)) 100%);
