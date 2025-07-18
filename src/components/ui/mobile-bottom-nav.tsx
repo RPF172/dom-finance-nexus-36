@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, BookOpen, Users, User, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface NavItem {
   href: string;
@@ -10,8 +12,8 @@ interface NavItem {
   badge?: number;
 }
 
-const navItems: NavItem[] = [
-  { href: '/pledgehall', icon: Home, label: 'Home' },
+const getNavItems = (isAuthenticated: boolean): NavItem[] => [
+  { href: isAuthenticated ? '/social' : '/pledgehall', icon: Home, label: 'Home' },
   { href: '/doctrine', icon: BookOpen, label: 'Learn' },
   { href: '/social', icon: Users, label: 'Social' },
   { href: '/profile', icon: User, label: 'Profile' },
@@ -19,11 +21,21 @@ const navItems: NavItem[] = [
 
 export function MobileBottomNav() {
   const location = useLocation();
+  
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      return session?.user;
+    }
+  });
 
   // Don't show on landing page or auth page
   if (location.pathname === '/' || location.pathname === '/auth') {
     return null;
   }
+
+  const navItems = getNavItems(!!user);
 
   return (
     <nav className="mobile-nav bg-card/95 backdrop-blur-sm">

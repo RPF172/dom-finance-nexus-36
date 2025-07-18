@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '@/components/Header';
 import MainNavigation from '@/components/layout/MainNavigation';
+import { useMobileDetection } from '@/hooks/useMobileDetection';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -10,9 +11,10 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children, showNavigation = true }) => {
   const location = useLocation();
+  const { isMobile } = useMobileDetection();
   
-  // Don't show navigation on landing page or auth page
-  const hideNav = location.pathname === '/' || location.pathname === '/auth';
+  // Don't show navigation on landing page, auth page, or mobile
+  const hideNav = location.pathname === '/' || location.pathname === '/auth' || isMobile;
   const shouldShowNav = showNavigation && !hideNav;
 
   return (

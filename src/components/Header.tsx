@@ -29,7 +29,7 @@ const Header: React.FC = () => {
   return (
     <header className="institutional-header fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-border">
       <div className="section-container !py-4 flex justify-between items-center">
-        <Link to={user ? '/pledgehall' : '/'} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+        <Link to={user ? '/social' : '/'} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
           <div className="w-6 h-6 bg-primary"></div>
           <span className="text-2xl font-institutional text-foreground tracking-wide">MAGAT UNIVERSITY</span>
         </Link>
