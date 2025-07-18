@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { DollarSign, CreditCard, ArrowLeft, Crown } from 'lucide-react';
-import SlidingBottomNav from '@/components/SlidingBottomNav';
+import AppLayout from '@/components/layout/AppLayout';
 
 const Tribute: React.FC = () => {
   const [amount, setAmount] = useState<string>('');

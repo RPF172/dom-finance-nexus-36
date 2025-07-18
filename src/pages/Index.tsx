@@ -14,7 +14,7 @@ import TeamSection from '@/components/TeamSection';
 import FooterSection from '@/components/FooterSection';
 import StatsCounter from '@/components/StatsCounter';
 import InvestorModal from '@/components/InvestorModal';
-import SlidingBottomNav from '@/components/SlidingBottomNav';
+import AppLayout from '@/components/layout/AppLayout';
 import BlinkingArrow from '@/components/BlinkingArrow';
 
 const Index = () => {
@@ -48,7 +48,7 @@ const Index = () => {
       </main>
       <BlinkingArrow />
       <FooterSection />
-      <SlidingBottomNav />
+      
       <InvestorModal 
         open={showModal} 
         onOpenChange={setShowModal}

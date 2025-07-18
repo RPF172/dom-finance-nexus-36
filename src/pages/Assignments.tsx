@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Video, Clock, AlertTriangle } from 'lucide-react';
-import SlidingBottomNav from '@/components/SlidingBottomNav';
+import AppLayout from '@/components/layout/AppLayout';
 
 interface Assignment {
   id: string;
@@ -118,97 +118,96 @@ const Assignments: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-black text-primary-foreground font-mono">
-      {/* Header */}
-      <div className="border-b border-border/20 p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 text-xl font-bold tracking-wider">
-              📝 ASSIGNMENTS
-            </div>
-            <div className="text-sm text-muted-foreground mt-1">
-              Rank: INITIATE WHELP
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-sm text-muted-foreground">Tasks Remaining</div>
-            <div className="text-2xl font-bold text-destructive">3</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="p-4 border-b border-border/20">
-        <div className="flex gap-2 mb-3 overflow-x-auto">
-          {['All', 'In Progress', 'Missed', 'Done'].map((filterOption) => (
-            <Button
-              key={filterOption}
-              variant={filter === filterOption ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setFilter(filterOption)}
-              className="whitespace-nowrap"
-            >
-              {filterOption}
-            </Button>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Sort by:</span>
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-card border border-border rounded px-2 py-1 text-sm"
-          >
-            <option>Due Soon</option>
-            <option>Type</option>
-            <option>Status</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Assignment Cards */}
-      <div className="p-4 space-y-4">
-        {filteredAssignments.map((assignment) => (
-          <Card key={assignment.id} className="bg-card/50 border-border/30">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3 mb-3">
-                {getStatusIcon(assignment)}
-                <div className="flex-1">
-                  <h3 className="font-bold text-sm mb-1">
-                    Task: "{assignment.title}"
-                  </h3>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                    <span>Type: {assignment.type}</span>
-                  </div>
-                  <div className="flex items-center justify-between mb-3">
-                    {getStatusBadge(assignment.status)}
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3" />
-                      Due In: {assignment.dueIn}
-                      {assignment.status === 'missed' && (
-                        <AlertTriangle className="w-3 h-3 text-destructive ml-1" />
-                      )}
-                    </div>
-                  </div>
-                  {assignment.hasPunishment && (
-                    <div className="text-xs text-destructive mb-3 flex items-center gap-1">
-                      <AlertTriangle className="w-3 h-3" />
-                      Assigned Punishment: Yes
-                    </div>
-                  )}
-                  {getActionButtons(assignment)}
+    <AppLayout>
+      <div className="p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-xl font-institutional tracking-wider uppercase">
+                  📝 ASSIGNMENTS
+                </div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  Rank: INITIATE WHELP
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              <div className="text-right">
+                <div className="text-sm text-muted-foreground">Tasks Remaining</div>
+                <div className="text-2xl font-bold text-destructive">3</div>
+              </div>
+            </div>
+          </div>
 
-      <SlidingBottomNav />
-      
-      {/* Bottom padding for fixed nav */}
-      <div className="h-20"></div>
-    </div>
+          {/* Filters */}
+          <div className="mb-6 space-y-4">
+            <div className="flex gap-2 overflow-x-auto">
+              {['All', 'In Progress', 'Missed', 'Done'].map((filterOption) => (
+                <Button
+                  key={filterOption}
+                  variant={filter === filterOption ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setFilter(filterOption)}
+                  className="whitespace-nowrap institutional-button"
+                >
+                  {filterOption}
+                </Button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Sort by:</span>
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-card border border-border rounded px-2 py-1 text-sm"
+              >
+                <option>Due Soon</option>
+                <option>Type</option>
+                <option>Status</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Assignment Cards */}
+          <div className="space-y-4">
+            {filteredAssignments.map((assignment) => (
+              <Card key={assignment.id} className="institutional-card">
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    {getStatusIcon(assignment)}
+                    <div className="flex-1">
+                      <h3 className="font-bold text-sm mb-1">
+                        Task: "{assignment.title}"
+                      </h3>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                        <span>Type: {assignment.type}</span>
+                      </div>
+                      <div className="flex items-center justify-between mb-3">
+                        {getStatusBadge(assignment.status)}
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="w-3 h-3" />
+                          Due In: {assignment.dueIn}
+                          {assignment.status === 'missed' && (
+                            <AlertTriangle className="w-3 h-3 text-destructive ml-1" />
+                          )}
+                        </div>
+                      </div>
+                      {assignment.hasPunishment && (
+                        <div className="text-xs text-destructive mb-3 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          Assigned Punishment: Yes
+                        </div>
+                      )}
+                      {getActionButtons(assignment)}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    </AppLayout>
   );
 };
 

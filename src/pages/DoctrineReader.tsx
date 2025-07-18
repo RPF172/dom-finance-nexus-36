@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useLessons, useModules } from '@/hooks/useLessons';
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { Link } from 'react-router-dom';
-import SlidingBottomNav from '@/components/SlidingBottomNav';
+import AppLayout from '@/components/layout/AppLayout';
 
 const DoctrineReader = () => {
   const { data: lessons, isLoading } = useLessons();
@@ -103,9 +103,9 @@ const DoctrineReader = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="pt-20">
-        <div className="section-container space-y-6">
+    <AppLayout>
+      <div className="p-6">
+        <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
           <div className="page-header">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -199,11 +199,9 @@ const DoctrineReader = () => {
               Continue your institutional education
             </p>
           </div>
-
-          <SlidingBottomNav />
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useLesson, useQuizzes } from '@/hooks/useLessons';
 import { useUserProgress, useUpdateProgress } from '@/hooks/useProgress';
 import { useToast } from '@/hooks/use-toast';
-import SlidingBottomNav from '@/components/SlidingBottomNav';
+import AppLayout from '@/components/layout/AppLayout';
 
 const LessonView = () => {
   const { id } = useParams<{ id: string }>();

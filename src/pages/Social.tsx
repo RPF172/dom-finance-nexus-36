@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SocialFeed } from '@/components/social/SocialFeed';
-import Header from '@/components/Header';
-import SlidingBottomNav from '@/components/SlidingBottomNav';
+import AppLayout from '@/components/layout/AppLayout';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Social() {
@@ -51,43 +48,31 @@ export default function Social() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
+      <AppLayout>
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-muted-foreground">Loading...</p>
           </div>
         </div>
-        <SlidingBottomNav />
-      </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 pt-20 pb-32">
-        <div className="flex items-center mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="mr-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <h1 className="text-2xl font-bold">Social Feed</h1>
-        </div>
+    <AppLayout>
+      <div className="p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-institutional uppercase tracking-wide">Social Feed</h1>
+            <p className="text-muted-foreground mt-2">Connect with the community</p>
+          </div>
 
-        <div className="max-w-2xl mx-auto">
-          <SocialFeed currentUser={currentUser} />
+          <div className="max-w-2xl mx-auto">
+            <SocialFeed currentUser={currentUser} />
+          </div>
         </div>
-      </main>
-
-      <SlidingBottomNav />
-    </div>
+      </div>
+    </AppLayout>
   );
 }
