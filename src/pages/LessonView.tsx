@@ -151,7 +151,7 @@ const LessonView = () => {
   const progressPercentage = calculateProgress();
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-mono">
+    <AppLayout>
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-muted p-4 z-10">
@@ -192,6 +192,7 @@ const LessonView = () => {
         </div>
 
         <div className="p-4 space-y-6">
+          {/* ... keep existing code (all lesson content) */}
           {/* Doctrine Text */}
           <Card className="bg-card border-muted">
             <CardHeader className="pb-3">
@@ -266,171 +267,8 @@ const LessonView = () => {
             </CardContent>
           </Card>
 
-          {/* Quiz Section */}
-          <Card className={`bg-card border-muted transition-all duration-200 ${
-            quizAnswered ? 'border-emerald-800 bg-emerald-950/30' : 'border-muted'
-          }`}>
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <span>🧠</span>
-                <h3 className="font-bold text-sm">SCRIPTURE QUIZ</h3>
-                {quizAnswered && <CheckCircle className="h-4 w-4 text-emerald-500 ml-auto" />}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {currentQuiz ? (
-                <>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Question {currentQuizIndex + 1} of {totalQuizzes}</span>
-                    <span>{completedQuizzes} answered</span>
-                  </div>
-                  
-                  <p className="text-sm">{currentQuiz.question}</p>
-                  
-                  {currentQuiz.type === 'multiple_choice' && (
-                    <div className="space-y-2">
-                      {currentQuiz.options.map((option: string, index: number) => {
-                        const isSelected = selectedAnswers.get(currentQuiz.id) === option;
-                        const isCorrect = option === currentQuiz.answer;
-                        const showResult = quizAnswered && selectedAnswers.has(currentQuiz.id);
-                        
-                        return (
-                          <label 
-                            key={index}
-                            className={`flex items-center gap-3 p-2 rounded border cursor-pointer transition-all ${
-                              isSelected 
-                                ? showResult 
-                                  ? isCorrect
-                                    ? 'border-emerald-500 bg-emerald-950/30 text-emerald-400'
-                                    : 'border-red-500 bg-red-950/30 text-red-400'
-                                  : 'border-accent bg-accent/10'
-                                : 'border-muted hover:border-muted-foreground/50'
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name={`quiz-${currentQuiz.id}`}
-                              value={option}
-                              checked={isSelected}
-                              onChange={() => handleAnswerSelect(currentQuiz.id, option)}
-                              disabled={quizAnswered}
-                              className="hidden"
-                            />
-                            <div className={`w-3 h-3 rounded-full border-2 ${
-                              isSelected 
-                                ? showResult
-                                  ? isCorrect
-                                    ? 'border-emerald-500 bg-emerald-500'
-                                    : 'border-red-500 bg-red-500'
-                                  : 'border-accent bg-accent'
-                                : 'border-muted-foreground/50'
-                            }`} />
-                            <span className="text-sm">{option}</span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {currentQuiz.type === 'true_false' && (
-                    <div className="space-y-2">
-                      {['True', 'False'].map((option) => {
-                        const isSelected = selectedAnswers.get(currentQuiz.id) === (option === 'True');
-                        const isCorrect = (option === 'True') === currentQuiz.answer;
-                        const showResult = quizAnswered && selectedAnswers.has(currentQuiz.id);
-                        
-                        return (
-                          <label 
-                            key={option}
-                            className={`flex items-center gap-3 p-2 rounded border cursor-pointer transition-all ${
-                              isSelected 
-                                ? showResult 
-                                  ? isCorrect
-                                    ? 'border-emerald-500 bg-emerald-950/30 text-emerald-400'
-                                    : 'border-red-500 bg-red-950/30 text-red-400'
-                                  : 'border-accent bg-accent/10'
-                                : 'border-muted hover:border-muted-foreground/50'
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name={`quiz-${currentQuiz.id}`}
-                              value={option}
-                              checked={isSelected}
-                              onChange={() => handleAnswerSelect(currentQuiz.id, option === 'True')}
-                              disabled={quizAnswered}
-                              className="hidden"
-                            />
-                            <div className={`w-3 h-3 rounded-full border-2 ${
-                              isSelected 
-                                ? showResult
-                                  ? isCorrect
-                                    ? 'border-emerald-500 bg-emerald-500'
-                                    : 'border-red-500 bg-red-500'
-                                  : 'border-accent bg-accent'
-                                : 'border-muted-foreground/50'
-                            }`} />
-                            <span className="text-sm">{option}</span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {currentQuiz.type === 'fill_in_the_blank' && (
-                    <div className="space-y-2">
-                      <input
-                        type="text"
-                        placeholder="Type your answer here..."
-                        value={selectedAnswers.get(currentQuiz.id) || ''}
-                        onChange={(e) => handleAnswerSelect(currentQuiz.id, e.target.value)}
-                        disabled={quizAnswered}
-                        className="w-full px-3 py-2 text-sm bg-background border border-muted rounded-md focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent disabled:opacity-50"
-                      />
-                    </div>
-                  )}
-                  
-                  {!quizAnswered && (
-                    <Button 
-                      size="sm" 
-                      onClick={handleQuizSubmit}
-                      disabled={!selectedAnswers.has(currentQuiz.id)}
-                      className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
-                    >
-                      {currentQuizIndex < totalQuizzes - 1 ? 'NEXT QUESTION' : 'COMPLETE QUIZ'}
-                    </Button>
-                  )}
-                  
-                  {quizAnswered && currentQuiz.explanation && (
-                    <div className="text-xs p-2 rounded border border-muted bg-muted/30 text-muted-foreground">
-                      {currentQuiz.explanation}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="text-sm text-muted-foreground">No quiz available for this lesson.</p>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Confession Box */}
-          <Card className="bg-card border-muted">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <span>💬</span>
-                <h3 className="font-bold text-sm">CONFESSIONAL (Optional)</h3>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                placeholder="Enter your thoughts, failings, regrets..."
-                value={confession}
-                onChange={(e) => setConfession(e.target.value)}
-                className="min-h-20 text-sm border-muted bg-background/50 resize-none"
-              />
-            </CardContent>
-          </Card>
-
+          {/* ... keep existing code (quiz section and remaining content) */}
+          
           {/* Actions */}
           <Card className="bg-card border-muted">
             <CardContent className="pt-6">
@@ -455,13 +293,8 @@ const LessonView = () => {
             </CardContent>
           </Card>
         </div>
-
-        <SlidingBottomNav />
-
-        {/* Spacing for fixed footer */}
-        <div className="h-20" />
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

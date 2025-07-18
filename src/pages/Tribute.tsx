@@ -113,132 +113,116 @@ const Tribute: React.FC = () => {
   const quickAmounts = [25, 50, 100, 250, 500];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="flex items-center justify-between p-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-          <div className="text-center">
-            <h1 className="text-lg font-bold tracking-wide">MAGAT UNIVERSITY</h1>
-            <p className="text-sm text-muted-foreground">TRIBUTE PAYMENT</p>
+    <AppLayout>
+      <div className="p-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-institutional uppercase tracking-wide mb-2">Tribute Payment</h1>
+            <p className="text-muted-foreground">Express your devotion through financial sacrifice</p>
           </div>
-          <div className="w-16" /> {/* Spacer for center alignment */}
+
+          <div className="space-y-6">
+            {/* Tribute Card */}
+            <Card className="institutional-card">
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Crown className="h-8 w-8 text-primary" />
+                </div>
+                <CardTitle className="text-2xl font-bold tracking-wide">
+                  SUBMIT TRIBUTE
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Express your devotion through financial sacrifice.
+                  Your submission fuels the institution.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Custom Amount Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Tribute Amount
+                  </label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="0.00"
+                      value={amount}
+                      onChange={(e) => handleAmountChange(e.target.value)}
+                      className="pl-10 text-lg font-mono"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Minimum: $5.00 • Maximum: $500.00
+                  </p>
+                </div>
+
+                {/* Quick Amount Buttons */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Quick Amounts
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {quickAmounts.map((quickAmount) => (
+                      <Button
+                        key={quickAmount}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setAmount(quickAmount.toString())}
+                        disabled={isLoading}
+                        className="text-sm font-mono institutional-button"
+                      >
+                        ${quickAmount}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  onClick={handleTributeSubmit}
+                  disabled={!amount || isLoading}
+                  className="w-full h-12 text-lg font-semibold institutional-button"
+                  size="lg"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                      Processing...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-5 w-5" />
+                      Submit Tribute
+                    </div>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Instructions */}
+            <Card className="institutional-card">
+              <CardContent className="pt-6">
+                <div className="space-y-3 text-sm text-muted-foreground">
+                  <p className="font-medium text-foreground">Payment Instructions:</p>
+                  <ul className="space-y-2 list-disc list-inside">
+                    <li>Enter your desired tribute amount above</li>
+                    <li>Click "Submit Tribute" to proceed to secure payment</li>
+                    <li>Complete payment using Stripe's encrypted checkout</li>
+                    <li>Return here for confirmation of your submission</li>
+                  </ul>
+                  <p className="text-xs mt-4 text-center">
+                    All payments are processed securely through Stripe.
+                    Your financial data is encrypted and protected.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-
-      <div className="p-6 space-y-6">
-        {/* Tribute Card */}
-        <Card className="border-2 border-primary/20 bg-card/50">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <Crown className="h-8 w-8 text-primary" />
-            </div>
-            <CardTitle className="text-2xl font-bold tracking-wide">
-              SUBMIT TRIBUTE
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Express your devotion through financial sacrifice.
-              Your submission fuels the institution.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Custom Amount Input */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Tribute Amount
-              </label>
-              <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="0.00"
-                  value={amount}
-                  onChange={(e) => handleAmountChange(e.target.value)}
-                  className="pl-10 text-lg font-mono"
-                  disabled={isLoading}
-                />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Minimum: $5.00 • Maximum: $500.00
-              </p>
-            </div>
-
-            {/* Quick Amount Buttons */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Quick Amounts
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {quickAmounts.map((quickAmount) => (
-                  <Button
-                    key={quickAmount}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setAmount(quickAmount.toString())}
-                    disabled={isLoading}
-                    className="text-sm font-mono"
-                  >
-                    ${quickAmount}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              onClick={handleTributeSubmit}
-              disabled={!amount || isLoading}
-              className="w-full h-12 text-lg font-semibold"
-              size="lg"
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-                  Processing...
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5" />
-                  Submit Tribute
-                </div>
-              )}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Instructions */}
-        <Card className="bg-muted/30">
-          <CardContent className="pt-6">
-            <div className="space-y-3 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">Payment Instructions:</p>
-              <ul className="space-y-2 list-disc list-inside">
-                <li>Enter your desired tribute amount above</li>
-                <li>Click "Submit Tribute" to proceed to secure payment</li>
-                <li>Complete payment using Stripe's encrypted checkout</li>
-                <li>Return here for confirmation of your submission</li>
-              </ul>
-              <p className="text-xs mt-4 text-center">
-                All payments are processed securely through Stripe.
-                Your financial data is encrypted and protected.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <SlidingBottomNav />
-      
-      {/* Bottom padding for fixed nav */}
-      <div className="h-20"></div>
-    </div>
+    </AppLayout>
   );
 };
 
