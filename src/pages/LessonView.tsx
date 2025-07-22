@@ -9,7 +9,7 @@ import { useLesson, useQuizzes } from '@/hooks/useLessons';
 import { useUserProgress, useUpdateProgress } from '@/hooks/useProgress';
 import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/layout/AppLayout';
-import { ChapterReader } from '@/components/ChapterReader';
+import { LessonReader } from '@/components/LessonReader';
 
 const LessonView = () => {
   const { id } = useParams<{ id: string }>();
@@ -68,7 +68,7 @@ const LessonView = () => {
   // Show reader view by default or when explicitly selected
   if (viewMode === 'reader') {
     return (
-      <ChapterReader
+      <LessonReader
         lesson={lesson}
         progress={progress}
         onBack={() => navigate('/book')}

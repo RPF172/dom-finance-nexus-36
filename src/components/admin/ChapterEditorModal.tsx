@@ -245,16 +245,6 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="objective">Chapter Objective</Label>
-                  <Textarea
-                    id="objective"
-                    value={formData.objective}
-                    onChange={(e) => handleInputChange('objective', e.target.value)}
-                    placeholder="What will students learn from this chapter?"
-                    rows={2}
-                  />
-                </div>
               </CardContent>
             </Card>
 
@@ -293,38 +283,6 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
               </CardContent>
             </Card>
 
-            {/* Learning Activities */}
-            <Card>
-              <CardHeader>
-                <h3 className="font-institutional text-sm uppercase tracking-wide flex items-center gap-2">
-                  <Target className="h-4 w-4" />
-                  Learning Activities
-                </h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="assignment_text">Practical Assignment</Label>
-                  <Textarea
-                    id="assignment_text"
-                    value={formData.assignment_text}
-                    onChange={(e) => handleInputChange('assignment_text', e.target.value)}
-                    placeholder="Describe the practical task students should complete..."
-                    rows={4}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="ritual_text">Ritual Instructions</Label>
-                  <Textarea
-                    id="ritual_text"
-                    value={formData.ritual_text}
-                    onChange={(e) => handleInputChange('ritual_text', e.target.value)}
-                    placeholder="Special ritual or ceremonial instructions (optional)..."
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Sidebar */}
@@ -371,24 +329,6 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
                 </h3>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="estimated_time">Estimated Time (minutes)</Label>
-                  <Input
-                    id="estimated_time"
-                    type="number"
-                    min="1"
-                    max="240"
-                    value={formData.estimated_time}
-                    onChange={(e) => handleInputChange('estimated_time', parseInt(e.target.value) || 45)}
-                    className={cn(errors.estimated_time && "border-destructive")}
-                  />
-                  {errors.estimated_time && (
-                    <p className="text-sm text-destructive flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.estimated_time}
-                    </p>
-                  )}
-                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="order_index">Chapter Order</Label>

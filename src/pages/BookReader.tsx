@@ -170,7 +170,6 @@ const BookReader = () => {
                 />
               </div>
             </div>
-            </div>
           </div>
 
           {/* Content Grid */}
@@ -219,10 +218,10 @@ const BookReader = () => {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Admin Chapter Manager FAB */}
-      {isAdmin && <ChapterManagerFAB />}
+        {/* Admin Chapter Manager FAB */}
+        {isAdmin && <ChapterManagerFAB />}
+      </div>
     </AppLayout>
   );
 };

@@ -7,34 +7,64 @@ import { ChapterIllustration } from '@/components/ChapterIllustration';
 import { ReadingProgressRing } from '@/components/ReadingProgressRing';
 import { cn } from '@/lib/utils';
 
-interface ChapterReaderProps {
-  chapter: any;
+interface LessonReaderProps {
+  lesson: any;
+  progress: any;
   onBack: () => void;
-  onContinue: () => void;
+  onProgressUpdate: (progress: any) => void;
 }
 
-export const ChapterReader: React.FC<ChapterReaderProps> = ({
-  chapter,
+export const LessonReader: React.FC<LessonReaderProps> = ({
+  lesson,
+  progress,
   onBack,
-  onContinue
+  onProgressUpdate
 }) => {
   const [readingProgress, setReadingProgress] = useState(0);
   const [isReading, setIsReading] = useState(false);
   const [hasStartedReading, setHasStartedReading] = useState(false);
 
   // Calculate reading time based on content length
-  const estimatedReadingTime = Math.max(3, Math.ceil((chapter.body_text?.length || 0) / 200));
+  const estimatedReadingTime = Math.max(3, Math.ceil((lesson.body_text?.length || 0) / 200));
   
+  // Calculate overall lesson progress
+  const calculateOverallProgress = () => {
+    let completed = 0;
+    let total = 4;
+    
+    if (progress?.content_read || readingProgress >= 90) completed++;
+    if (progress?.quiz_completed) completed++;
+    if (progress?.assignment_submitted) completed++;
+    if (progress?.ritual_completed) completed++;
+    
+    return Math.round((completed / total) * 100);
+  };
+
   // Simulate reading progress based on scroll and time
   useEffect(() => {
     if (!isReading) return;
 
     const interval = setInterval(() => {
-      setReadingProgress(prev => Math.min(prev + 1, 100));
+      setReadingProgress(prev => {
+        const newProgress = Math.min(prev + 1, 100);
+        
+        // Mark content as read when 90% progress reached
+        if (newProgress >= 90 && !progress?.content_read) {
+          onProgressUpdate({
+            lesson_id: lesson.id,
+            content_read: true,
+            quiz_completed: progress?.quiz_completed || false,
+            assignment_submitted: progress?.assignment_submitted || false,
+            ritual_completed: progress?.ritual_completed || false
+          });
+        }
+        
+        return newProgress;
+      });
     }, estimatedReadingTime * 600 / 100); // Distribute over estimated reading time
 
     return () => clearInterval(interval);
-  }, [isReading, estimatedReadingTime]);
+  }, [isReading, estimatedReadingTime, lesson.id, progress, onProgressUpdate]);
 
   const handleStartReading = () => {
     setIsReading(true);
@@ -45,7 +75,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
     setIsReading(false);
   };
 
-  
+  const overallProgress = calculateOverallProgress();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -67,7 +97,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
               <div className="flex items-center gap-3">
                 <BookOpen className="h-5 w-5 text-accent shrink-0" />
                 <h1 className="font-institutional text-lg uppercase tracking-wide truncate">
-                  {chapter.title}
+                  {lesson.title}
                 </h1>
               </div>
               
@@ -83,6 +113,10 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
               </div>
             </div>
 
+            {/* Progress Ring */}
+            <div className="shrink-0">
+              <ReadingProgressRing progress={overallProgress} size="sm" />
+            </div>
           </div>
 
           {/* Reading Progress Bar */}
@@ -101,12 +135,12 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Chapter Illustration */}
+            {/* Lesson Illustration */}
             <Card className="overflow-hidden border-2 border-accent/20">
               <div className="relative h-64 md:h-80">
                 <ChapterIllustration
-                  chapterIndex={chapter.order_index || 0}
-                  title={chapter.title}
+                  chapterIndex={lesson.order || 0}
+                  title={lesson.title}
                   className="h-full"
                 />
                 
@@ -120,15 +154,33 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                   </Badge>
                 </div>
 
-                {/* Chapter Number */}
+                {/* Lesson Number */}
                 <div className="absolute bottom-4 left-4">
                   <div className="bg-accent text-accent-foreground px-4 py-2 rounded-full font-mono font-bold">
-                    Chapter {(chapter.order_index || 0) + 1}
+                    Lesson {(lesson.order || 0) + 1}
                   </div>
                 </div>
               </div>
             </Card>
 
+            {/* Lesson Objective */}
+            {lesson.objective && (
+              <Card className="border-l-4 border-l-accent bg-accent/5">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-3">
+                    <Target className="h-5 w-5 text-accent shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-institutional text-sm uppercase tracking-wide mb-2">
+                        Learning Objective
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {lesson.objective}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Reading Content */}
             <Card className="border-2 border-accent/10">
@@ -137,7 +189,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                   <div className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-accent" />
                     <h2 className="font-institutional text-base uppercase tracking-wide">
-                      Chapter Content
+                      Lesson Content
                     </h2>
                   </div>
                   
@@ -160,13 +212,13 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                   )}
                 </div>
 
-                {/* Chapter Text */}
+                {/* Lesson Text */}
                 <div className={cn(
                   "prose prose-sm max-w-none transition-all duration-300",
                   !hasStartedReading && "blur-sm opacity-60 pointer-events-none"
                 )}>
                   <div className="whitespace-pre-line text-base leading-relaxed text-foreground/90 font-inter">
-                    {chapter.body_text}
+                    {lesson.body_text}
                   </div>
                 </div>
 
@@ -175,7 +227,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                   <div className="mt-8 p-4 bg-emerald-950/20 border border-emerald-800/30 rounded-lg">
                     <div className="flex items-center gap-2 text-emerald-400">
                       <Flame className="h-4 w-4" />
-                      <span className="font-mono text-sm">Chapter Content Mastered</span>
+                      <span className="font-mono text-sm">Lesson Content Mastered</span>
                     </div>
                   </div>
                 )}
@@ -185,11 +237,11 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Chapter Metadata */}
+            {/* Lesson Metadata */}
             <Card>
               <CardContent className="p-6 space-y-4">
                 <h3 className="font-institutional text-sm uppercase tracking-wide">
-                  Chapter Details
+                  Lesson Details
                 </h3>
                 
                 <div className="space-y-3 text-sm">
@@ -211,6 +263,52 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
               </CardContent>
             </Card>
 
+            {/* Learning Elements */}
+            <Card>
+              <CardContent className="p-6 space-y-4">
+                <h3 className="font-institutional text-sm uppercase tracking-wide">
+                  Learning Elements
+                </h3>
+                
+                <div className="space-y-3">
+                  <div className={cn(
+                    "flex items-center gap-3 p-3 rounded-lg border transition-all",
+                    readingProgress >= 90 ? "bg-emerald-950/20 border-emerald-800/30" : "bg-muted/30 border-muted"
+                  )}>
+                    <FileText className={cn(
+                      "h-4 w-4",
+                      readingProgress >= 90 ? "text-emerald-400" : "text-muted-foreground"
+                    )} />
+                    <span className="text-sm">Lesson Content</span>
+                    {readingProgress >= 90 && <span className="ml-auto text-emerald-400 text-xs">✓</span>}
+                  </div>
+                  
+                  <div className={cn(
+                    "flex items-center gap-3 p-3 rounded-lg border transition-all",
+                    progress?.quiz_completed ? "bg-emerald-950/20 border-emerald-800/30" : "bg-muted/30 border-muted"
+                  )}>
+                    <Brain className={cn(
+                      "h-4 w-4",
+                      progress?.quiz_completed ? "text-emerald-400" : "text-muted-foreground"
+                    )} />
+                    <span className="text-sm">Knowledge Quiz</span>
+                    {progress?.quiz_completed && <span className="ml-auto text-emerald-400 text-xs">✓</span>}
+                  </div>
+                  
+                  <div className={cn(
+                    "flex items-center gap-3 p-3 rounded-lg border transition-all",
+                    progress?.assignment_submitted ? "bg-emerald-950/20 border-emerald-800/30" : "bg-muted/30 border-muted"
+                  )}>
+                    <Target className={cn(
+                      "h-4 w-4",
+                      progress?.assignment_submitted ? "text-emerald-400" : "text-muted-foreground"
+                    )} />
+                    <span className="text-sm">Practical Task</span>
+                    {progress?.assignment_submitted && <span className="ml-auto text-emerald-400 text-xs">✓</span>}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Next Steps */}
             {readingProgress >= 90 && (
@@ -218,14 +316,14 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                 <CardContent className="p-6 text-center space-y-4">
                   <Flame className="h-8 w-8 text-accent mx-auto" />
                   <h3 className="font-institutional text-sm uppercase tracking-wide">
-                    Chapter Complete
+                    Reading Complete
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    You've completed this chapter. Continue to the next part of your journey.
+                    Continue to quiz and practical exercises to master this lesson.
                   </p>
                   <Button 
                     className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
-                    onClick={onContinue}
+                    onClick={onBack}
                   >
                     Continue Learning
                   </Button>
