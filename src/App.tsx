@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PledgeHall from "./pages/PledgeHall";
-import DoctrineReader from "./pages/DoctrineReader";
+import BookReader from "./pages/BookReader";
 import LessonView from "./pages/LessonView";
 import Assignments from "./pages/Assignments";
 import Tribute from "./pages/Tribute";
@@ -33,7 +33,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/pledgehall" element={<PledgeHall />} />
-                <Route path="/doctrine" element={<DoctrineReader />} />
+                <Route path="/doctrine" element={<BookReader />} />
                 <Route path="/lesson/:id" element={<LessonView />} />
                 <Route path="/assignments" element={<Assignments />} />
                 <Route path="/tribute" element={<Tribute />} />

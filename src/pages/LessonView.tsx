@@ -56,7 +56,7 @@ const LessonView = () => {
         <div className="text-center">
           <p className="text-sm text-muted-foreground">Lesson not found</p>
           <Button onClick={() => navigate('/doctrine')} className="mt-4" variant="outline">
-            Return to Doctrine
+            Return to Book
           </Button>
         </div>
       </div>
@@ -139,8 +139,8 @@ const LessonView = () => {
       ritual_completed: true
     });
     toast({
-      title: "Scripture Completed",
-      description: "Your indoctrination deepens. Return to the Doctrine to continue."
+      title: "Chapter Completed",
+      description: "Your indoctrination deepens. Return to the Book to continue."
     });
     navigate('/doctrine');
   };
@@ -197,12 +197,12 @@ const LessonView = () => {
         </div>
 
         <div className="p-4 space-y-6 animate-fade-in [animation-delay:0.8s] opacity-0 [animation-fill-mode:forwards]">
-          {/* Doctrine Text */}
+          {/* Chapter Text */}
           <Card className="bg-card border-muted hover:shadow-lg transition-all duration-300 border-l-4 border-l-accent">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
                 <Flame className="h-4 w-4 text-accent animate-pulse" />
-                <h2 className="font-bold text-sm">DOCTRINE TEXT</h2>
+                <h2 className="font-bold text-sm">CHAPTER TEXT</h2>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -286,12 +286,12 @@ const LessonView = () => {
                     : 'bg-muted text-muted-foreground cursor-not-allowed'
                 }`}
               >
-                {canComplete ? 'COMPLETE SCRIPTURE' : 'COMPLETE TASK & QUIZ TO PROCEED'}
+                {canComplete ? 'COMPLETE CHAPTER' : 'COMPLETE TASK & QUIZ TO PROCEED'}
               </Button>
               
               {!canComplete && (
                 <p className="text-xs text-muted-foreground text-center mt-2">
-                  Scripture completion requires both task submission and quiz completion
+                  Chapter completion requires both task submission and quiz completion
                 </p>
               )}
             </CardContent>

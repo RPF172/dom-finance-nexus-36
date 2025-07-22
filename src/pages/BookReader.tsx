@@ -7,7 +7,7 @@ import { useAllUserProgress } from '@/hooks/useProgress';
 import { Link } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 
-const DoctrineReader = () => {
+const BookReader = () => {
   const { data: lessons, isLoading } = useLessons();
   const { data: progressData } = useAllUserProgress();
 
@@ -213,4 +213,4 @@ const DoctrineReader = () => {
   );
 };
 
-export default DoctrineReader;
+export default BookReader;

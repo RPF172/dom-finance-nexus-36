@@ -73,7 +73,7 @@ const Profile: React.FC = () => {
                   <div className="text-center space-y-1">
                     <BookOpen className="h-6 w-6 mx-auto text-primary" />
                     <div className="text-2xl font-bold">9</div>
-                    <div className="text-xs text-muted-foreground">Scriptures Completed</div>
+                    <div className="text-xs text-muted-foreground">Chapters Completed</div>
                   </div>
                   <div className="text-center space-y-1">
                     <ClipboardList className="h-6 w-6 mx-auto text-primary" />
@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
                 <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
                   <BookOpen className="h-5 w-5 text-primary" />
                   <div className="flex-1">
-                    <div className="text-sm font-medium">Finished "Scripture V: Erosion"</div>
+                    <div className="text-sm font-medium">Finished "Chapter V: Erosion"</div>
                     <div className="text-xs text-muted-foreground">2 hours ago</div>
                   </div>
                 </div>

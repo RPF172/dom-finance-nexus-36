@@ -24,7 +24,7 @@ const AcademicRoadmapSection: React.FC = () => {
     },
     {
       semester: "Semester 3",
-      title: "Advanced Doctrine",
+      title: "Advanced Chapters",
       icon: <Crown className="h-6 w-6" />,
       milestone: "Deep study of hierarchical principles & practical application",
       completed: false,

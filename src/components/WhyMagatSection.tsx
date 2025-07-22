@@ -22,13 +22,13 @@ const WhyMagatSection: React.FC = () => {
 
         <div className="text-center mb-12">
           <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 font-cinzel">
-            🕳️ ENTER THE <span className="text-domtoken-crimson">DOCTRINE</span>
+            🕳️ ENTER THE <span className="text-domtoken-crimson">INITIATION WEEK</span>
           </h3>
           <blockquote className="text-xl text-domtoken-crimson italic mb-6">
-            "Blessed be the broken, for they may yet be rebuilt." — The Doctrine
+            "Blessed be the broken, for they may yet be rebuilt." — The Book
           </blockquote>
           <div className="text-lg text-domtoken-silver max-w-2xl mx-auto space-y-4">
-            <p>MAGAT University teaches The Doctrine — a scripture of control, degradation, and transformation.</p>
+            <p>MAGAT University teaches The Book — a scripture of control, degradation, and transformation.</p>
             <p>Its curriculum is brutal. Its tests are personal.<br />Its reward? Nothing. You will remain property.</p>
             <p>But through this sacred suffering, you may find purpose.<br />
             You may find structure.<br />

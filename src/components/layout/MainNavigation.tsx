@@ -25,7 +25,7 @@ const navigationItems: NavItem[] = [
   { path: '/pledgehall', icon: Home, label: 'Dashboard', description: 'Command Center', category: 'main' },
   
   // Learning
-  { path: '/doctrine', icon: BookOpen, label: 'Doctrine', description: 'Sacred Texts', category: 'learning' },
+  { path: '/doctrine', icon: BookOpen, label: 'Book', description: 'Initiation Week', category: 'learning' },
   { path: '/assignments', icon: PenTool, label: 'Assignments', description: 'Your Tasks', category: 'learning' },
   
   // Social

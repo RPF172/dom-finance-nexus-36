@@ -15,7 +15,7 @@ const UniversityFeaturesSection: React.FC = () => {
   const features = [
     {
       icon: <BookOpen className="h-8 w-8 text-domtoken-crimson" />,
-      title: "Interactive Doctrine Library",
+      title: "Interactive Book Library",
       description: "Comprehensive digital library with progressive lessons, quizzes, and practical assignments.",
       status: "Live"
     },
@@ -86,8 +86,8 @@ const UniversityFeaturesSection: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
-            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Doctrine Keys</h3>
-            <p className="text-domtoken-silver">unlock advanced scripture</p>
+            <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Chapter Keys</h3>
+            <p className="text-domtoken-silver">unlock advanced chapters</p>
           </div>
           <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
             <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Obedience Credits</h3>

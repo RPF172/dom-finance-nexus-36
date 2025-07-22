@@ -153,11 +153,11 @@ const PledgeHall: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-3">
-                <p className="text-foreground font-medium text-lg">"Complete Initial Doctrine Reading"</p>
+                <p className="text-foreground font-medium text-lg">"Complete Initial Chapter Reading"</p>
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <BookOpen className="w-3 h-3" />
-                    Type: SCRIPTURE STUDY
+                    Type: CHAPTER STUDY
                   </span>
                   <span className="text-accent font-medium animate-pulse">Due: 12 HOURS</span>
                 </div>
@@ -182,7 +182,7 @@ const PledgeHall: React.FC = () => {
                   <h3 className="font-institutional text-base uppercase tracking-wide">Active Lesson</h3>
                 </div>
                 <div className="space-y-3">
-                  <p className="text-foreground font-medium">Scripture I: Foundational Obedience</p>
+                  <p className="text-foreground font-medium">Chapter I: Foundational Obedience</p>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                     <p className="text-sm text-muted-foreground">Status: IN PROGRESS</p>

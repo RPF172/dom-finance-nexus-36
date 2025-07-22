@@ -6,7 +6,7 @@ const LearningPathsSection: React.FC = () => {
   const learningPaths = [
     {
       icon: <BookOpen className="w-8 h-8" />,
-      title: "Foundational Doctrine",
+      title: "Foundational Chapters",
       description: "Master the core principles of submission, surrender, and service through structured lessons and readings.",
       level: "Beginner"
     },

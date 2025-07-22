@@ -30,7 +30,7 @@ const FooterSection: React.FC = () => {
             <h4 className="text-lg font-bold text-white mb-4 font-cinzel">The Registry</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-domtoken-silver hover:text-white">Doctrine Reader</a>
+                <a href="#" className="text-domtoken-silver hover:text-white">Book Reader</a>
               </li>
               <li>
                 <a href="#" className="text-domtoken-silver hover:text-white">Assignments</a>
