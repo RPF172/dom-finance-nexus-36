@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Upload, CheckCircle, Clock, Flame } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, Clock, Flame, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +9,7 @@ import { useLesson, useQuizzes } from '@/hooks/useLessons';
 import { useUserProgress, useUpdateProgress } from '@/hooks/useProgress';
 import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/layout/AppLayout';
+import { ChapterReader } from '@/components/ChapterReader';
 
 const LessonView = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ const LessonView = () => {
   const { data: progress } = useUserProgress(id);
   const updateProgress = useUpdateProgress();
 
+  const [viewMode, setViewMode] = useState<'reader' | 'exercises'>('reader');
   const [taskCompleted, setTaskCompleted] = useState(false);
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<Map<string, any>>(new Map());
@@ -55,11 +57,29 @@ const LessonView = () => {
       <div className="min-h-screen bg-background text-foreground font-mono flex items-center justify-center">
         <div className="text-center">
           <p className="text-sm text-muted-foreground">Lesson not found</p>
-          <Button onClick={() => navigate('/doctrine')} className="mt-4" variant="outline">
+          <Button onClick={() => navigate('/book')} className="mt-4" variant="outline">
             Return to Book
           </Button>
         </div>
       </div>
+    );
+  }
+
+  // Show reader view by default or when explicitly selected
+  if (viewMode === 'reader') {
+    return (
+      <ChapterReader
+        lesson={lesson}
+        progress={progress}
+        onBack={() => navigate('/book')}
+        onProgressUpdate={(progressData) => {
+          updateProgress.mutate(progressData);
+          // Switch to exercises after reading is complete
+          if (progressData.content_read) {
+            setViewMode('exercises');
+          }
+        }}
+      />
     );
   }
 
@@ -138,11 +158,11 @@ const LessonView = () => {
       assignment_submitted: true,
       ritual_completed: true
     });
-    toast({
-      title: "Chapter Completed",
-      description: "Your indoctrination deepens. Return to the Book to continue."
-    });
-    navigate('/doctrine');
+        toast({
+          title: "Chapter Completed",
+          description: "Your indoctrination deepens. Return to the Book to continue."
+        });
+        navigate('/book');
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,14 +183,25 @@ const LessonView = () => {
           <div className="flex items-center gap-3 mb-2">
             <button 
               className="p-1 hover:bg-muted/50 rounded transition-all duration-200 hover:scale-110"
-              onClick={() => navigate('/doctrine')}
+              onClick={() => navigate('/book')}
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
-            <div className="flex-1">
-              <h1 className="font-bold text-lg leading-tight animate-fade-in [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
-                {lesson.title}
-              </h1>
+            <div className="flex items-center gap-3 flex-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setViewMode('reader')}
+                className="text-accent hover:bg-accent/10"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Reader
+              </Button>
+              <div className="flex-1">
+                <h1 className="font-bold text-lg leading-tight animate-fade-in [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
+                  {lesson.title}
+                </h1>
+              </div>
             </div>
           </div>
           
