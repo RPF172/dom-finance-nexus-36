@@ -6,7 +6,7 @@ import { ContentCard } from '@/components/ContentCard';
 import { ChapterSkeleton } from '@/components/ChapterSkeleton';
 import { Flame } from 'lucide-react';
 import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
-import { ChapterManagerFAB } from '@/components/admin/ChapterManagerFAB';
+import { ContentManagerFAB } from '@/components/admin/ContentManagerFAB';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Chapter } from '@/hooks/useChapters';
@@ -220,7 +220,7 @@ const BookReader = () => {
         </div>
 
         {/* Admin Chapter Manager FAB */}
-        {isAdmin && <ChapterManagerFAB />}
+        {isAdmin && <ContentManagerFAB />}
       </div>
     </AppLayout>
   );

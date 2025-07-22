@@ -8,22 +8,21 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { ChapterEditorModal } from './ChapterEditorModal';
+import { ContentEditorModal } from './ContentEditorModal';
 import { ChapterListModal } from './ChapterListModal';
 import { cn } from '@/lib/utils';
 
-interface ChapterManagerFABProps {
+interface ContentManagerFABProps {
   className?: string;
 }
 
-export const ChapterManagerFAB: React.FC<ChapterManagerFABProps> = ({ className }) => {
+export const ContentManagerFAB: React.FC<ContentManagerFABProps> = ({ className }) => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
-  const [editingChapter, setEditingChapter] = useState<any | null>(null);
+  
   const [isOpen, setIsOpen] = useState(false);
 
   const handleCreateNew = () => {
-    setEditingChapter(null);
     setIsEditorOpen(true);
     setIsOpen(false);
   };
@@ -34,9 +33,8 @@ export const ChapterManagerFAB: React.FC<ChapterManagerFABProps> = ({ className 
   };
 
   const handleEditChapter = (chapter: any) => {
-    setEditingChapter(chapter);
     setIsListOpen(false);
-    setIsEditorOpen(true);
+    // For editing existing chapters, we'll handle this in the ChapterListModal
   };
 
   const handleEditorSave = () => {
@@ -81,10 +79,10 @@ export const ChapterManagerFAB: React.FC<ChapterManagerFABProps> = ({ className 
           >
             <div className="px-2 py-1.5">
               <p className="text-sm font-institutional uppercase tracking-wide text-accent">
-                Chapter Manager
+                Content Manager
               </p>
               <p className="text-xs text-muted-foreground">
-                Create and edit course chapters
+                Create and edit chapters & lessons
               </p>
             </div>
             
@@ -95,7 +93,7 @@ export const ChapterManagerFAB: React.FC<ChapterManagerFABProps> = ({ className 
               className="gap-2 cursor-pointer hover:bg-accent/10 focus:bg-accent/10"
             >
               <Plus className="h-4 w-4 text-accent" />
-              <span>Create New Chapter</span>
+              <span>Create New Content</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem 
@@ -109,11 +107,10 @@ export const ChapterManagerFAB: React.FC<ChapterManagerFABProps> = ({ className 
         </DropdownMenu>
       </div>
 
-      {/* Chapter Editor Modal */}
-      <ChapterEditorModal
+      {/* Content Editor Modal */}
+      <ContentEditorModal
         isOpen={isEditorOpen}
         onClose={() => setIsEditorOpen(false)}
-        editingChapter={editingChapter}
         onSave={handleEditorSave}
       />
 
