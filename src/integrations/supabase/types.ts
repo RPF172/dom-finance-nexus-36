@@ -172,6 +172,7 @@ export type Database = {
           body_text: string | null
           created_at: string | null
           estimated_time: number | null
+          featured_image_url: string | null
           id: string
           module_id: string | null
           objective: string | null
@@ -187,6 +188,7 @@ export type Database = {
           body_text?: string | null
           created_at?: string | null
           estimated_time?: number | null
+          featured_image_url?: string | null
           id?: string
           module_id?: string | null
           objective?: string | null
@@ -202,6 +204,7 @@ export type Database = {
           body_text?: string | null
           created_at?: string | null
           estimated_time?: number | null
+          featured_image_url?: string | null
           id?: string
           module_id?: string | null
           objective?: string | null
