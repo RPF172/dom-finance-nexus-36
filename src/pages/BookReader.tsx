@@ -1,15 +1,26 @@
+
 import React from 'react';
-import { Lock, Play, CheckCircle, Flame } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { useLessons, useModules } from '@/hooks/useLessons';
+import { Flame } from 'lucide-react';
+import { useLessons } from '@/hooks/useLessons';
 import { useAllUserProgress } from '@/hooks/useProgress';
-import { Link } from 'react-router-dom';
+import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
+import { ChapterCard } from '@/components/ChapterCard';
+import { ChapterSkeleton } from '@/components/ChapterSkeleton';
 import AppLayout from '@/components/layout/AppLayout';
 
 const BookReader = () => {
   const { data: lessons, isLoading } = useLessons();
   const { data: progressData } = useAllUserProgress();
+
+  const {
+    visibleChapters,
+    loadMoreRef,
+    isLoadingMore,
+    hasMore
+  } = useInfiniteChapters({
+    chapters: lessons || [],
+    batchSize: 6
+  });
 
   if (isLoading) {
     return (
@@ -30,9 +41,8 @@ const BookReader = () => {
     const progress = progressMap.get(lessonId);
     if (progress?.completed) return 'complete';
     if (progress && !progress.completed) return 'in_progress';
-    if (index === 0) return 'in_progress'; // First lesson is always available
+    if (index === 0) return 'in_progress';
     
-    // Check if previous lesson is completed
     const previousLesson = lessons?.[index - 1];
     if (previousLesson) {
       const previousProgress = progressMap.get(previousLesson.id);
@@ -47,7 +57,7 @@ const BookReader = () => {
     if (!progress) return 0;
     
     let completed = 0;
-    let total = 4; // content_read, quiz_completed, assignment_submitted, ritual_completed
+    let total = 4;
     
     if (progress.content_read) completed++;
     if (progress.quiz_completed) completed++;
@@ -57,156 +67,117 @@ const BookReader = () => {
     return Math.round((completed / total) * 100);
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'complete':
-        return <CheckCircle className="h-5 w-5 text-emerald-500" />;
-      case 'in_progress':
-        return <Play className="h-5 w-5 text-amber-500" />;
-      case 'locked':
-        return <Lock className="h-5 w-5 text-muted-foreground" />;
-    }
+  const getEstimatedTime = (lesson: any) => {
+    // Estimate reading time based on content length
+    const contentLength = (lesson.body_text || '').length + (lesson.assignment_text || '').length;
+    return Math.max(5, Math.ceil(contentLength / 200)); // ~200 chars per minute
   };
 
-  const getStatusText = (status: string, progress?: number) => {
-    switch (status) {
-      case 'complete':
-        return '✓ Complete';
-      case 'in_progress':
-        return `🔓 In Progress (${progress || 0}%)`;
-      case 'locked':
-        return '🔒 Locked';
-    }
-  };
-
-  const getActionButton = (lesson: any, status: string, index: number) => {
-    switch (status) {
-      case 'complete':
-        return (
-          <Button variant="outline" size="sm" className="w-full bg-emerald-950/30 border-emerald-800 text-emerald-400 hover:bg-emerald-900/50" asChild>
-            <Link to={`/lesson/${lesson.id}`}>REVIEW</Link>
-          </Button>
-        );
-      case 'in_progress':
-        return (
-          <Button size="sm" className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground font-mono" asChild>
-            <Link to={`/lesson/${lesson.id}`}>CONTINUE</Link>
-          </Button>
-        );
-      case 'locked':
-        return (
-          <Button variant="outline" size="sm" className="w-full border-muted-foreground/30 text-muted-foreground hover:bg-muted/20" disabled>
-            {index === 0 ? 'UNLOCK REQUIREMENT' : 'COMPLETE PREVIOUS LESSON'}
-          </Button>
-        );
-    }
+  const getDifficulty = (index: number) => {
+    // Simple difficulty progression
+    if (index < 2) return 'beginner';
+    if (index < 5) return 'intermediate';
+    return 'advanced';
   };
 
   return (
     <AppLayout>
-      <div className="p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="page-header animate-fade-in">
-            <div className="flex items-center justify-center gap-3 mb-4">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Enhanced Header */}
+          <div className="text-center mb-12 space-y-6">
+            <div className="flex items-center justify-center gap-3 mb-6">
               <div className="w-6 h-6 bg-accent animate-pulse"></div>
-              <h1 className="text-3xl font-institutional uppercase tracking-wide">MAGAT UNIVERSITY: INITIATION WEEK</h1>
+              <h1 className="text-4xl lg:text-5xl font-institutional uppercase tracking-wide bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                MAGAT UNIVERSITY: INITIATION WEEK
+              </h1>
             </div>
-            <div className="text-sm text-muted-foreground font-mono">
-              RANK: FRESHMAN PLEDGE
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Progress: <span className="text-accent font-medium">{completedLessons}</span> / {totalLessons} Chapters Read
-            </div>
-            <div className="w-full bg-muted h-2 rounded-full mt-4 overflow-hidden">
-              <div 
-                className="bg-accent h-2 rounded-full transition-all duration-500 animate-pulse"
-                style={{ width: `${totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0}%` }}
-              />
+            
+            <div className="max-w-2xl mx-auto space-y-4">
+              <div className="text-lg text-muted-foreground font-mono">
+                RANK: FRESHMAN PLEDGE
+              </div>
+              
+              {/* Progress Summary */}
+              <div className="flex items-center justify-center gap-8 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-accent font-bold text-xl">{completedLessons}</span>
+                  <span className="text-muted-foreground">Chapters Complete</span>
+                </div>
+                <div className="w-px h-6 bg-border"></div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground font-bold text-xl">{totalLessons - completedLessons}</span>
+                  <span className="text-muted-foreground">Remaining</span>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="w-full max-w-md mx-auto bg-muted h-3 rounded-full overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-accent to-accent/80 h-3 rounded-full transition-all duration-1000 ease-out"
+                  style={{ width: `${totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0}%` }}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Chapter Cards */}
-          <div className="grid-cards">
-            {lessons?.map((lesson, index) => {
+          {/* Enhanced Chapter Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+            {visibleChapters.map((lesson, index) => {
               const status = getLessonStatus(lesson.id, index);
               const progress = getLessonProgress(lesson.id);
+              const estimatedTime = getEstimatedTime(lesson);
+              const difficulty = getDifficulty(index);
               
               return (
-                <Card 
-                  key={lesson.id} 
-                  className={`institutional-card hover:scale-105 transition-all duration-300 hover:shadow-xl ${
-                    status === 'locked' 
-                      ? 'opacity-60 hover:scale-100' 
-                      : status === 'complete'
-                      ? 'border-green-500/30 bg-green-50/10 border-l-4 border-l-green-500'
-                      : status === 'in_progress'
-                      ? 'border-l-4 border-l-accent bg-gradient-to-r from-card to-accent/5'
-                      : ''
-                  }`}
-                >
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-4 h-4 bg-accent flex-shrink-0"></div>
-                        <h3 className="font-institutional text-base leading-tight uppercase tracking-wide">
-                          {lesson.title}
-                        </h3>
-                      </div>
-                      {getStatusIcon(status)}
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed mt-2">
-                      {lesson.objective || 'Learn the institutional principles'}
-                    </p>
-                  </CardHeader>
-                
-                <CardContent className="pt-0 space-y-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">
-                      Status: {getStatusText(status, progress)}
-                    </span>
-                    {status === 'in_progress' && progress > 0 && (
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-1 bg-muted rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-accent transition-all duration-300"
-                            style={{ width: `${progress}%` }}
-                          />
-                        </div>
-                        <span className="text-accent">{progress}%</span>
-                      </div>
-                    )}
+                <div key={lesson.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <ChapterCard
+                    lesson={lesson}
+                    index={index}
+                    status={status}
+                    progress={progress}
+                    estimatedTime={estimatedTime}
+                    difficulty={difficulty}
+                  />
+                </div>
+              );
+            })}
+
+            {/* Loading Skeletons */}
+            {isLoadingMore && (
+              <>
+                {[...Array(3)].map((_, i) => (
+                  <div key={`skeleton-${i}`} className="animate-fade-in">
+                    <ChapterSkeleton />
                   </div>
+                ))}
+              </>
+            )}
+          </div>
 
-                  {status === 'locked' && index > 0 && (
-                    <div className="text-xs text-muted-foreground bg-muted/30 p-2 rounded border border-muted">
-                      Requires: Complete previous lesson
-                    </div>
-                  )}
-
-                  {getActionButton(lesson, status, index)}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-          {/* Progress Summary */}
-          <div className="text-center space-y-4 pt-8 border-t border-border">
-            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-              <div className="institutional-card p-4 text-center">
-                <div className="text-2xl font-mono text-accent mb-1">{completedLessons}</div>
-                <div className="text-xs font-institutional uppercase tracking-wide">Completed</div>
-              </div>
-              <div className="institutional-card p-4 text-center">
-                <div className="text-2xl font-mono text-muted-foreground mb-1">{totalLessons - completedLessons}</div>
-                <div className="text-xs font-institutional uppercase tracking-wide">Remaining</div>
+          {/* Load More Sentinel */}
+          {hasMore && (
+            <div ref={loadMoreRef} className="flex justify-center py-8">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Flame className="h-4 w-4 animate-pulse" />
+                <span className="text-sm font-mono">Loading more chapters...</span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground font-mono">
-              Continue your institutional education
-            </p>
-          </div>
+          )}
+
+          {/* Completion Message */}
+          {!hasMore && totalLessons > 0 && (
+            <div className="text-center py-12 border-t border-border">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="text-2xl font-institutional uppercase tracking-wide text-accent">
+                  Journey Complete
+                </div>
+                <p className="text-sm text-muted-foreground font-mono">
+                  You have reached the end of your initiation week materials. Continue your institutional education.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>
