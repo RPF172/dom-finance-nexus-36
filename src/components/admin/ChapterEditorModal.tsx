@@ -42,6 +42,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
     body_text: '',
     assignment_text: '',
     ritual_text: '',
+    featured_image_url: '',
     estimated_time: 45,
     order_index: 0,
     published: false,
@@ -61,6 +62,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
         body_text: editingChapter.body_text || '',
         assignment_text: editingChapter.assignment_text || '',
         ritual_text: editingChapter.ritual_text || '',
+        featured_image_url: editingChapter.featured_image_url || '',
         estimated_time: editingChapter.estimated_time || 45,
         order_index: editingChapter.order_index || 0,
         published: editingChapter.published || false,
@@ -75,6 +77,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
         body_text: '',
         assignment_text: '',
         ritual_text: '',
+        featured_image_url: '',
         estimated_time: 45,
         order_index: 0,
         published: false,
@@ -277,6 +280,19 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
                       </p>
                     )}
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="featured_image_url">Featured Image URL</Label>
+                  <Input
+                    id="featured_image_url"
+                    value={formData.featured_image_url}
+                    onChange={(e) => handleInputChange('featured_image_url', e.target.value)}
+                    placeholder="https://example.com/chapter-image.jpg"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Image URL for the chapter illustration (optional)
+                  </p>
                 </div>
 
                 <div className="space-y-2">
