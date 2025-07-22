@@ -1,19 +1,30 @@
 
-import React, { useState, useEffect } from 'react';
-import { Flame } from 'lucide-react';
-import { useLessons } from '@/hooks/useLessons';
+import React, { useEffect, useState } from 'react';
+import { useContentSequence, useFallbackMixedContent } from '@/hooks/useContentSequence';
 import { useAllUserProgress } from '@/hooks/useProgress';
-import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
-import { ChapterCard } from '@/components/ChapterCard';
+import { ContentCard } from '@/components/ContentCard';
 import { ChapterSkeleton } from '@/components/ChapterSkeleton';
+import { Flame } from 'lucide-react';
+import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
 import { ChapterManagerFAB } from '@/components/admin/ChapterManagerFAB';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { Chapter } from '@/hooks/useChapters';
+import { Lesson } from '@/hooks/useLessons';
 import AppLayout from '@/components/layout/AppLayout';
 
 const BookReader = () => {
-  const { data: lessons, isLoading } = useLessons();
-  const { data: progressData } = useAllUserProgress();
   const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
+
+  // Try to use content sequence first, fallback to mixed content
+  const { data: sequencedContent, isLoading: isSequenceLoading } = useContentSequence();
+  const { data: fallbackContent, isLoading: isFallbackLoading } = useFallbackMixedContent();
+  const { data: progressData } = useAllUserProgress();
+
+  // Use sequenced content if available, otherwise fallback
+  const mixedContent = sequencedContent?.length ? sequencedContent : fallbackContent;
+  const isLoading = isSequenceLoading || isFallbackLoading;
 
   // Check if user is admin
   useEffect(() => {
@@ -46,67 +57,87 @@ const BookReader = () => {
     isLoadingMore,
     hasMore
   } = useInfiniteChapters({
-    chapters: lessons || [],
+    chapters: mixedContent || [],
     batchSize: 6
   });
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background text-foreground font-mono flex items-center justify-center">
-        <div className="text-center">
-          <Flame className="h-8 w-8 text-accent animate-pulse mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Loading chapters...</p>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Flame className="w-12 h-12 text-primary animate-pulse mx-auto" />
+          <p className="text-muted-foreground">Loading your content...</p>
         </div>
       </div>
     );
   }
 
-  const progressMap = new Map(progressData?.map(p => [p.lesson_id, p]) || []);
-  const completedLessons = progressData?.filter(p => p.completed).length || 0;
-  const totalLessons = lessons?.length || 0;
+  // Process progress data into a map for efficient lookup
+  const progressMap = new Map(
+    progressData?.map(progress => [progress.lesson_id, progress]) || []
+  );
 
-  const getLessonStatus = (lessonId: string, index: number) => {
-    const progress = progressMap.get(lessonId);
-    if (progress?.completed) return 'complete';
-    if (progress && !progress.completed) return 'in_progress';
-    if (index === 0) return 'in_progress';
-    
-    const previousLesson = lessons?.[index - 1];
-    if (previousLesson) {
-      const previousProgress = progressMap.get(previousLesson.id);
-      if (previousProgress?.completed) return 'in_progress';
+  // Helper function to determine content status
+  const getContentStatus = (item: any, index: number) => {
+    if (item.type === 'chapter') {
+      // Chapters are always accessible if previous content is complete
+      if (index === 0) return 'in_progress';
+      const previousItem = visibleChapters[index - 1];
+      if (previousItem?.type === 'lesson') {
+        const progress = progressMap.get(previousItem.content.id);
+        return progress?.completed ? 'in_progress' : 'locked';
+      }
+      return 'in_progress';
+    } else {
+      // Lesson logic
+      const progress = progressMap.get(item.content.id);
+      if (progress?.completed) return 'complete';
+      
+      // First lesson is always unlocked
+      if (index === 0) return 'in_progress';
+      
+      // Check if previous content is completed
+      const previousItem = visibleChapters[index - 1];
+      if (previousItem) {
+        if (previousItem.type === 'chapter') {
+          return 'in_progress'; // Lessons after chapters are unlocked
+        } else {
+          const previousProgress = progressMap.get(previousItem.content.id);
+          return previousProgress?.completed ? 'in_progress' : 'locked';
+        }
+      }
+      
+      return 'locked';
     }
-    
-    return 'locked';
   };
 
-  const getLessonProgress = (lessonId: string) => {
-    const progress = progressMap.get(lessonId);
+  // Helper function to get lesson progress percentage
+  const getLessonProgress = (item: any) => {
+    if (item.type === 'chapter') return 0; // Chapters don't have progress
+    
+    const progress = progressMap.get(item.content.id);
     if (!progress) return 0;
     
-    let completed = 0;
-    let total = 4;
+    let completedCount = 0;
+    if (progress.content_read) completedCount++;
+    if (progress.quiz_completed) completedCount++;
+    if (progress.assignment_submitted) completedCount++;
+    if (progress.ritual_completed) completedCount++;
     
-    if (progress.content_read) completed++;
-    if (progress.quiz_completed) completed++;
-    if (progress.assignment_submitted) completed++;
-    if (progress.ritual_completed) completed++;
-    
-    return Math.round((completed / total) * 100);
+    return Math.round((completedCount / 4) * 100);
   };
 
-  const getEstimatedTime = (lesson: any) => {
-    // Estimate reading time based on content length
-    const contentLength = (lesson.body_text || '').length + (lesson.assignment_text || '').length;
-    return Math.max(5, Math.ceil(contentLength / 200)); // ~200 chars per minute
+  // Handle content click
+  const handleContentClick = (item: any) => {
+    if (item.type === 'chapter') {
+      navigate(`/chapter/${item.content.id}`);
+    } else {
+      navigate(`/lesson/${item.content.id}`);
+    }
   };
 
-  const getDifficulty = (index: number) => {
-    // Simple difficulty progression
-    if (index < 2) return 'beginner';
-    if (index < 5) return 'intermediate';
-    return 'advanced';
-  };
+  const completedLessons = progressData?.filter(p => p.completed).length || 0;
+  const totalLessons = visibleChapters.filter(item => item.type === 'lesson').length;
 
   return (
     <AppLayout>
@@ -122,64 +153,45 @@ const BookReader = () => {
             </div>
             
             <div className="max-w-2xl mx-auto space-y-4">
-              <div className="text-lg text-muted-foreground font-mono">
-                RANK: FRESHMAN PLEDGE
+              <p className="text-xl text-muted-foreground">
+                {completedLessons} of {totalLessons} lessons completed
+              </p>
+            </div>
+            
+            <div className="max-w-md mx-auto">
+              <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                <span>Progress</span>
+                <span>{totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0}%</span>
               </div>
-              
-              {/* Progress Summary */}
-              <div className="flex items-center justify-center gap-8 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-accent font-bold text-xl">{completedLessons}</span>
-                  <span className="text-muted-foreground">Chapters Complete</span>
-                </div>
-                <div className="w-px h-6 bg-border"></div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground font-bold text-xl">{totalLessons - completedLessons}</span>
-                  <span className="text-muted-foreground">Remaining</span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full max-w-md mx-auto bg-muted h-3 rounded-full overflow-hidden">
+              <div className="w-full bg-secondary rounded-full h-2">
                 <div 
-                  className="bg-gradient-to-r from-accent to-accent/80 h-3 rounded-full transition-all duration-1000 ease-out"
+                  className="bg-primary h-2 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0}%` }}
                 />
               </div>
             </div>
+            </div>
           </div>
 
-          {/* Enhanced Chapter Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            {visibleChapters.map((lesson, index) => {
-              const status = getLessonStatus(lesson.id, index);
-              const progress = getLessonProgress(lesson.id);
-              const estimatedTime = getEstimatedTime(lesson);
-              const difficulty = getDifficulty(index);
-              
-              return (
-                <div key={lesson.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <ChapterCard
-                    lesson={lesson}
-                    index={index}
-                    status={status}
-                    progress={progress}
-                    estimatedTime={estimatedTime}
-                    difficulty={difficulty}
-                  />
-                </div>
-              );
-            })}
-
-            {/* Loading Skeletons */}
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {visibleChapters.map((item, index) => (
+              <ContentCard
+                key={`${item.type}-${item.content.id}`}
+                item={item}
+                index={index}
+                isLocked={getContentStatus(item, index) === 'locked'}
+                isCompleted={getContentStatus(item, index) === 'complete'}
+                progress={getLessonProgress(item)}
+                onClick={() => handleContentClick(item)}
+              />
+            ))}
+            
+            {/* Loading skeletons */}
             {isLoadingMore && (
-              <>
-                {[...Array(3)].map((_, i) => (
-                  <div key={`skeleton-${i}`} className="animate-fade-in">
-                    <ChapterSkeleton />
-                  </div>
-                ))}
-              </>
+              Array.from({ length: 3 }).map((_, index) => (
+                <ChapterSkeleton key={`skeleton-${index}`} />
+              ))
             )}
           </div>
 

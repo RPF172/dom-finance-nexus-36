@@ -145,6 +145,85 @@ export type Database = {
         }
         Relationships: []
       }
+      chapters: {
+        Row: {
+          body_text: string | null
+          created_at: string | null
+          featured_image_url: string | null
+          id: string
+          module_id: string | null
+          order_index: number
+          published: boolean
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          body_text?: string | null
+          created_at?: string | null
+          featured_image_url?: string | null
+          id?: string
+          module_id?: string | null
+          order_index?: number
+          published?: boolean
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          body_text?: string | null
+          created_at?: string | null
+          featured_image_url?: string | null
+          id?: string
+          module_id?: string | null
+          order_index?: number
+          published?: boolean
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_sequence: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string | null
+          id: string
+          module_id: string | null
+          sequence_order: number
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string | null
+          id?: string
+          module_id?: string | null
+          sequence_order: number
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string | null
+          id?: string
+          module_id?: string | null
+          sequence_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_sequence_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dom_token: {
         Row: {
           created_at: string

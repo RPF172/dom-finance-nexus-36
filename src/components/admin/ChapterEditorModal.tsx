@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useLessons } from '@/hooks/useLessons';
+import { useModules } from '@/hooks/useLessons';
 import { cn } from '@/lib/utils';
 
 interface ChapterEditorModalProps {
@@ -33,20 +33,15 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
   onSave
 }) => {
   const { toast } = useToast();
-  const { refetch } = useLessons();
+  const { data: modules } = useModules();
   
   const [formData, setFormData] = useState({
     title: '',
-    slug: '',
-    objective: '',
     body_text: '',
-    assignment_text: '',
-    ritual_text: '',
     featured_image_url: '',
-    estimated_time: 45,
+    module_id: '',
     order_index: 0,
-    published: false,
-    module_id: null as string | null
+    published: false
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -54,50 +49,30 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
 
   // Reset form when modal opens/closes or editing chapter changes
   useEffect(() => {
-    if (isOpen && editingChapter) {
-      setFormData({
-        title: editingChapter.title || '',
-        slug: editingChapter.slug || '',
-        objective: editingChapter.objective || '',
-        body_text: editingChapter.body_text || '',
-        assignment_text: editingChapter.assignment_text || '',
-        ritual_text: editingChapter.ritual_text || '',
-        featured_image_url: editingChapter.featured_image_url || '',
-        estimated_time: editingChapter.estimated_time || 45,
-        order_index: editingChapter.order_index || 0,
-        published: editingChapter.published || false,
-        module_id: editingChapter.module_id || null
-      });
-    } else if (isOpen && !editingChapter) {
-      // Reset for new chapter
-      setFormData({
-        title: '',
-        slug: '',
-        objective: '',
-        body_text: '',
-        assignment_text: '',
-        ritual_text: '',
-        featured_image_url: '',
-        estimated_time: 45,
-        order_index: 0,
-        published: false,
-        module_id: null
-      });
+    if (isOpen) {
+      if (editingChapter) {
+        setFormData({
+          title: editingChapter.title || '',
+          body_text: editingChapter.body_text || '',
+          featured_image_url: editingChapter.featured_image_url || '',
+          module_id: editingChapter.module_id || '',
+          order_index: editingChapter.order_index || 0,
+          published: editingChapter.published || false
+        });
+      } else {
+        setFormData({
+          title: '',
+          body_text: '',
+          featured_image_url: '',
+          module_id: modules?.[0]?.id || '',
+          order_index: 0,
+          published: false
+        });
+      }
+      setErrors({});
     }
-    setErrors({});
-  }, [isOpen, editingChapter]);
+  }, [isOpen, editingChapter, modules]);
 
-  // Auto-generate slug from title
-  useEffect(() => {
-    if (formData.title && !editingChapter) {
-      const slug = formData.title
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .trim();
-      setFormData(prev => ({ ...prev, slug }));
-    }
-  }, [formData.title, editingChapter]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -106,16 +81,12 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
       newErrors.title = 'Chapter title is required';
     }
 
-    if (!formData.slug.trim()) {
-      newErrors.slug = 'Chapter slug is required';
-    }
-
     if (!formData.body_text.trim()) {
       newErrors.body_text = 'Chapter content is required';
     }
 
-    if (formData.estimated_time < 1 || formData.estimated_time > 240) {
-      newErrors.estimated_time = 'Estimated time must be between 1 and 240 minutes';
+    if (!formData.module_id) {
+      newErrors.module_id = 'Module is required';
     }
 
     setErrors(newErrors);
@@ -138,7 +109,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
       if (editingChapter) {
         // Update existing chapter
         const { error } = await supabase
-          .from('lessons')
+          .from('chapters')
           .update(formData)
           .eq('id', editingChapter.id);
 
@@ -151,7 +122,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
       } else {
         // Create new chapter
         const { error } = await supabase
-          .from('lessons')
+          .from('chapters')
           .insert([formData]);
 
         if (error) throw error;
@@ -161,8 +132,6 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
           description: `"${formData.title}" has been created successfully.`
         });
       }
-
-      await refetch();
       onSave();
       onClose();
     } catch (error: any) {
@@ -188,7 +157,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
 
     try {
       const { error } = await supabase
-        .from('lessons')
+        .from('chapters')
         .delete()
         .eq('id', editingChapter.id);
 
@@ -199,7 +168,7 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
         description: `"${editingChapter.title}" has been deleted successfully.`
       });
 
-      await refetch();
+      
       onSave();
       onClose();
     } catch (error: any) {
@@ -246,40 +215,21 @@ export const ChapterEditorModal: React.FC<ChapterEditorModalProps> = ({
                 </h3>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Chapter Title *</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => handleInputChange('title', e.target.value)}
-                      placeholder="Enter chapter title..."
-                      className={cn(errors.title && "border-destructive")}
-                    />
-                    {errors.title && (
-                      <p className="text-sm text-destructive flex items-center gap-1">
-                        <AlertCircle className="h-3 w-3" />
-                        {errors.title}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="slug">URL Slug *</Label>
-                    <Input
-                      id="slug"
-                      value={formData.slug}
-                      onChange={(e) => handleInputChange('slug', e.target.value)}
-                      placeholder="chapter-url-slug"
-                      className={cn(errors.slug && "border-destructive")}
-                    />
-                    {errors.slug && (
-                      <p className="text-sm text-destructive flex items-center gap-1">
-                        <AlertCircle className="h-3 w-3" />
-                        {errors.slug}
-                      </p>
-                    )}
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="title">Chapter Title *</Label>
+                  <Input
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    placeholder="Enter chapter title..."
+                    className={cn(errors.title && "border-destructive")}
+                  />
+                  {errors.title && (
+                    <p className="text-sm text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.title}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
