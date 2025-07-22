@@ -9,7 +9,10 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PledgeHall from "./pages/PledgeHall";
 import BookReader from "./pages/BookReader";
+import ReadChapters from "./pages/ReadChapters";
+import LearnLessons from "./pages/LearnLessons";
 import LessonView from "./pages/LessonView";
+import { ChapterView } from "./pages/ChapterView";
 import Assignments from "./pages/Assignments";
 import Tribute from "./pages/Tribute";
 import Profile from "./pages/Profile";
@@ -34,7 +37,10 @@ const App = () => (
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/pledgehall" element={<PledgeHall />} />
                 <Route path="/doctrine" element={<BookReader />} />
+                <Route path="/read" element={<ReadChapters />} />
+                <Route path="/learn" element={<LearnLessons />} />
                 <Route path="/lesson/:id" element={<LessonView />} />
+                <Route path="/chapter/:chapterId" element={<ChapterView />} />
                 <Route path="/assignments" element={<Assignments />} />
                 <Route path="/tribute" element={<Tribute />} />
                 <Route path="/profile" element={<Profile />} />
