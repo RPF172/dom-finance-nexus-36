@@ -1,16 +1,44 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame } from 'lucide-react';
 import { useLessons } from '@/hooks/useLessons';
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
 import { ChapterCard } from '@/components/ChapterCard';
 import { ChapterSkeleton } from '@/components/ChapterSkeleton';
+import { ChapterManagerFAB } from '@/components/admin/ChapterManagerFAB';
+import { supabase } from '@/integrations/supabase/client';
 import AppLayout from '@/components/layout/AppLayout';
 
 const BookReader = () => {
   const { data: lessons, isLoading } = useLessons();
   const { data: progressData } = useAllUserProgress();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check if user is admin
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          // Check if user has admin role
+          const { data: userRoles } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .eq('role', 'admin')
+            .single();
+          
+          setIsAdmin(!!userRoles);
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
 
   const {
     visibleChapters,
@@ -180,6 +208,9 @@ const BookReader = () => {
           )}
         </div>
       </div>
+
+      {/* Admin Chapter Manager FAB */}
+      {isAdmin && <ChapterManagerFAB />}
     </AppLayout>
   );
 };
