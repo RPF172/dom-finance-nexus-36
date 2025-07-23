@@ -80,34 +80,15 @@ const BookReader = () => {
   // Helper function to determine content status
   const getContentStatus = (item: any, index: number) => {
     if (item.type === 'chapter') {
-      // Chapters are always accessible if previous content is complete
-      if (index === 0) return 'in_progress';
-      const previousItem = visibleChapters[index - 1];
-      if (previousItem?.type === 'lesson') {
-        const progress = progressMap.get(previousItem.content.id);
-        return progress?.completed ? 'in_progress' : 'locked';
-      }
+      // Chapters are always accessible
       return 'in_progress';
     } else {
       // Lesson logic
       const progress = progressMap.get(item.content.id);
       if (progress?.completed) return 'complete';
       
-      // First lesson is always unlocked
-      if (index === 0) return 'in_progress';
-      
-      // Check if previous content is completed
-      const previousItem = visibleChapters[index - 1];
-      if (previousItem) {
-        if (previousItem.type === 'chapter') {
-          return 'in_progress'; // Lessons after chapters are unlocked
-        } else {
-          const previousProgress = progressMap.get(previousItem.content.id);
-          return previousProgress?.completed ? 'in_progress' : 'locked';
-        }
-      }
-      
-      return 'locked';
+      // All lessons are now accessible regardless of previous completion
+      return 'in_progress';
     }
   };
 
@@ -179,7 +160,7 @@ const BookReader = () => {
                 key={`${item.type}-${item.content.id}`}
                 item={item}
                 index={index}
-                isLocked={getContentStatus(item, index) === 'locked'}
+                isLocked={false}
                 isCompleted={getContentStatus(item, index) === 'complete'}
                 progress={getLessonProgress(item)}
                 onClick={() => handleContentClick(item)}

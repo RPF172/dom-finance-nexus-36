@@ -81,17 +81,8 @@ const LearnLessons = () => {
     const progress = progressMap.get(item.content.id);
     if (progress?.completed) return 'complete';
     
-    // First lesson is always unlocked
-    if (index === 0) return 'in_progress';
-    
-    // Check if previous lesson is completed
-    const previousItem = visibleChapters[index - 1];
-    if (previousItem) {
-      const previousProgress = progressMap.get(previousItem.content.id);
-      return previousProgress?.completed ? 'in_progress' : 'locked';
-    }
-    
-    return 'locked';
+    // All lessons are now accessible regardless of previous completion
+    return 'in_progress';
   };
 
   // Helper function to get lesson progress percentage
@@ -156,7 +147,7 @@ const LearnLessons = () => {
                 key={`${item.type}-${item.content.id}`}
                 item={item}
                 index={index}
-                isLocked={getLessonStatus(item, index) === 'locked'}
+                isLocked={false}
                 isCompleted={getLessonStatus(item, index) === 'complete'}
                 progress={getLessonProgress(item)}
                 onClick={() => handleContentClick(item)}
