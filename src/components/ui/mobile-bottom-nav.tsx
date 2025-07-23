@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Users, User, Settings } from 'lucide-react';
+import { Home, BookOpen, Users, User, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import MainNavigation from '@/components/layout/MainNavigation';
 
 interface NavItem {
   href: string;
@@ -14,13 +16,14 @@ interface NavItem {
 
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
   { href: isAuthenticated ? '/social' : '/pledgehall', icon: Home, label: 'Home' },
-  { href: '/doctrine', icon: BookOpen, label: 'Learn' },
+  { href: '/read', icon: BookOpen, label: 'Read' },
   { href: '/social', icon: Users, label: 'Social' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
 
 export function MobileBottomNav() {
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -39,7 +42,7 @@ export function MobileBottomNav() {
 
   return (
     <nav className="mobile-nav bg-card/95 backdrop-blur-sm">
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-5 h-16">
         {navItems.map((item) => {
           const isActive = location.pathname === item.href;
           const Icon = item.icon;
@@ -81,6 +84,29 @@ export function MobileBottomNav() {
             </Link>
           );
         })}
+        
+        {/* More tab with sidebar */}
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetTrigger asChild>
+            <button
+              className="touch-target flex flex-col items-center justify-center space-y-1 relative transition-colors duration-200 text-muted-foreground hover:text-foreground active:text-primary"
+              aria-label="More"
+            >
+              <Menu className="h-5 w-5 transition-all duration-200 hover:scale-105" />
+              <span className="text-xs font-medium transition-all duration-200">
+                More
+              </span>
+            </button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[80vh] p-0">
+            <div className="h-full overflow-y-auto">
+              <div className="p-4 border-b">
+                <h2 className="text-lg font-semibold">Navigation</h2>
+              </div>
+              <MainNavigation />
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
