@@ -245,6 +245,36 @@ export type Database = {
         }
         Relationships: []
       }
+      emails: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          source: string | null
+          subscribed_at: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          source?: string | null
+          subscribed_at?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          source?: string | null
+          subscribed_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lessons: {
         Row: {
           assignment_text: string | null

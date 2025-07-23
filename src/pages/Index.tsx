@@ -41,9 +41,9 @@ const Index = () => {
   }, [hasScrolledToTrigger]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background relative">
+    <div className="flex flex-col min-h-screen bg-background relative overflow-x-hidden">
       <Header />
-      <main className={showModal ? 'pointer-events-none' : 'relative z-10'}>
+      <main className={`${showModal ? 'pointer-events-none' : 'relative z-10'} flex-1`}>
         <HeroSection />
       </main>
       <BlinkingArrow />
