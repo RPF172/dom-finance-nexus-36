@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, BookOpen, Eye, Clock, Flame, FileText, Brain, Target } from 'lucide-react';
+import { ArrowLeft, BookOpen, Eye, Clock, Flame, FileText, Brain, Target, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChapterIllustration } from '@/components/ChapterIllustration';
 import { ReadingProgressRing } from '@/components/ReadingProgressRing';
+import { useChapterQuizzes } from '@/hooks/useChapters';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface ChapterReaderProps {
@@ -21,6 +23,10 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
   const [readingProgress, setReadingProgress] = useState(0);
   const [isReading, setIsReading] = useState(false);
   const [hasStartedReading, setHasStartedReading] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  
+  const { toast } = useToast();
+  const { data: quizzes } = useChapterQuizzes(chapter.id);
 
   // Calculate reading time based on content length
   const estimatedReadingTime = Math.max(3, Math.ceil((chapter.body_text?.length || 0) / 200));
@@ -44,6 +50,17 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
   const handlePauseReading = () => {
     setIsReading(false);
   };
+
+  const handleMarkCompleted = () => {
+    setIsCompleted(true);
+    toast({
+      title: "Chapter Completed",
+      description: "Your understanding has been recorded. Continue to the next chapter."
+    });
+  };
+
+  const hasQuizzes = quizzes && quizzes.length > 0;
+  const canComplete = readingProgress >= 90;
 
   
 
@@ -212,19 +229,55 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
             </Card>
 
 
-            {/* Next Steps */}
-            {readingProgress >= 90 && (
+            {/* Completion Actions */}
+            {readingProgress >= 90 && !isCompleted && (
               <Card className="border-accent/30">
                 <CardContent className="p-6 text-center space-y-4">
                   <Flame className="h-8 w-8 text-accent mx-auto" />
                   <h3 className="font-institutional text-sm uppercase tracking-wide">
-                    Chapter Complete
+                    Ready to Complete
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    You've completed this chapter. Continue to the next part of your journey.
+                    {hasQuizzes 
+                      ? "This chapter has associated quizzes. Complete reading to continue to exercises."
+                      : "Mark this chapter as complete to continue your journey."
+                    }
+                  </p>
+                  
+                  {hasQuizzes ? (
+                    <Button 
+                      className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
+                      onClick={onContinue}
+                    >
+                      Continue to Exercises
+                    </Button>
+                  ) : (
+                    <Button 
+                      className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
+                      onClick={handleMarkCompleted}
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Mark Completed
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Completion Confirmation */}
+            {isCompleted && (
+              <Card className="border-emerald-500/30 bg-emerald-950/20">
+                <CardContent className="p-6 text-center space-y-4">
+                  <CheckCircle className="h-8 w-8 text-emerald-400 mx-auto" />
+                  <h3 className="font-institutional text-sm uppercase tracking-wide text-emerald-400">
+                    Chapter Completed
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Well done! You've mastered this chapter.
                   </p>
                   <Button 
-                    className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
+                    variant="outline"
+                    className="w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/30"
                     onClick={onContinue}
                   >
                     Continue Learning

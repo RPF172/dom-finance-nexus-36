@@ -154,7 +154,7 @@ const LessonView = () => {
     updateProgress.mutate({
       lesson_id: lesson.id,
       content_read: true,
-      quiz_completed: true,
+      quiz_completed: hasQuizzes ? quizAnswered : true,
       assignment_submitted: true,
       ritual_completed: true
     });
@@ -172,7 +172,8 @@ const LessonView = () => {
     }
   };
 
-  const canComplete = taskCompleted && quizAnswered;
+  const hasQuizzes = quizzes && quizzes.length > 0;
+  const canComplete = taskCompleted && (hasQuizzes ? quizAnswered : true);
   const progressPercentage = calculateProgress();
 
   return (
@@ -317,12 +318,15 @@ const LessonView = () => {
                     : 'bg-muted text-muted-foreground cursor-not-allowed'
                 }`}
               >
-                {canComplete ? 'COMPLETE CHAPTER' : 'COMPLETE TASK & QUIZ TO PROCEED'}
+                {canComplete ? 'COMPLETE CHAPTER' : hasQuizzes ? 'COMPLETE TASK & QUIZ TO PROCEED' : 'COMPLETE TASK TO PROCEED'}
               </Button>
               
               {!canComplete && (
                 <p className="text-xs text-muted-foreground text-center mt-2">
-                  Chapter completion requires both task submission and quiz completion
+                  {hasQuizzes 
+                    ? "Chapter completion requires both task submission and quiz completion"
+                    : "Chapter completion requires task submission"
+                  }
                 </p>
               )}
             </CardContent>

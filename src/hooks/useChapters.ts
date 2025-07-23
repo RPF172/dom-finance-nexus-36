@@ -51,3 +51,20 @@ export const useChapter = (chapterId: string) => {
     enabled: !!chapterId
   });
 };
+
+export const useChapterQuizzes = (chapterId: string) => {
+  return useQuery({
+    queryKey: ['chapter-quizzes', chapterId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('quizzes')
+        .select('*')
+        .eq('lesson_id', chapterId)
+        .order('order_index');
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!chapterId
+  });
+};
