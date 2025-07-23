@@ -96,8 +96,8 @@ const ReadChapters = () => {
             </div>
           </div>
 
-          {/* Content Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {/* Blog-Style Content Feed */}
+          <div className="max-w-4xl mx-auto space-y-8 mb-8">
             {visibleChapters.map((item, index) => (
               <ContentCard
                 key={`${item.type}-${item.content.id}`}
@@ -112,9 +112,11 @@ const ReadChapters = () => {
             
             {/* Loading skeletons */}
             {isLoadingMore && (
-              Array.from({ length: 3 }).map((_, index) => (
-                <ChapterSkeleton key={`skeleton-${index}`} />
-              ))
+              <div className="space-y-8">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <ChapterSkeleton key={`skeleton-${index}`} />
+                ))}
+              </div>
             )}
           </div>
 

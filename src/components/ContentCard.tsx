@@ -1,11 +1,12 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, BookOpen, Target, CheckCircle, Lock } from 'lucide-react';
+import { Clock, BookOpen, Target, CheckCircle, Lock, Calendar } from 'lucide-react';
 import { MixedContentItem } from '@/hooks/useContentSequence';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { Chapter } from '@/hooks/useChapters';
 import { Lesson } from '@/hooks/useLessons';
+import { format } from 'date-fns';
 
 interface ContentCardProps {
   item: MixedContentItem;
@@ -37,115 +38,155 @@ export const ContentCard: React.FC<ContentCardProps> = ({
     }
   };
 
-  const getCardIcon = () => {
-    if (isCompleted) return <CheckCircle className="w-5 h-5 text-green-500" />;
-    if (isLocked) return <Lock className="w-5 h-5 text-muted-foreground" />;
-    return isChapter ? <BookOpen className="w-5 h-5" /> : <Target className="w-5 h-5" />;
+  const getFallbackImage = () => {
+    const fallbackImages = [
+      'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?w=800&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e425?w=800&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=800&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=800&h=400&fit=crop'
+    ];
+    return fallbackImages[index % fallbackImages.length];
+  };
+
+  const getImageSrc = () => {
+    return (content as any).featured_image_url || getFallbackImage();
   };
 
   const getCardBadge = () => {
     if (isChapter) {
-      return <Badge variant="secondary" className="text-xs">Chapter</Badge>;
+      return <Badge variant="secondary" className="text-xs font-medium">Chapter</Badge>;
     } else {
-      return <Badge variant="default" className="text-xs">Lesson</Badge>;
+      return <Badge variant="default" className="text-xs font-medium">Lesson</Badge>;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy');
+    } catch {
+      return 'Recently';
     }
   };
 
   return (
-    <Card 
-      className={`group cursor-pointer transition-all duration-300 hover:shadow-lg relative overflow-hidden ${
-        isLocked ? 'opacity-60' : 'hover:scale-[1.02]'
+    <article 
+      className={`group cursor-pointer transition-all duration-300 hover:shadow-xl relative overflow-hidden bg-card rounded-lg border ${
+        isLocked ? 'opacity-60' : 'hover:scale-[1.01]'
       } ${isCompleted ? 'ring-2 ring-green-500/20' : ''}`}
       onClick={!isLocked ? onClick : undefined}
     >
       {/* Progress Bar */}
       {!isChapter && progress > 0 && (
-        <div className="absolute top-0 left-0 h-1 bg-primary transition-all duration-500" 
+        <div className="absolute top-0 left-0 h-1 bg-primary transition-all duration-500 z-10" 
              style={{ width: `${progress}%` }} />
       )}
 
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-              {getCardIcon()}
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                {getCardBadge()}
-                <span className="text-xs text-muted-foreground">
-                  {index + 1}
-                </span>
-              </div>
-              <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
-                {content.title}
-              </h3>
-            </div>
-          </div>
+      {/* Featured Image - Always Show */}
+      <div className="relative aspect-[16/9] overflow-hidden">
+        <OptimizedImage
+          src={getImageSrc()}
+          alt={content.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          width={800}
+          height={450}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        
+        {/* Status Overlay */}
+        <div className="absolute top-4 left-4 flex items-center gap-2">
+          {getCardBadge()}
+          {isCompleted && (
+            <Badge variant="outline" className="bg-green-500/90 text-white border-green-400">
+              <CheckCircle className="w-3 h-3 mr-1" />
+              Complete
+            </Badge>
+          )}
+          {isLocked && (
+            <Badge variant="outline" className="bg-muted/90 text-muted-foreground border-muted">
+              <Lock className="w-3 h-3 mr-1" />
+              Locked
+            </Badge>
+          )}
         </div>
 
-        {/* Featured Image */}
-        {(content as any).featured_image_url && (
-          <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
-            <OptimizedImage
-              src={(content as any).featured_image_url}
-              alt={content.title}
-              className="w-full h-full object-cover transition-transform group-hover:scale-105"
-              width={400}
-              height={200}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        {/* Reading Progress for Lessons */}
+        {!isCompleted && !isLocked && progress > 0 && (
+          <div className="absolute top-4 right-4">
+            <Badge variant="outline" className="bg-primary/90 text-primary-foreground border-primary">
+              {Math.round(progress)}% Complete
+            </Badge>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="p-6 space-y-4">
+        {/* Meta Information */}
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              {formatDate((content as any).created_at || new Date().toISOString())}
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {getEstimatedTime()} min read
+            </div>
+          </div>
+          <span className="font-medium">#{index + 1}</span>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-xl font-bold leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-2">
+          {content.title}
+        </h2>
+
+        {/* Objective for Lessons */}
+        {!isChapter && (content as Lesson).objective && (
+          <div className="p-3 bg-muted/50 rounded-lg border-l-4 border-primary">
+            <p className="text-sm font-medium text-foreground">
+              Learning Objective
+            </p>
+            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+              {(content as Lesson).objective}
+            </p>
           </div>
         )}
 
         {/* Content Preview */}
-        <div className="space-y-3">
-          {!isChapter && (content as Lesson).objective && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              <span className="font-medium">Objective:</span> {(content as Lesson).objective}
-            </p>
-          )}
-          
-          {(isChapter ? (content as Chapter).body_text : (content as Lesson).body_text) && (
-            <p className="text-sm text-muted-foreground line-clamp-3">
-              {isChapter 
-                ? (content as Chapter).body_text 
-                : (content as Lesson).body_text
-              }
-            </p>
-          )}
-        </div>
+        {(isChapter ? (content as Chapter).body_text : (content as Lesson).body_text) && (
+          <p className="text-muted-foreground line-clamp-3 leading-relaxed">
+            {isChapter 
+              ? (content as Chapter).body_text 
+              : (content as Lesson).body_text
+            }
+          </p>
+        )}
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t">
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {getEstimatedTime()} min
-            </div>
-            {!isChapter && (
-              <div className="flex items-center gap-1">
+        {/* Action Footer */}
+        <div className="flex items-center justify-between pt-4 border-t">
+          <div className="flex items-center gap-2">
+            {isChapter ? (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <BookOpen className="w-3 h-3" />
+                Reading
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Target className="w-3 h-3" />
-                Learning
+                Interactive Learning
               </div>
             )}
           </div>
           
-          {isCompleted && (
-            <div className="flex items-center gap-1 text-xs text-green-600">
-              <CheckCircle className="w-3 h-3" />
-              Complete
-            </div>
-          )}
-          
-          {!isCompleted && !isLocked && progress > 0 && (
-            <div className="text-xs text-primary font-medium">
-              {Math.round(progress)}% Complete
+          {!isLocked && (
+            <div className="text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
+              {isCompleted ? 'Review' : 'Continue'} →
             </div>
           )}
         </div>
       </div>
-    </Card>
+    </article>
   );
 };
