@@ -8,6 +8,7 @@ import {
   Settings, 
   Download 
 } from "lucide-react";
+import JsonQuickAdd from "./JsonQuickAdd";
 
 const QuickActions = () => {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ const QuickActions = () => {
 
   return (
     <div className="space-y-2">
+      <JsonQuickAdd />
       {actions.map((action) => (
         <Button
           key={action.label}
