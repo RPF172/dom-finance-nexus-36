@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
+import { ContentCarousel } from '@/components/ContentCarousel';
 import WhyMagatSection from '@/components/WhyMagatSection';
 import LearningPathsSection from '@/components/LearningPathsSection';
 import TraditionalVsMagatSection from '@/components/TraditionalVsMagatSection';
@@ -45,6 +46,8 @@ const Index = () => {
       <Header />
       <main className={`${showModal ? 'pointer-events-none' : 'relative z-10'} flex-1`}>
         <HeroSection />
+        <ContentCarousel className="bg-gray-50" />
+        <WhyMagatSection />
       </main>
       <BlinkingArrow />
       <FooterSection />
