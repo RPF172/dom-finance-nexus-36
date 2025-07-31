@@ -19,9 +19,10 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				institutional: ['Bebas Neue', 'Arial Black', 'sans-serif'],
-				inter: ['Inter', 'system-ui', 'sans-serif'],
-				mono: ['Space Mono', 'Consolas', 'monospace'],
+				institutional: ['Rakkas', 'Arial Black', 'sans-serif'],
+				body: ['IBM Plex Mono', 'Cormorant', 'serif'],
+				mono: ['IBM Plex Mono', 'Consolas', 'monospace'],
+				italic: ['Cormorant', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -67,12 +68,12 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Institutional Format Brand Colors
-				'alpha-steel': '#2B2F3A',
-				'obedience-white': '#F7F9FA',
-				'control-blue': '#567DAE',
-				'command-black': '#101214',
-				'target-red': '#B0151C',
+				// New MAGAT Brand Colors
+				'alpha-black': '#0A0A0A',
+				'concrete-gray': '#CCCCCC',
+				'ritual-khaki': '#7B6E54',
+				'submission-pink': '#FF9EC7',
+				'shame-red': '#B30000',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
