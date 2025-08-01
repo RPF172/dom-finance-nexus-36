@@ -45,61 +45,61 @@ const Index = () => {
     {
       key: 'hero',
       content: <HeroSection />, 
-      bg: 'bg-card',
+      bg: 'bg-ritual-khaki',
       border: 'border border-border shadow-md',
     },
     {
       key: 'carousel',
       content: <RecentLessonsCarousel />, 
-      bg: 'bg-secondary',
+      bg: 'bg-concrete-gray',
       border: 'border border-border shadow-lg',
     },
     {
       key: 'why',
       content: <WhyMagatSection />, 
-      bg: 'bg-card',
+      bg: 'bg-ritual-khaki',
       border: 'border border-border shadow-md',
     },
     {
       key: 'paths',
       content: <LearningPathsSection />, 
-      bg: 'bg-secondary',
+      bg: 'bg-concrete-gray',
       border: 'border border-border shadow-lg',
     },
     {
       key: 'traditional',
       content: <TraditionalVsMagatSection />, 
-      bg: 'bg-card',
+      bg: 'bg-ritual-khaki',
       border: 'border border-border shadow-md',
     },
     {
       key: 'features',
       content: <UniversityFeaturesSection />, 
-      bg: 'bg-secondary',
+      bg: 'bg-concrete-gray',
       border: 'border border-border shadow-lg',
     },
     {
       key: 'tokenomics',
       content: <TokenomicsSection />, 
-      bg: 'bg-card',
+      bg: 'bg-ritual-khaki',
       border: 'border border-border shadow-md',
     },
     {
       key: 'roadmap',
       content: <AcademicRoadmapSection />, 
-      bg: 'bg-secondary',
+      bg: 'bg-concrete-gray',
       border: 'border border-border shadow-lg',
     },
     {
       key: 'preview',
       content: <InteractiveLessonPreview />, 
-      bg: 'bg-card',
+      bg: 'bg-ritual-khaki',
       border: 'border border-border shadow-md',
     },
     {
       key: 'team',
       content: <TeamSection />, 
-      bg: 'bg-secondary',
+      bg: 'bg-concrete-gray',
       border: 'border border-border shadow-lg',
     },
   ];
@@ -111,7 +111,7 @@ const Index = () => {
         {sections.map((section, idx) => (
           <section
             key={section.key}
-            className={`my-8 py-12 px-4 md:px-8 rounded-xl ${section.bg} ${section.border}`}
+            className={`my-8 mx-4 md:mx-12 lg:mx-24 py-12 px-4 md:px-8 rounded-xl ${section.bg} ${section.border}`}
           >
             {section.content}
           </section>
