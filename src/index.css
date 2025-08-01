@@ -8,53 +8,53 @@
 
 @layer base {
   :root {
-    /* MAGAT Institutional Color System */
-    --background: 214 24% 97%; /* Obedience White */
-    --foreground: 215 24% 8%; /* Command Black */
+    /* New MAGAT Color System */
+    --background: 0 0% 80%; /* Concrete Gray */
+    --foreground: 0 0% 4%; /* Alpha Black */
 
-    --card: 0 0% 100%; /* Pure white for cards */
-    --card-foreground: 215 24% 8%; /* Command Black */
+    --card: 0 0% 90%; /* Light concrete for cards */
+    --card-foreground: 0 0% 4%; /* Alpha Black */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 24% 8%;
+    --popover: 0 0% 90%;
+    --popover-foreground: 0 0% 4%;
 
-    --primary: 213 45% 52%; /* Control Blue */
-    --primary-foreground: 0 0% 100%;
+    --primary: 339 100% 81%; /* Submission Pink */
+    --primary-foreground: 0 0% 4%;
 
-    --secondary: 220 24% 22%; /* Alpha Steel */
-    --secondary-foreground: 214 24% 97%;
+    --secondary: 39 19% 39%; /* Ritual Khaki */
+    --secondary-foreground: 0 0% 80%;
 
-    --muted: 215 16% 93%; /* Light gray for subtle elements */
-    --muted-foreground: 215 16% 45%;
+    --muted: 0 0% 70%; /* Darker concrete for subtle elements */
+    --muted-foreground: 0 0% 20%;
 
     --accent: 32 57% 51%; /* Bronze (#CD7F32) */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 356 75% 42%; /* Target Red */
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 100% 35%; /* Shame Red */
+    --destructive-foreground: 0 0% 80%;
 
-    --border: 215 16% 87%; /* Subtle borders */
-    --input: 0 0% 100%; /* White inputs */
-    --ring: 213 45% 52%; /* Control Blue for focus */
+    --border: 0 0% 60%; /* Medium gray borders */
+    --input: 0 0% 85%; /* Light concrete inputs */
+    --ring: 339 100% 81%; /* Submission Pink for focus */
 
     --radius: 0rem; /* Sharp, institutional edges */
 
-    /* Institutional Brand Colors */
-    --alpha-steel: 220 24% 22%;
-    --obedience-white: 214 24% 97%;
-    --control-blue: 213 45% 52%;
-    --command-black: 215 24% 8%;
-    --target-red: 356 75% 42%;
+    /* New Brand Colors */
+    --alpha-black: 0 0% 4%;
+    --concrete-gray: 0 0% 80%;
+    --ritual-khaki: 39 19% 39%;
+    --submission-pink: 339 100% 81%;
+    --shame-red: 0 100% 35%;
 
     /* Sidebar tokens */
-    --sidebar-background: 220 24% 22%;
-    --sidebar-foreground: 214 24% 97%;
-    --sidebar-primary: 213 45% 52%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 24% 8%;
-    --sidebar-accent-foreground: 214 24% 97%;
-    --sidebar-border: 220 24% 22%;
-    --sidebar-ring: 213 45% 52%;
+    --sidebar-background: 39 19% 39%;
+    --sidebar-foreground: 0 0% 80%;
+    --sidebar-primary: 339 100% 81%;
+    --sidebar-primary-foreground: 0 0% 4%;
+    --sidebar-accent: 0 0% 4%;
+    --sidebar-accent-foreground: 0 0% 80%;
+    --sidebar-border: 39 19% 39%;
+    --sidebar-ring: 339 100% 81%;
   }
 }
 
@@ -65,7 +65,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'IBM Plex Mono', 'Cormorant', serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -74,7 +74,16 @@
   }
 
   .font-mono {
-    font-family: 'Space Mono', monospace;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .font-body {
+    font-family: 'Cormorant', serif;
+  }
+
+  .font-body-italic {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
   }
 }
 
@@ -183,11 +192,11 @@
 
   /* Legacy styles for backward compatibility */
   .dom-gradient {
-    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--alpha-steel)) 100%);
+    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--ritual-khaki)) 100%);
   }
 
   .crimson-glow {
-    box-shadow: 0 0 20px 2px hsl(var(--target-red) / 0.3);
+    box-shadow: 0 0 20px 2px hsl(var(--shame-red) / 0.3);
   }
 
   .circuit-overlay {
