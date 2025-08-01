@@ -8,42 +8,42 @@
 
 @layer base {
   :root {
-    /* New MAGAT Color System */
-    --background: 0 0% 80%; /* Concrete Gray */
-    --foreground: 0 0% 4%; /* Alpha Black */
+    /* Updated MAGAT Color System - New Palette */
+    --background: 0 0% 4%; /* Alpha Black */
+    --foreground: 0 0% 80%; /* Concrete Gray */
 
-    --card: 0 0% 90%; /* Light concrete for cards */
-    --card-foreground: 0 0% 4%; /* Alpha Black */
+    --card: 39 19% 39%; /* Ritual Khaki for cards */
+    --card-foreground: 0 0% 80%; /* Concrete Gray */
 
-    --popover: 0 0% 90%;
-    --popover-foreground: 0 0% 4%;
+    --popover: 39 19% 39%;
+    --popover-foreground: 0 0% 80%;
 
-    --primary: 339 100% 81%; /* Submission Pink */
-    --primary-foreground: 0 0% 4%;
+    --primary: 0 100% 35%; /* Shame Red */
+    --primary-foreground: 0 0% 80%;
 
-    --secondary: 39 19% 39%; /* Ritual Khaki */
-    --secondary-foreground: 0 0% 80%;
+    --secondary: 30 58% 50%; /* Rusted Bronze */
+    --secondary-foreground: 0 0% 4%;
 
-    --muted: 0 0% 70%; /* Darker concrete for subtle elements */
-    --muted-foreground: 0 0% 20%;
+    --muted: 0 0% 20%; /* Darker for subtle elements */
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 32 57% 51%; /* Bronze (#CD7F32) */
-    --accent-foreground: 0 0% 100%;
+    --accent: 30 58% 50%; /* Rusted Bronze */
+    --accent-foreground: 0 0% 4%;
 
     --destructive: 0 100% 35%; /* Shame Red */
     --destructive-foreground: 0 0% 80%;
 
-    --border: 0 0% 60%; /* Medium gray borders */
-    --input: 0 0% 85%; /* Light concrete inputs */
-    --ring: 339 100% 81%; /* Submission Pink for focus */
+    --border: 0 0% 20%; /* Dark borders */
+    --input: 39 19% 35%; /* Darker Ritual Khaki for inputs */
+    --ring: 0 100% 35%; /* Shame Red for focus */
 
     --radius: 0rem; /* Sharp, institutional edges */
 
-    /* New Brand Colors */
+    /* Updated Brand Colors - HSL Values */
     --alpha-black: 0 0% 4%;
     --concrete-gray: 0 0% 80%;
     --ritual-khaki: 39 19% 39%;
-    --submission-pink: 339 100% 81%;
+    --rusted-bronze: 30 58% 50%;
     --shame-red: 0 100% 35%;
 
     /* Sidebar tokens */

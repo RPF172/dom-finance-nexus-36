@@ -14,10 +14,9 @@ const HeroSection: React.FC = () => {
       {/* Shame Red glowing cracks overlay */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0"
+        className="pointer-events-none absolute inset-0 z-0 bg-background"
         style={{
           background: "url('/textures/concrete.png')",
-          backgroundColor: '#0A0A0A',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundBlendMode: 'multiply',
@@ -45,24 +44,10 @@ const HeroSection: React.FC = () => {
 
       {/* Foreground content */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-2xl text-center">
-        <h1
-          className="font-stencil text-concrete-gray tracking-wide uppercase z-10"
-          style={{
-            fontSize: 'clamp(3rem, 8vw, 6rem)',
-            letterSpacing: '0.05em',
-            color: '#CCCCCC',
-          }}
-        >
+        <h1 className="font-institutional text-foreground tracking-wide uppercase z-10 text-6xl md:text-8xl">
           SUB CAMP™
         </h1>
-        <p
-          className="font-mono text-shame-red mt-4 z-10"
-          style={{
-            fontFamily: 'IBM Plex Mono, monospace',
-            color: '#B30000',
-            fontSize: 'clamp(1rem, 3vw, 1.5rem)',
-          }}
-        >
+        <p className="font-mono text-primary mt-4 z-10 text-lg md:text-xl">
           Not a camp. A conversion center.
         </p>
         {/* CTA Buttons */}
@@ -70,53 +55,14 @@ const HeroSection: React.FC = () => {
           className="flex flex-col gap-4 mt-10 w-full sm:flex-row sm:justify-center sm:items-center sm:gap-6"
         >
           <button
-            className="enlist-btn w-full sm:w-auto"
+            className="bg-primary text-primary-foreground font-mono font-bold uppercase px-8 py-4 rounded-lg hover:bg-primary/90 transition-all duration-300 hover:scale-105 active:scale-95 text-lg animate-pulse-slow"
             onClick={() => navigate('/auth?enlist=1')}
-            style={{
-              backgroundColor: '#FF9EC7',
-              color: '#0A0A0A',
-              fontFamily: 'IBM Plex Mono, monospace',
-              textTransform: 'uppercase',
-              fontWeight: 'bold',
-              borderRadius: 8,
-              padding: '1rem 2rem',
-              animation: 'pulse 2s infinite',
-              fontSize: '1.1rem',
-              boxShadow: '0 0 0 0 rgba(255,158,199,0.7)',
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.animationDuration = '1.2s';
-              e.currentTarget.style.boxShadow = '0 0 24px 8px rgba(255,158,199,0.6)';
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.animationDuration = '2s';
-              e.currentTarget.style.boxShadow = '0 0 0 0 rgba(255,158,199,0.7)';
-            }}
           >
             ENLIST NOW
           </button>
           <button
-            className="alpha-btn w-full sm:w-auto"
+            className="bg-secondary text-secondary-foreground font-mono font-bold uppercase px-8 py-4 border-2 border-foreground hover:bg-secondary/90 transition-all duration-300 hover:scale-105 active:scale-95 text-lg"
             onClick={() => navigate('/auth?admin=1')}
-            style={{
-              backgroundColor: '#7B6E54',
-              color: '#0A0A0A',
-              fontFamily: 'IBM Plex Mono, monospace',
-              textTransform: 'uppercase',
-              fontWeight: 'bold',
-              border: '2px solid #CCCCCC',
-              borderRadius: 2,
-              padding: '1rem 2rem',
-              fontSize: '1.1rem',
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.backgroundColor = '#6a604a';
-              e.currentTarget.style.boxShadow = '0 0 0 2px #CCCCCC inset';
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.backgroundColor = '#7B6E54';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
           >
             ALPHA COMMAND LOGIN
           </button>

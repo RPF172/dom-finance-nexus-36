@@ -68,11 +68,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// New MAGAT Brand Colors
+				// Updated MAGAT Brand Colors - New Palette
 				'alpha-black': '#0A0A0A',
 				'concrete-gray': '#CCCCCC',
 				'ritual-khaki': '#7B6E54',
-				'submission-pink': '#FF9EC7',
+				'rusted-bronze': '#CD7F32',
 				'shame-red': '#B30000',
 			},
 			borderRadius: {

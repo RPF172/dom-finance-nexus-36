@@ -253,7 +253,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
               <Checkbox
                 id="remember"
                 checked={rememberMe}
-                onCheckedChange={setRememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
                 className="border-border data-[state=checked]:bg-accent"
               />
               <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
