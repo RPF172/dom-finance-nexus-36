@@ -5,6 +5,7 @@ import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { MobileBottomNav } from "@/components/ui/mobile-bottom-nav";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PledgeHall from "./pages/PledgeHall";
@@ -20,6 +21,7 @@ import Social from "./pages/Social";
 import Friends from "./pages/Friends";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -35,18 +37,18 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/pledgehall" element={<PledgeHall />} />
-                <Route path="/doctrine" element={<BookReader />} />
-                <Route path="/read" element={<ReadChapters />} />
-                <Route path="/learn" element={<LearnLessons />} />
-                <Route path="/lesson/:id" element={<LessonView />} />
-                <Route path="/chapter/:chapterId" element={<ChapterView />} />
-                <Route path="/assignments" element={<Assignments />} />
-                <Route path="/tribute" element={<Tribute />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/social" element={<Social />} />
-                <Route path="/friends" element={<Friends />} />
-                <Route path="/admin/*" element={<Admin />} />
+                <Route path="/pledgehall" element={<ProtectedRoute><PledgeHall /></ProtectedRoute>} />
+                <Route path="/doctrine" element={<ProtectedRoute><BookReader /></ProtectedRoute>} />
+                <Route path="/read" element={<ProtectedRoute><ReadChapters /></ProtectedRoute>} />
+                <Route path="/learn" element={<ProtectedRoute><LearnLessons /></ProtectedRoute>} />
+                <Route path="/lesson/:id" element={<ProtectedRoute><LessonView /></ProtectedRoute>} />
+                <Route path="/chapter/:chapterId" element={<ProtectedRoute><ChapterView /></ProtectedRoute>} />
+                <Route path="/assignments" element={<ProtectedRoute><Assignments /></ProtectedRoute>} />
+                <Route path="/tribute" element={<ProtectedRoute><Tribute /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/social" element={<ProtectedRoute><Social /></ProtectedRoute>} />
+                <Route path="/friends" element={<ProtectedRoute><Friends /></ProtectedRoute>} />
+                <Route path="/admin/*" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
