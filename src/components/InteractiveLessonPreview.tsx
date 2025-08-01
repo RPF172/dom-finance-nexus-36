@@ -47,7 +47,7 @@ const InteractiveLessonPreview: React.FC<LessonPreviewProps> = ({ className = ''
     <div className={`bg-domtoken-slate/20 border border-domtoken-slate/30 rounded-lg p-6 ${className}`}>
       <div className="flex items-center gap-3 mb-6">
         <BookOpen className="h-6 w-6 text-domtoken-crimson" />
-        <h3 className="text-xl font-semibold text-white">Interactive Lesson Preview</h3>
+        <h3 className="text-xl font-semibold text-[hsl(var(--secondary-foreground))]">Interactive Lesson Preview</h3>
         <span className="bg-domtoken-crimson/20 text-domtoken-crimson px-2 py-1 rounded text-sm">Demo</span>
       </div>
 
@@ -73,7 +73,7 @@ const InteractiveLessonPreview: React.FC<LessonPreviewProps> = ({ className = ''
       <Card className="p-6 bg-domtoken-obsidian/50 border-domtoken-slate/50 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h4 className="text-lg font-semibold text-white mb-2">
+            <h4 className="text-lg font-semibold text-[hsl(var(--secondary-foreground))] mb-2">
               {sampleLessons[currentLesson].title}
             </h4>
             <p className="text-domtoken-silver text-sm mb-3">
@@ -109,11 +109,11 @@ const InteractiveLessonPreview: React.FC<LessonPreviewProps> = ({ className = ''
         <Card className="p-6 bg-domtoken-crimson/5 border-domtoken-crimson/30">
           <div className="flex items-center gap-3 mb-4">
             <CheckCircle className="h-5 w-5 text-domtoken-crimson" />
-            <h5 className="font-semibold text-white">Knowledge Check</h5>
+            <h5 className="font-semibold text-[hsl(var(--secondary-foreground))]">Knowledge Check</h5>
           </div>
           
           <div className="space-y-4">
-            <p className="text-white">{quizQuestions[0].question}</p>
+            <p className="text-[hsl(var(--secondary-foreground))]">{quizQuestions[0].question}</p>
             <div className="grid grid-cols-1 gap-2">
               {quizQuestions[0].options.map((option, index) => (
                 <button

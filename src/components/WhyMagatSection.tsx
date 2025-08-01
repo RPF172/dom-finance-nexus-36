@@ -6,7 +6,7 @@ const WhyMagatSection: React.FC = () => {
     <LazySection className="py-20 bg-domtoken-obsidian/50">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             📜 WELCOME TO THE <span className="text-domtoken-crimson">INSTITUTION</span>
           </h2>
           <div className="text-xl text-domtoken-silver max-w-3xl mx-auto space-y-4">
@@ -21,7 +21,7 @@ const WhyMagatSection: React.FC = () => {
         </div>
 
         <div className="text-center mb-12">
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 font-cinzel">
+          <h3 className="text-3xl md:text-4xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🕳️ ENTER THE <span className="text-domtoken-crimson">INITIATION WEEK</span>
           </h3>
           <blockquote className="text-xl text-domtoken-crimson italic mb-6">

@@ -65,7 +65,7 @@ const TraditionalVsMagatSection: React.FC = () => {
     <LazySection className="py-20 bg-domtoken-slate/10">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🏴‍☠️ CAMPUS <span className="text-domtoken-crimson">LIFE</span>
           </h2>
           <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
@@ -90,7 +90,7 @@ const TraditionalVsMagatSection: React.FC = () => {
         </div>
 
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             ⛓️ YOUR PROGRESSION IS NOT <span className="text-domtoken-crimson">YOURS</span>
           </h2>
           <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">

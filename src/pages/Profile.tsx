@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/components/layout/AppLayout';
+import { useProfile, useUpdateProfile } from '@/hooks/useProfile';
 import { 
   Crown, 
   MessageCircle,
@@ -19,7 +20,28 @@ import {
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
+  const { data: profile, isLoading, error } = useProfile();
+  const updateProfile = useUpdateProfile();
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || '');
+  const [bio, setBio] = useState(profile?.bio || '');
+  React.useEffect(() => {
+    if (profile) {
+      setAvatarUrl(profile.avatar_url || '');
+      setBio(profile.bio || '');
+    }
+  }, [profile]);
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAvatarUrl(e.target.value);
+  };
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setBio(e.target.value);
+  };
+  const handleSave = () => {
+    updateProfile.mutate({ avatar_url: avatarUrl, bio });
+  };
 
+  if (isLoading) return <div className="p-6 text-center">Loading...</div>;
+  if (error) return <div className="p-6 text-center text-destructive">Error loading profile.</div>;
   return (
     <AppLayout>
       <div className="p-6">
@@ -35,28 +57,39 @@ const Profile: React.FC = () => {
               <CardContent className="p-6">
                 <div className="flex flex-col items-center space-y-4">
                   {/* Avatar */}
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-primary/30 flex items-center justify-center">
-                    <Crown className="h-12 w-12 text-primary" />
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-primary/30 flex items-center justify-center overflow-hidden">
+                    {avatarUrl ? (
+                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <Crown className="h-12 w-12 text-primary" />
+                    )}
                   </div>
+                  <input
+                    type="text"
+                    className="input mt-2 w-full"
+                    placeholder="Avatar image URL"
+                    value={avatarUrl}
+                    onChange={handleAvatarChange}
+                  />
                   
                   {/* Basic Info */}
                   <div className="text-center space-y-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>🔖 Collar ID:</span>
-                      <Badge variant="outline" className="font-mono">#739AFD</Badge>
+                      <Badge variant="outline" className="font-mono">{profile?.id || 'N/A'}</Badge>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span>🏛️ Role:</span>
-                      <Badge variant="destructive">SUBMISSIVE</Badge>
+                      <Badge variant="destructive">{profile?.display_name || 'SUBMISSIVE'}</Badge>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span>🎖️ Rank:</span>
                       <Badge className="bg-primary/10 text-primary border-primary/20">
-                        OBEDIENT SLUG
+                        {profile?.is_premium ? 'PREMIUM' : 'OBEDIENT SLUG'}
                       </Badge>
                     </div>
                     <div className="text-sm italic text-muted-foreground mt-3">
-                      💬 "Unworthy. Unwavering."
+                      💬 {bio || 'No bio set.'}
                     </div>
                   </div>
                 </div>
@@ -168,15 +201,28 @@ const Profile: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* About Section */}
+            {/* About Section (Editable) */}
             <Card className="institutional-card">
               <CardHeader>
                 <CardTitle className="text-lg tracking-wide">ABOUT</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-sm italic text-center p-4 bg-muted/30 rounded-lg">
-                  "I enrolled to unlearn freedom. Pain makes sense. I hope to be chosen."
-                </div>
+                <textarea
+                  className="w-full p-2 rounded bg-muted/30 border border-border text-sm"
+                  rows={3}
+                  placeholder="Write something about yourself..."
+                  value={bio}
+                  onChange={handleBioChange}
+                />
+                <Button className="mt-2" onClick={handleSave} disabled={updateProfile.status === 'pending'}>
+                  {updateProfile.status === 'pending' ? 'Saving...' : 'Save'}
+                </Button>
+                {updateProfile.status === 'error' && (
+                  <div className="text-destructive text-xs mt-2">Error saving profile.</div>
+                )}
+                {updateProfile.status === 'success' && (
+                  <div className="text-green-600 text-xs mt-2">Profile updated!</div>
+                )}
               </CardContent>
             </Card>
 

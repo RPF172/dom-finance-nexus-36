@@ -69,10 +69,10 @@ const LearningPathsSection: React.FC = () => {
     <LazySection className="py-20 bg-domtoken-obsidian">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🎓 RANKS ARE NOT <span className="text-domtoken-crimson">EARNED</span>.
           </h2>
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-6 font-cinzel">
+          <h3 className="text-3xl md:text-4xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             THEY ARE <span className="text-domtoken-crimson">ENFORCED</span>.
           </h3>
           <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
@@ -85,7 +85,7 @@ const LearningPathsSection: React.FC = () => {
         </div>
         
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             📚 LESSONS IN <span className="text-domtoken-crimson">DEHUMANIZATION</span>
           </h2>
           <p className="text-xl text-domtoken-silver mb-8">You will study:</p>

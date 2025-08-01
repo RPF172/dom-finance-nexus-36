@@ -157,102 +157,90 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-[#e3dcc3] flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen bg-card text-foreground flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-8 border border-border rounded-xl shadow-lg bg-card">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold font-cinzel text-white">
-            MAGAT UNIVERSITY
+          <h1 className="text-3xl font-bold font-cinzel text-[hsl(var(--secondary-foreground))]">
+            MAGAT University Login
           </h1>
-          <p className="text-sm text-[#999] italic">
-            Submit • Surrender • Serve
+          <p className="text-sm text-muted-foreground italic">
+            "Obedience is the Tuition. Ownership is the Degree."
           </p>
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex bg-[#1a1a1a] rounded-lg p-1 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
+        <div className="flex bg-secondary rounded-lg p-1 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
           <button
+            type="button"
+            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${isLogin ? 'bg-card text-foreground shadow-md border border-border' : 'bg-secondary text-secondary-foreground shadow-lg border border-border'}`}
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${
-              isLogin 
-                ? 'bg-red-600 text-white shadow-lg transform scale-105' 
-                : 'text-[#999] hover:text-[#e3dcc3]'
-            }`}
           >
-            Submit to Entry
+            Login
           </button>
           <button
+            type="button"
+            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${!isLogin ? 'bg-card text-foreground shadow-md border border-border' : 'bg-secondary text-secondary-foreground shadow-lg border border-border'}`}
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${
-              !isLogin 
-                ? 'bg-red-600 text-white shadow-lg transform scale-105' 
-                : 'text-[#999] hover:text-[#e3dcc3]'
-            }`}
           >
-            Begin Indoctrination
+            Register
           </button>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in [animation-delay:0.5s] opacity-0 [animation-fill-mode:forwards]">
+          {/* Email */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Email</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <input
+                type="email"
+                value={formData.email}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                className="pl-10 bg-card border-border text-foreground placeholder-muted-foreground rounded-md w-full py-2 border"
+                placeholder="Email address"
+                required
+              />
+            </div>
+          </div>
+
           {/* Collar ID (Username for registration) */}
           {!isLogin && (
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#999]">
-                Collar Name
-              </label>
+              <label className="text-sm font-medium text-muted-foreground">Collar Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#666] h-4 w-4" />
-                <Input
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <input
                   type="text"
                   value={formData.collarName}
-                  onChange={handleInputChange('collarName')}
-                  className="pl-10 bg-[#1a1a1a] border-[#333] text-[#e3dcc3] placeholder-[#666]"
-                  placeholder="Your designated identifier"
-                  disabled={loading}
+                  onChange={e => setFormData({ ...formData, collarName: e.target.value })}
+                  className="pl-10 bg-card border-border text-foreground placeholder-muted-foreground rounded-md w-full py-2 border"
+                  placeholder="Collar name"
+                  required
                 />
               </div>
             </div>
           )}
 
-          {/* Email */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[#999]">
-              {isLogin ? 'Collar ID' : 'Email Address'}
-            </label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#666] h-4 w-4" />
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange('email')}
-                className="pl-10 bg-[#1a1a1a] border-[#333] text-[#e3dcc3] placeholder-[#666]"
-                placeholder={isLogin ? "your.email@domain.com" : "Email for institutional communications"}
-                disabled={loading}
-              />
-            </div>
-          </div>
-
           {/* Password */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#999]">
-              Passphrase
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#666] h-4 w-4" />
-              <Input
-                type={showPassword ? "text" : "password"}
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <input
+                type={showPassword ? 'text' : 'password'}
                 value={formData.password}
-                onChange={handleInputChange('password')}
-                className="pl-10 pr-10 bg-[#1a1a1a] border-[#333] text-[#e3dcc3] placeholder-[#666]"
-                placeholder={isLogin ? "Enter your binding phrase" : "Minimum 8 characters of submission"}
-                disabled={loading}
+                onChange={e => setFormData({ ...formData, password: e.target.value })}
+                className="pl-10 pr-10 bg-card border-border text-foreground placeholder-muted-foreground rounded-md w-full py-2 border"
+                placeholder="Password"
+                required
               />
               <button
                 type="button"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-accent"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#666] hover:text-[#e3dcc3]"
-                disabled={loading}
+                tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -265,11 +253,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
               <Checkbox
                 id="remember"
                 checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                className="border-[#666] data-[state=checked]:bg-red-600"
+                onCheckedChange={setRememberMe}
+                className="border-border data-[state=checked]:bg-accent"
               />
-              <label htmlFor="remember" className="text-sm text-[#999] cursor-pointer">
-                Remember My Shame
+              <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
+                Remember me
               </label>
             </div>
           )}
@@ -277,32 +265,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           {/* Submit Button */}
           <Button
             type="submit"
+            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-3 font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden group"
             disabled={loading}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden group"
           >
-            <span className="relative z-10">
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Processing...
-                </div>
-              ) : (
-                isLogin ? 'Submit to Entry' : 'Begin Indoctrination →'
-              )}
-            </span>
-            <div className="absolute inset-0 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+            {loading ? 'Processing...' : isLogin ? 'Login' : 'Register'}
           </Button>
         </form>
-
-        {/* Footer */}
-        <div className="text-center text-xs text-[#666]">
-          <p className="mb-2">
-            By proceeding, you acknowledge your worthlessness and accept institutional processing.
-          </p>
-          <p>
-            Your data belongs to the Institution. Privacy is a delusion of the unprocessed.
-          </p>
-        </div>
       </div>
     </div>
   );

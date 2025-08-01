@@ -50,7 +50,7 @@ const UseCasesSection: React.FC = () => {
     <section className="py-20 bg-domtoken-obsidian">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             Built for <span className="text-domtoken-crimson">Financial Domination</span>
           </h2>
           <p className="text-xl text-domtoken-silver max-w-3xl mx-auto">

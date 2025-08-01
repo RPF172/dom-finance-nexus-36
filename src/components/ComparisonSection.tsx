@@ -49,7 +49,7 @@ const ComparisonSection: React.FC = () => {
     <section className="py-20 bg-domtoken-slate/10">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             Why <span className="text-domtoken-crimson">$DOM</span> Dominates
           </h2>
           <p className="text-xl text-domtoken-silver max-w-3xl mx-auto">
@@ -97,15 +97,15 @@ const ComparisonSection: React.FC = () => {
           <h3 className="text-2xl font-bold text-domtoken-crimson mb-4">The $DOM Advantage</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-semibold text-white mb-2">Psychological Accessibility</h4>
+              <h4 className="font-semibold text-[hsl(var(--secondary-foreground))] mb-2">Psychological Accessibility</h4>
               <p className="text-domtoken-silver text-sm">Low unit price ($0.01-$0.10) means even broke pigs can pay tribute daily.</p>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-2">Deflationary Mechanics</h4>
+              <h4 className="font-semibold text-[hsl(var(--secondary-foreground))] mb-2">Deflationary Mechanics</h4>
               <p className="text-domtoken-silver text-sm">Every transaction burns supply, creating scarcity and increasing value over time.</p>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-2">Purpose-Built Features</h4>
+              <h4 className="font-semibold text-[hsl(var(--secondary-foreground))] mb-2">Purpose-Built Features</h4>
               <p className="text-domtoken-silver text-sm">Tribute, burn, rank, and ritual mechanics unmatched by generic tokens.</p>
             </div>
           </div>

@@ -1,93 +1,138 @@
 
+
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();
-  
   return (
-    <>
-      {/* Hero Section */}
-      <section className="min-h-screen w-full flex flex-col justify-center items-center bg-obedience-white relative overflow-hidden px-4 sm:px-6 lg:px-8">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20 animate-pulse"
-          style={{ backgroundImage: 'url(/lovable-uploads/31446dfb-4573-453a-b853-5998004b543b.png)' }}
-        />
-        
-        {/* Content */}
-        <div className="relative z-10 text-center max-w-4xl animate-fade-in w-full">
-          <h1 className="font-institutional text-command-black text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase tracking-wider leading-tight mb-4 sm:mb-6 animate-scale-in">
-            You're Not Enrolling.<br />You're Surrendering.
-          </h1>
-          
-          <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 font-inter animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards] max-w-2xl mx-auto leading-relaxed">
-            MAGAT U — Elite Obedience Training for the Weak-Willed.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in [animation-delay:0.6s] opacity-0 [animation-fill-mode:forwards]">
-            <Button 
-              variant="outline"
-              size="lg"
-              className="group border-2 border-command-black text-command-black hover:border-target-red hover:text-target-red bg-transparent px-8 sm:px-12 py-3 sm:py-4 font-semibold uppercase transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden w-full sm:w-auto"
-              onClick={() => navigate('/auth')}
-            >
-              <span className="relative z-10">BEND NOW</span>
-              <div className="absolute inset-0 bg-target-red transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left opacity-10"></div>
-            </Button>
-            
-            <button 
-              className="text-gray-500 underline text-base sm:text-lg font-inter hover:text-gray-700 transition-all duration-200 hover:scale-105 story-link w-full sm:w-auto"
-              onClick={() => navigate('/lessons')}
-            >
-              VIEW CURRICULUM
-            </button>
-          </div>
-        </div>
-      </section>
+    <section
+      className="hero relative flex flex-col justify-center items-center h-screen overflow-hidden px-6 sm:px-8"
+      style={{ minHeight: '100vh' }}
+    >
+      {/* Background layers */}
+      {/* Shame Red glowing cracks overlay */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background: "url('/textures/concrete.png')",
+          backgroundColor: '#0A0A0A',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundBlendMode: 'multiply',
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background: "url('/svg/cracks-red.svg')",
+          mixBlendMode: 'overlay',
+          opacity: 0.25,
+        }}
+      />
+      {/* Bottom silhouettes */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 right-0 bottom-0 z-0"
+        style={{
+          height: '40%',
+          background: "url('/svg/kneeling-silhouettes.svg') repeat-x bottom",
+          opacity: 0.15,
+        }}
+      />
 
-      {/* Why You're Here Section */}
-      <section className="w-full bg-obedience-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="font-institutional text-command-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold uppercase text-center mb-8 sm:mb-12 border-b-2 border-gray-200 pb-4">
-            Why You're Here
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <div className="bg-gray-50 p-6 sm:p-8 border border-gray-200 shadow-sm hover:transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 text-center min-h-60 group animate-fade-in [animation-delay:0.9s] opacity-0 [animation-fill-mode:forwards]">
-              <div className="text-command-black mb-4 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-10 sm:w-12 h-10 sm:h-12 mx-auto stroke-current" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46" />
-                </svg>
-              </div>
-              <h3 className="font-inter text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-command-black transition-colors">You crave structure.</h3>
-              <p className="text-sm sm:text-base text-gray-600 font-inter leading-relaxed">Structure is what saves weak minds from chaos.</p>
-            </div>
-            
-            <div className="bg-gray-50 p-6 sm:p-8 border border-gray-200 shadow-sm hover:transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 text-center min-h-60 group animate-fade-in [animation-delay:1.1s] opacity-0 [animation-fill-mode:forwards]">
-              <div className="text-command-black mb-4 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-10 sm:w-12 h-10 sm:h-12 mx-auto stroke-current" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                </svg>
-              </div>
-              <h3 className="font-inter text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-command-black transition-colors">You need restraint.</h3>
-              <p className="text-sm sm:text-base text-gray-600 font-inter leading-relaxed">Restraint builds character through controlled pressure.</p>
-            </div>
-            
-            <div className="bg-gray-50 p-6 sm:p-8 border border-gray-200 shadow-sm hover:transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 text-center min-h-60 group animate-fade-in [animation-delay:1.3s] opacity-0 [animation-fill-mode:forwards]">
-              <div className="text-command-black mb-4 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-10 sm:w-12 h-10 sm:h-12 mx-auto stroke-current" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="font-inter text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-command-black transition-colors">You want routine.</h3>
-              <p className="text-sm sm:text-base text-gray-600 font-inter leading-relaxed">Routine creates measured progress toward obedience.</p>
-            </div>
-          </div>
+      {/* Foreground content */}
+      <div className="relative z-10 flex flex-col items-center w-full max-w-2xl text-center">
+        <h1
+          className="font-stencil text-concrete-gray tracking-wide uppercase z-10"
+          style={{
+            fontSize: 'clamp(3rem, 8vw, 6rem)',
+            letterSpacing: '0.05em',
+            color: '#CCCCCC',
+          }}
+        >
+          SUB CAMP™
+        </h1>
+        <p
+          className="font-mono text-shame-red mt-4 z-10"
+          style={{
+            fontFamily: 'IBM Plex Mono, monospace',
+            color: '#B30000',
+            fontSize: 'clamp(1rem, 3vw, 1.5rem)',
+          }}
+        >
+          Not a camp. A conversion center.
+        </p>
+        {/* CTA Buttons */}
+        <div
+          className="flex flex-col gap-4 mt-10 w-full sm:flex-row sm:justify-center sm:items-center sm:gap-6"
+        >
+          <button
+            className="enlist-btn w-full sm:w-auto"
+            onClick={() => navigate('/auth?enlist=1')}
+            style={{
+              backgroundColor: '#FF9EC7',
+              color: '#0A0A0A',
+              fontFamily: 'IBM Plex Mono, monospace',
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
+              borderRadius: 8,
+              padding: '1rem 2rem',
+              animation: 'pulse 2s infinite',
+              fontSize: '1.1rem',
+              boxShadow: '0 0 0 0 rgba(255,158,199,0.7)',
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.animationDuration = '1.2s';
+              e.currentTarget.style.boxShadow = '0 0 24px 8px rgba(255,158,199,0.6)';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.animationDuration = '2s';
+              e.currentTarget.style.boxShadow = '0 0 0 0 rgba(255,158,199,0.7)';
+            }}
+          >
+            ENLIST NOW
+          </button>
+          <button
+            className="alpha-btn w-full sm:w-auto"
+            onClick={() => navigate('/auth?admin=1')}
+            style={{
+              backgroundColor: '#7B6E54',
+              color: '#0A0A0A',
+              fontFamily: 'IBM Plex Mono, monospace',
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
+              border: '2px solid #CCCCCC',
+              borderRadius: 2,
+              padding: '1rem 2rem',
+              fontSize: '1.1rem',
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.backgroundColor = '#6a604a';
+              e.currentTarget.style.boxShadow = '0 0 0 2px #CCCCCC inset';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.backgroundColor = '#7B6E54';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            ALPHA COMMAND LOGIN
+          </button>
         </div>
-      </section>
-    </>
+      </div>
+      {/* Custom cursor effect */}
+      <style>{`
+        .hero { cursor: url('/icons/boot-footprint.svg'), auto; }
+        .enlist-btn { transition: box-shadow 0.2s, animation-duration 0.2s; }
+        .alpha-btn { transition: background 0.2s, box-shadow 0.2s; }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,158,199,0.7); }
+          50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(255,158,199,0.4); }
+        }
+      `}</style>
+    </section>
   );
 };
 

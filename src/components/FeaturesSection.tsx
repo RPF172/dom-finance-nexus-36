@@ -61,14 +61,14 @@ const FeaturesSection: React.FC = () => {
               className="bg-domtoken-slate/30 p-6 rounded-lg border border-domtoken-slate/50 hover:border-domtoken-crimson/50 transition-all duration-300"
             >
               <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
+              <h3 className="text-xl font-bold mb-2 text-[hsl(var(--secondary-foreground))]">{feature.title}</h3>
               <p className="text-domtoken-silver">{feature.description}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-16 bg-domtoken-slate/30 p-8 rounded-lg border border-domtoken-slate/50">
-          <h3 className="text-2xl font-bold mb-4 text-white text-center">Problem & Opportunity</h3>
+          <h3 className="text-2xl font-bold mb-4 text-[hsl(var(--secondary-foreground))] text-center">Problem & Opportunity</h3>
           
           <div className="grid md:grid-cols-2 gap-8">
             <div>

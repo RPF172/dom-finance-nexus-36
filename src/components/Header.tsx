@@ -31,7 +31,7 @@ const Header: React.FC = () => {
       <div className="section-container !py-4 flex justify-between items-center">
         <Link to={user ? '/social' : '/'} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
           <div className="w-6 h-6 bg-primary"></div>
-          <span className="text-2xl font-institutional text-foreground tracking-wide">MAGAT UNIVERSITY</span>
+          <span className="text-2xl font-institutional text-foreground tracking-wide">FAG CAMP</span>
         </Link>
         
         <div className="flex items-center gap-4">

@@ -57,7 +57,7 @@ const TeamSection: React.FC = () => {
     <section id="team" className="py-24 bg-gradient-to-b from-domtoken-slate/30 to-domtoken-obsidian">
       <div className="section-container">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🔻 THE MONOLITH <span className="text-domtoken-crimson">CALLS</span>
           </h2>
           <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
@@ -87,7 +87,7 @@ const TeamSection: React.FC = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
+          <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🔒 BEGIN YOUR <span className="text-domtoken-crimson">INDOCTRINATION</span>
           </h2>
           <div className="text-lg text-domtoken-silver mb-8 space-y-2">
