@@ -60,8 +60,8 @@ export default function RecentLessonsCarousel() {
         </button>
       </div>
       <div className="mt-6 text-center">
-        <h3 className="text-2xl font-bold text-foreground mb-2">{lessons[current].title}</h3>
-        <p className="text-muted-foreground">{lessons[current].description}</p>
+        <h3 className="text-2xl font-bold text-white mb-2">{lessons[current].title}</h3>
+        <p className="text-white/80">{lessons[current].description}</p>
       </div>
       <div className="flex gap-2 mt-4 justify-center">
         {lessons.map((_, idx) => (

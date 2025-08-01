@@ -79,7 +79,7 @@ const UniversityFeaturesSection: React.FC = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel">
             🩸 THE TRIBUTE <span className="text-domtoken-crimson">SYSTEM</span>
           </h2>
-          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
+          <div className="text-lg text-white max-w-3xl mx-auto space-y-4">
             <p>MAGAT University is not free.<br />You will pay. In coin, in voice, in blood.</p>
           </div>
         </div>
@@ -87,20 +87,20 @@ const UniversityFeaturesSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
             <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Chapter Keys</h3>
-            <p className="text-domtoken-silver">unlock advanced chapters</p>
+            <p className="text-white">unlock advanced chapters</p>
           </div>
           <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
             <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Obedience Credits</h3>
-            <p className="text-domtoken-silver">track your loyalty</p>
+            <p className="text-white">track your loyalty</p>
           </div>
           <div className="bg-domtoken-slate/20 border border-domtoken-crimson/30 rounded-lg p-6">
             <h3 className="text-xl font-semibold text-domtoken-crimson mb-3">Punishment Dues</h3>
-            <p className="text-domtoken-silver">are... inevitable</p>
+            <p className="text-white">are... inevitable</p>
           </div>
         </div>
 
         <div className="text-center mb-16">
-          <p className="text-lg text-domtoken-silver">
+          <p className="text-lg text-white">
             You may opt out, of course.<br />
             Just click "I Refuse," and watch what happens next.
           </p>
@@ -111,7 +111,7 @@ const UniversityFeaturesSection: React.FC = () => {
             🧠 BUILT FOR <span className="text-domtoken-crimson">DEGRADATION</span>.<br />
             ENGINEERED FOR <span className="text-domtoken-crimson">SUBMISSION</span>.
           </h2>
-          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto mb-8">
+          <div className="text-lg text-white max-w-3xl mx-auto mb-8">
             <p>MAGAT University is powered by advanced indoctrination systems, including:</p>
           </div>
           
@@ -130,7 +130,7 @@ const UniversityFeaturesSection: React.FC = () => {
             </div>
           </div>
           
-          <div className="mt-8 text-domtoken-silver space-y-2">
+          <div className="mt-8 text-white space-y-2">
             <p>No feature exists for your convenience.</p>
             <p>Every button is a test.</p>
             <p>Every scroll is a choice.</p>

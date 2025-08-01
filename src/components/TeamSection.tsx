@@ -60,7 +60,7 @@ const TeamSection: React.FC = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🔻 THE MONOLITH <span className="text-domtoken-crimson">CALLS</span>
           </h2>
-          <div className="text-lg text-domtoken-silver max-w-3xl mx-auto space-y-4">
+          <div className="text-lg text-white max-w-3xl mx-auto space-y-4">
             <blockquote className="text-xl text-domtoken-crimson italic mb-6">
               A towering structure of brutal stone, bound by chains.<br />
               It pulses red with your unshed shame.<br />
@@ -77,7 +77,7 @@ const TeamSection: React.FC = () => {
               alt="The Monolith"
               className="w-full h-96 object-cover object-center rounded-lg mb-8"
             />
-            <div className="text-lg text-domtoken-silver space-y-4">
+            <div className="text-lg text-white space-y-4">
               <p>The ancient pyramid stands before you, its surface crackling with dark energy.</p>
               <p>Each level represents a stage of transformation.</p>
               <p>Each inscription, a commandment you will learn to obey.</p>
@@ -90,11 +90,11 @@ const TeamSection: React.FC = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-[hsl(var(--secondary-foreground))] mb-6 font-cinzel">
             🔒 BEGIN YOUR <span className="text-domtoken-crimson">INDOCTRINATION</span>
           </h2>
-          <div className="text-lg text-domtoken-silver mb-8 space-y-2">
+          <div className="text-lg text-white mb-8 space-y-2">
             <p>No signup. No exit.</p>
             <p>Only one button.</p>
           </div>
-          <div className="text-sm text-domtoken-silver/70 mt-4">
+          <div className="text-sm text-white/70 mt-4">
             (The system will decide if you're ready.)
           </div>
         </div>
