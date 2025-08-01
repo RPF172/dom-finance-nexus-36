@@ -45,62 +45,62 @@ const Index = () => {
     {
       key: 'hero',
       content: <HeroSection />, 
-      bg: 'bg-ritual-khaki',
-      border: 'border border-border shadow-md',
+      bg: 'bg-obsidian-grey',
+      border: 'obsidian-card',
     },
     {
       key: 'carousel',
       content: <RecentLessonsCarousel />, 
-      bg: 'bg-concrete-gray',
-      border: 'border border-border shadow-lg',
+      bg: 'bg-steel-silver text-jet-black',
+      border: 'border-2 border-steel-silver',
     },
     {
       key: 'why',
       content: <WhyMagatSection />, 
-      bg: 'bg-ritual-khaki',
-      border: 'border border-border shadow-md',
+      bg: 'bg-obsidian-grey',
+      border: 'obsidian-card',
     },
     {
       key: 'paths',
       content: <LearningPathsSection />, 
-      bg: 'bg-concrete-gray',
-      border: 'border border-border shadow-lg',
+      bg: 'bg-steel-silver text-jet-black',
+      border: 'border-2 border-steel-silver',
     },
     {
       key: 'traditional',
       content: <TraditionalVsMagatSection />, 
-      bg: 'bg-ritual-khaki',
-      border: 'border border-border shadow-md',
+      bg: 'bg-obsidian-grey',
+      border: 'obsidian-card',
     },
     {
       key: 'features',
       content: <UniversityFeaturesSection />, 
-      bg: 'bg-concrete-gray',
-      border: 'border border-border shadow-lg',
+      bg: 'bg-steel-silver text-jet-black',
+      border: 'border-2 border-steel-silver',
     },
     {
       key: 'tokenomics',
       content: <TokenomicsSection />, 
-      bg: 'bg-ritual-khaki',
-      border: 'border border-border shadow-md',
+      bg: 'bg-obsidian-grey',
+      border: 'obsidian-card',
     },
     {
       key: 'roadmap',
       content: <AcademicRoadmapSection />, 
-      bg: 'bg-concrete-gray',
-      border: 'border border-border shadow-lg',
+      bg: 'bg-steel-silver text-jet-black',
+      border: 'border-2 border-steel-silver',
     },
     {
       key: 'preview',
       content: <InteractiveLessonPreview />, 
-      bg: 'bg-ritual-khaki',
-      border: 'border border-border shadow-md',
+      bg: 'bg-obsidian-grey',
+      border: 'obsidian-card',
     },
     {
       key: 'team',
       content: <TeamSection />, 
-      bg: 'bg-concrete-gray',
-      border: 'border border-border shadow-lg',
+      bg: 'bg-steel-silver text-jet-black',
+      border: 'border-2 border-steel-silver',
     },
   ];
 
@@ -111,7 +111,7 @@ const Index = () => {
         {sections.map((section, idx) => (
           <section
             key={section.key}
-            className={`my-8 mx-4 md:mx-12 lg:mx-24 py-12 px-4 md:px-8 rounded-xl ${section.bg} ${section.border}`}
+            className={`my-8 mx-4 md:mx-12 lg:mx-24 py-12 px-4 md:px-8 obsidian-tilt crimson-glow-hover ${section.bg} ${section.border}`}
           >
             {section.content}
           </section>

@@ -68,12 +68,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Updated MAGAT Brand Colors - New Palette
-				'alpha-black': '#0A0A0A',
-				'concrete-gray': '#CCCCCC',
-				'ritual-khaki': '#7B6E54',
-				'rusted-bronze': '#CD7F32',
-				'shame-red': '#B30000',
+				// OBSIDIAN CUT Brand Colors
+				'jet-black': '#0A0A0A',
+				'obsidian-grey': '#1A1A1A',
+				'steel-silver': '#CCCCCC',
+				'ritual-crimson': '#C1272D',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

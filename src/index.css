@@ -8,53 +8,57 @@
 
 @layer base {
   :root {
-    /* Updated MAGAT Color System - New Palette */
-    --background: 0 0% 4%; /* Alpha Black */
-    --foreground: 0 0% 80%; /* Concrete Gray */
+    /* OBSIDIAN CUT Color System */
+    --background: 0 0% 4%; /* Jet Black */
+    --foreground: 0 0% 80%; /* Steel Silver */
 
-    --card: 39 19% 39%; /* Ritual Khaki for cards */
-    --card-foreground: 0 0% 80%; /* Concrete Gray */
+    --card: 0 0% 10%; /* Obsidian Grey */
+    --card-foreground: 0 0% 80%; /* Steel Silver */
 
-    --popover: 39 19% 39%;
+    --popover: 0 0% 10%;
     --popover-foreground: 0 0% 80%;
 
-    --primary: 0 100% 35%; /* Shame Red */
-    --primary-foreground: 0 0% 80%;
+    --primary: 356 75% 47%; /* Ritual Crimson */
+    --primary-foreground: 0 0% 95%;
 
-    --secondary: 30 58% 50%; /* Rusted Bronze */
-    --secondary-foreground: 0 0% 4%;
+    --secondary: 0 0% 10%; /* Obsidian Grey */
+    --secondary-foreground: 0 0% 80%;
 
-    --muted: 0 0% 20%; /* Darker for subtle elements */
+    --muted: 0 0% 15%; /* Darker obsidian */
     --muted-foreground: 0 0% 60%;
 
-    --accent: 30 58% 50%; /* Rusted Bronze */
-    --accent-foreground: 0 0% 4%;
+    --accent: 356 75% 47%; /* Ritual Crimson */
+    --accent-foreground: 0 0% 95%;
 
-    --destructive: 0 100% 35%; /* Shame Red */
-    --destructive-foreground: 0 0% 80%;
+    --destructive: 356 75% 47%; /* Ritual Crimson */
+    --destructive-foreground: 0 0% 95%;
 
     --border: 0 0% 20%; /* Dark borders */
-    --input: 39 19% 35%; /* Darker Ritual Khaki for inputs */
-    --ring: 0 100% 35%; /* Shame Red for focus */
+    --input: 0 0% 15%; /* Dark obsidian for inputs */
+    --ring: 356 75% 47%; /* Ritual Crimson for focus */
 
-    --radius: 0rem; /* Sharp, institutional edges */
+    --radius: 0rem; /* Sharp, surgical edges */
 
-    /* Updated Brand Colors - HSL Values */
-    --alpha-black: 0 0% 4%;
-    --concrete-gray: 0 0% 80%;
-    --ritual-khaki: 39 19% 39%;
-    --rusted-bronze: 30 58% 50%;
-    --shame-red: 0 100% 35%;
+    /* OBSIDIAN CUT Brand Colors - HSL Values */
+    --jet-black: 0 0% 4%;
+    --obsidian-grey: 0 0% 10%;
+    --steel-silver: 0 0% 80%;
+    --ritual-crimson: 356 75% 47%;
+
+    /* Gradients */
+    --obsidian-gradient: linear-gradient(135deg, hsl(0 0% 10%) 0%, hsl(0 0% 4%) 100%);
+    --crimson-glow: 0 0 20px 2px hsl(356 75% 47% / 0.3);
+    --obsidian-shadow: 0 8px 32px hsl(0 0% 0% / 0.8), 0 2px 8px hsl(0 0% 0% / 0.6);
 
     /* Sidebar tokens */
-    --sidebar-background: 39 19% 39%;
+    --sidebar-background: 0 0% 10%;
     --sidebar-foreground: 0 0% 80%;
-    --sidebar-primary: 339 100% 81%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 4%;
+    --sidebar-primary: 356 75% 47%;
+    --sidebar-primary-foreground: 0 0% 95%;
+    --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 80%;
-    --sidebar-border: 39 19% 39%;
-    --sidebar-ring: 339 100% 81%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 356 75% 47%;
   }
 }
 
@@ -88,54 +92,88 @@
 }
 
 @layer components {
-  /* Institutional UI Components */
-  .institutional-header {
-    @apply bg-secondary text-secondary-foreground border-b border-border;
+  /* OBSIDIAN CUT Components */
+  .obsidian-header {
+    @apply bg-secondary text-secondary-foreground border-b-2 border-border;
+    background: var(--obsidian-gradient);
   }
 
-  .institutional-card {
-    @apply bg-card border border-border shadow-sm transition-all duration-200;
+  .obsidian-card {
+    @apply bg-card border-2 border-border transition-all duration-200;
+    background: var(--obsidian-gradient);
+    box-shadow: var(--obsidian-shadow);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
   }
 
-  .institutional-card:hover {
-    @apply shadow-md border-accent/30 transform hover:scale-[1.02];
+  .obsidian-card:hover {
+    box-shadow: var(--crimson-glow), var(--obsidian-shadow);
+    transform: perspective(1000px) rotateX(2deg) rotateY(-1deg);
+    border-color: hsl(var(--accent));
   }
 
-  .institutional-button {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-105 active:scale-95;
+  .obsidian-button {
+    @apply bg-primary text-primary-foreground transition-all duration-200 relative overflow-hidden;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    box-shadow: inset 0 1px 0 hsl(var(--primary) / 0.5);
   }
 
-  .institutional-input {
-    @apply bg-input border border-border focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-200;
+  .obsidian-button:hover {
+    box-shadow: var(--crimson-glow), inset 0 1px 0 hsl(var(--primary) / 0.5);
+    transform: perspective(500px) rotateX(1deg);
+  }
+
+  .obsidian-button:active {
+    box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.5);
+    transform: perspective(500px) rotateX(-1deg);
+  }
+
+  .obsidian-input {
+    @apply bg-input border-2 border-border focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-200;
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
   }
 
   .section-container {
-    @apply max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12;
+    @apply max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16;
   }
 
   .page-header {
-    @apply text-center space-y-2 pb-6 border-b border-border mb-8;
+    @apply text-center space-y-4 pb-8 mb-12;
+    border-bottom: 2px solid hsl(var(--border));
   }
 
   .grid-cards {
-    @apply grid gap-4 md:gap-6;
+    @apply grid gap-6 md:gap-8;
   }
 
-  /* Micro-interactions */
-  .interactive-card {
-    @apply transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1 active:scale-98;
+  /* Obsidian Interactions */
+  .crimson-glow-hover {
+    @apply transition-all duration-200 ease-out;
   }
 
-  .button-glow {
-    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700;
+  .crimson-glow-hover:hover {
+    box-shadow: var(--crimson-glow);
+    border-color: hsl(var(--accent));
   }
 
-  .focus-ring {
+  .obsidian-tilt {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .obsidian-tilt:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(-1deg) translateY(-2px);
+  }
+
+  .pressed-obsidian {
+    @apply transition-all duration-100;
+  }
+
+  .pressed-obsidian:active {
+    box-shadow: inset 0 2px 8px hsl(0 0% 0% / 0.6);
+    transform: translateY(1px);
+  }
+
+  .focus-crimson {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
-  }
-
-  .press-effect {
-    @apply transition-transform duration-100 active:scale-95;
   }
 
   /* Mobile-first touch optimizations */
@@ -190,20 +228,16 @@
     @apply translate-y-0;
   }
 
-  /* Legacy styles for backward compatibility */
-  .dom-gradient {
-    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--ritual-khaki)) 100%);
+  /* Obsidian Cut Utilities */
+  .obsidian-gradient {
+    background: var(--obsidian-gradient);
   }
 
-  .crimson-glow {
-    box-shadow: 0 0 20px 2px hsl(var(--shame-red) / 0.3);
+  .crimson-shadow {
+    box-shadow: var(--crimson-glow);
   }
 
-  .circuit-overlay {
-    background-image: 
-      linear-gradient(0deg, hsl(var(--secondary) / 0.9) 0%, hsl(var(--secondary) / 0.8) 100%), 
-      url('/lovable-uploads/69a25420-4be6-4397-8cf4-f9ccf9407440.png');
-    background-size: cover;
-    background-position: center;
+  .obsidian-clip {
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
   }
 }
