@@ -42,7 +42,7 @@ export const ContentSequenceManager: React.FC<ContentSequenceManagerProps> = ({ 
         title: item.content_type === 'chapter' ? item.chapters?.title : item.lessons?.title
       }));
     },
-    onSuccess: (data) => setSequence(data || [])
+    
   });
 
   // Move item up/down

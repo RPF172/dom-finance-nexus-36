@@ -250,7 +250,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
               {!hasStartedReading ? (
                 <div className="text-center py-12">
                   <div className="mb-6">
-                    <ChapterIllustration chapterId={lesson.id} size="lg" />
+                    <ChapterIllustration chapterIndex={0} title={lesson.title} className="w-32 h-32 mx-auto rounded-lg" />
                   </div>
                   <h2 className="text-2xl font-institutional uppercase tracking-wide mb-4">
                     Begin Your Study
