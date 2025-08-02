@@ -133,11 +133,9 @@ const Assignments: React.FC = () => {
                 <div className="text-sm text-muted-foreground">Tasks Remaining</div>
                 <div className="text-3xl font-bold text-destructive animate-pulse">3</div>
                 <div className="text-xs text-destructive mt-1">URGENT</div>
-  return (
-    <AppLayout>
-      <div className="p-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Header and Filters ...existing code... */}
+              </div>
+            </div>
+          </div>
           {/* Assignment Cards */}
           <div className="space-y-4 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
             {filteredAssignments
@@ -209,3 +207,4 @@ const Assignments: React.FC = () => {
       </div>
     </AppLayout>
   );
+}
