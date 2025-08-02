@@ -165,6 +165,116 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       setLoading(false);
     }
   };
+
+  return (
+    <div className="w-full max-w-md mx-auto p-6 space-y-6">
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-bold text-steel-silver uppercase tracking-wider">
+          {isLogin ? 'FACILITY ACCESS' : 'INITIATE PROCESSING'}
+        </h2>
+        <p className="text-sm text-steel-silver/80">
+          {isLogin ? 'Enter credentials for admission' : 'Register for indoctrination'}
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+            Identification Code
+          </label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-steel-silver/60" />
+            <Input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              className="pl-10 bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+              placeholder="Enter email address"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+            Security Passphrase
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-steel-silver/60" />
+            <Input
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+              className="pl-10 pr-10 bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+              placeholder="Enter passphrase"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-steel-silver/60 hover:text-steel-silver"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {!isLogin && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+              Designation Name
+            </label>
+            <Input
+              type="text"
+              value={formData.collarName}
+              onChange={(e) => setFormData(prev => ({ ...prev, collarName: e.target.value }))}
+              className="bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+              placeholder="Enter your chosen designation"
+              required={!isLogin}
+            />
+          </div>
+        )}
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="remember"
+            checked={rememberMe}
+            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+          />
+          <label htmlFor="remember" className="text-sm text-steel-silver/80">
+            Remember credentials
+          </label>
+        </div>
+
+        <Button 
+          type="submit" 
+          className="w-full" 
+          disabled={loading}
+          variant="default"
+        >
+          {loading ? 'PROCESSING...' : (isLogin ? 'ENTER FACILITY' : 'BEGIN PROCESSING')}
+        </Button>
+      </form>
+
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={() => setIsLogin(!isLogin)}
+          className="text-sm text-steel-silver/80 hover:text-ritual-crimson transition-colors"
+        >
+          {isLogin ? 'Need to register? Begin processing' : 'Already processed? Enter facility'}
+        </button>
+      </div>
+
+      {showCollarModal && collarId && (
+        <CollarIdModal 
+          open={showCollarModal}
+          collarId={collarId} 
+          onClose={() => setShowCollarModal(false)} 
+        />
+      )}
+    </div>
+  );
 };
 
 export default AuthForm;
