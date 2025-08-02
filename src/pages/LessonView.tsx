@@ -39,12 +39,105 @@ const LessonView = () => {
 
   // State variables
   const [viewMode, setViewMode] = useState<'reader' | 'interactive'>('interactive');
+  // Local UI state mirrors backend progress
   const [completed, setCompleted] = useState(false);
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [taskCompleted, setTaskCompleted] = useState(false);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Map<string, string>>(new Map());
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  // Handler for toggling task completion
+  const handleTaskToggle = () => {
+    const newTaskCompleted = !taskCompleted;
+    updateProgress.mutate({
+      lesson_id: lesson.id,
+      content_read: true,
+      quiz_completed: quizAnswered,
+      assignment_submitted: newTaskCompleted,
+      ritual_completed: false
+    }, {
+      onSuccess: (data) => {
+        setTaskCompleted(data.assignment_submitted);
+        setCompleted(data.completed);
+        setQuizAnswered(data.quiz_completed);
+        toast({
+          title: newTaskCompleted ? "Task Completed" : "Task Marked Incomplete",
+          description: newTaskCompleted ? "Your submission has been recorded." : "Task status updated."
+        });
+      }
+    });
+  };
+
+  // Handler for selecting quiz answer
+  const handleAnswerSelect = (quizId: string, answer: string) => {
+    if (!quizAnswered) {
+      const newAnswers = new Map(selectedAnswers);
+      newAnswers.set(quizId, answer);
+      setSelectedAnswers(newAnswers);
+    }
+  };
+
+  // Handler for submitting quiz
+  const handleQuizSubmit = () => {
+    const currentQuiz = quizzes?.[currentQuizIndex];
+    const totalQuizzes = quizzes?.length || 0;
+    const completedQuizzes = selectedAnswers.size;
+    if (currentQuiz && selectedAnswers.has(currentQuiz.id)) {
+      if (currentQuizIndex < totalQuizzes - 1) {
+        setCurrentQuizIndex(prev => prev + 1);
+      } else {
+        updateProgress.mutate({
+          lesson_id: lesson.id,
+          content_read: true,
+          quiz_completed: true,
+          quiz_score: Math.round((completedQuizzes / totalQuizzes) * 100),
+          assignment_submitted: taskCompleted,
+          ritual_completed: false
+        }, {
+          onSuccess: (data) => {
+            setQuizAnswered(data.quiz_completed);
+            setCompleted(data.completed);
+            setTaskCompleted(data.assignment_submitted);
+            toast({
+              title: "Quiz Completed",
+              description: "Your understanding has been recorded."
+            });
+          }
+        });
+      }
+    }
+  };
+
+  // Handler for completing lesson
+  const handleCompleteLesson = () => {
+    updateProgress.mutate({
+      lesson_id: lesson.id,
+      content_read: true,
+      quiz_completed: quizzes && quizzes.length > 0 ? quizAnswered : true,
+      assignment_submitted: true,
+      ritual_completed: true
+    }, {
+      onSuccess: (data) => {
+        setCompleted(data.completed);
+        setQuizAnswered(data.quiz_completed);
+        setTaskCompleted(data.assignment_submitted);
+        toast({
+          title: "Chapter Completed",
+          description: "Your indoctrination deepens. Return to the Book to continue."
+        });
+        navigate('/learn');
+      }
+    });
+  };
+
+  // Handler for file upload
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+    }
+  };
 
   useEffect(() => {
     if (progress && !Array.isArray(progress)) {

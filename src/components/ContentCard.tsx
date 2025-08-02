@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, BookOpen, Target, CheckCircle, Lock, Calendar } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/optimized-image';

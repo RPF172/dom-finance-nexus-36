@@ -45,6 +45,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, MoreHorizontal, BookOpen, Users } from "lucide-react";
 import type { Module } from "@/hooks/useLessons";
+import ContentSequenceManager from "./ContentSequenceManager";
 
 const moduleSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -417,59 +418,67 @@ const ModuleManager = () => {
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+            <TableBody>
                 {modules?.map((module) => (
-                  <TableRow key={module.id}>
-                    <TableCell>
-                      <div className="font-medium">{module.title}</div>
-                      <div className="text-sm text-muted-foreground">{module.slug}</div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="max-w-xs truncate">
-                        {module.description || 'No description'}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{module.year_id}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={module.published ? "default" : "secondary"}
-                        className="cursor-pointer"
-                        onClick={() => togglePublished(module)}
-                      >
-                        {module.published ? 'Published' : 'Draft'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{module.order_index}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        {module.lessons?.[0]?.count || 0} lessons
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEdit(module)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => handleDelete(module.id, module.lessons?.[0]?.count || 0)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
+                  <React.Fragment key={module.id}>
+                    <TableRow>
+                      <TableCell>
+                        <div className="font-medium">{module.title}</div>
+                        <div className="text-sm text-muted-foreground">{module.slug}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="max-w-xs truncate">
+                          {module.description || 'No description'}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{module.year_id}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={module.published ? "default" : "secondary"}
+                          className="cursor-pointer"
+                          onClick={() => togglePublished(module)}
+                        >
+                          {module.published ? 'Published' : 'Draft'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{module.order_index}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {module.lessons?.[0]?.count || 0} lessons
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleEdit(module)}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => handleDelete(module.id, module.lessons?.[0]?.count || 0)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                    {/* Sequence Manager for this module */}
+                    <tr>
+                      <td colSpan={7}>
+                        <ContentSequenceManager moduleId={module.id} />
+                      </td>
+                    </tr>
+                  </React.Fragment>
                 ))}
               </TableBody>
             </Table>

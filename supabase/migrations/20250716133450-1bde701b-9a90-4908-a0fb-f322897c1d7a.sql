@@ -81,6 +81,7 @@ LANGUAGE SQL
 SECURITY DEFINER
 STABLE
 AS $$
+  SET LOCAL search_path = public;
   SELECT COALESCE(is_premium, false) FROM public.profiles WHERE profiles.user_id = $1;
 $$;
 
@@ -90,6 +91,7 @@ LANGUAGE SQL
 SECURITY DEFINER
 STABLE
 AS $$
+  SET LOCAL search_path = public;
   SELECT EXISTS (
     SELECT 1 FROM public.user_connections 
     WHERE (follower_id = user1_id AND following_id = user2_id AND status = 'accepted')
@@ -172,6 +174,7 @@ CREATE POLICY "Users can delete their own connections" ON public.user_connection
 CREATE OR REPLACE FUNCTION public.update_post_likes_count()
 RETURNS TRIGGER AS $$
 BEGIN
+  PERFORM set_config('search_path', 'public', true);
   IF TG_OP = 'INSERT' THEN
     UPDATE public.posts SET likes_count = likes_count + 1 WHERE id = NEW.post_id;
     RETURN NEW;
@@ -186,6 +189,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION public.update_post_comments_count()
 RETURNS TRIGGER AS $$
 BEGIN
+  PERFORM set_config('search_path', 'public', true);
   IF TG_OP = 'INSERT' THEN
     UPDATE public.posts SET comments_count = comments_count + 1 WHERE id = NEW.post_id;
     RETURN NEW;
