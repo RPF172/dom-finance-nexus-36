@@ -16,7 +16,9 @@ interface Assignment {
   instructions: string;
   status: string;
   due_date: string;
+  type?: string;
   media_urls?: string[];
+  hasPunishment?: boolean;
 }
 
 // ...existing code...
@@ -29,11 +31,22 @@ const Assignments: React.FC = () => {
   const [submissionText, setSubmissionText] = useState('');
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   useEffect(() => {
-    const fetchAssignments = async () => {
-      const { data, error } = await supabase.from('assignments').select('*');
-      if (data) setAssignments(data);
-    };
-    fetchAssignments();
+    // Mock data since assignments table doesn't exist yet
+    const mockAssignments: Assignment[] = [
+      {
+        id: '1',
+        week_number: 1,
+        module_number: 1,
+        title: 'Introduction to MAGAT',
+        description: 'Complete the foundational reading',
+        objective: 'Understand core principles',
+        instructions: 'Read chapter 1 and submit reflection',
+        status: 'incomplete',
+        due_date: '2024-01-15',
+        type: 'Reflection'
+      }
+    ];
+    setAssignments(mockAssignments);
   }, []);
 
   const getStatusIcon = (assignment: Assignment) => {
@@ -207,4 +220,6 @@ const Assignments: React.FC = () => {
       </div>
     </AppLayout>
   );
-}
+};
+
+export default Assignments;
