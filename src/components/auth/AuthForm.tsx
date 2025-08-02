@@ -155,153 +155,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           });
         }
       }
-    } catch (error) {
-  return (
-    <>
-      <div className="min-h-screen bg-card text-foreground flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-8 border border-border rounded-xl shadow-lg bg-card">
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <h1 className="text-3xl font-bold font-cinzel text-[hsl(var(--secondary-foreground))]">
-              MAGAT University Login
-            </h1>
-            <p className="text-sm text-muted-foreground italic">
-              "Obedience is the Tuition. Ownership is the Degree."
-            </p>
-          </div>
-          {/* Tab Toggle */}
-          <div className="flex bg-secondary rounded-lg p-1 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
-            <button
-              type="button"
-              className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${isLogin ? 'bg-card text-foreground shadow-md border border-border' : 'bg-secondary text-secondary-foreground shadow-lg border border-border'}`}
-              onClick={() => setIsLogin(true)}
-            >
-              Login
-            </button>
-            {/* ...existing code... */}
-          </div>
-          {/* ...existing code... */}
-        </div>
-      </div>
-      {collarId && (
-        <CollarIdModal
-          open={showCollarModal}
-          collarId={collarId}
-          onClose={() => setShowCollarModal(false)}
-        />
-      )}
-    </>
-          </h1>
-          <p className="text-sm text-muted-foreground italic">
-            "Obedience is the Tuition. Ownership is the Degree."
-          </p>
-        </div>
-
-        {/* Tab Toggle */}
-        <div className="flex bg-secondary rounded-lg p-1 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
-          <button
-            type="button"
-            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${isLogin ? 'bg-card text-foreground shadow-md border border-border' : 'bg-secondary text-secondary-foreground shadow-lg border border-border'}`}
-            onClick={() => setIsLogin(true)}
-          >
-            Login
-          </button>
-          <button
-            type="button"
-            className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${!isLogin ? 'bg-card text-foreground shadow-md border border-border' : 'bg-secondary text-secondary-foreground shadow-lg border border-border'}`}
-            onClick={() => setIsLogin(false)}
-          >
-            Register
-          </button>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in [animation-delay:0.5s] opacity-0 [animation-fill-mode:forwards]">
-          {/* Email */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Email</label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <input
-                type="email"
-                value={formData.email}
-                onChange={e => setFormData({ ...formData, email: e.target.value })}
-                className="pl-10 bg-card border-border text-foreground placeholder-muted-foreground rounded-md w-full py-2 border"
-                placeholder="Email address"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Collar ID (Username for registration) */}
-          {!isLogin && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Collar Name</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <input
-                  type="text"
-                  value={formData.collarName}
-                  onChange={e => setFormData({ ...formData, collarName: e.target.value })}
-                  className="pl-10 bg-card border-border text-foreground placeholder-muted-foreground rounded-md w-full py-2 border"
-                  placeholder="Collar name"
-                  required
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Password */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={e => setFormData({ ...formData, password: e.target.value })}
-                className="pl-10 pr-10 bg-card border-border text-foreground placeholder-muted-foreground rounded-md w-full py-2 border"
-                placeholder="Password"
-                required
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-accent"
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Remember Me */}
-          {isLogin && (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="remember"
-                checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-                className="border-border data-[state=checked]:bg-accent"
-              />
-              <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
-                Remember me
-              </label>
-            </div>
-          )}
-
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-3 font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden group"
-            disabled={loading}
-          >
-            {loading ? 'Processing...' : isLogin ? 'Login' : 'Register'}
-          </Button>
-        </form>
-      </div>
-    </div>
-  );
+    } catch (error: any) {
+      toast({
+        title: "Unexpected error",
+        description: error?.message || "An unknown error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 };
 
 export default AuthForm;
