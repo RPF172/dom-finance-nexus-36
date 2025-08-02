@@ -11,6 +11,22 @@ import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/layout/AppLayout';
 import { LessonReader } from '@/components/LessonReader';
 
+interface Quiz {
+  id: string;
+  question: string;
+  options: string[];
+  correct_answer: string;
+}
+
+interface Lesson {
+  id: string;
+  title: string;
+  body_text?: string;
+  estimated_time?: number;
+  assignment_text?: string;
+  ritual_text?: string;
+}
+
 const LessonView = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -21,11 +37,20 @@ const LessonView = () => {
   const { data: progress } = useUserProgress(id);
   const updateProgress = useUpdateProgress();
 
-  const [completed, setCompleted] = useState(progress?.completed || false);
+  // State variables
+  const [viewMode, setViewMode] = useState<'reader' | 'interactive'>('interactive');
+  const [completed, setCompleted] = useState(false);
+  const [quizAnswered, setQuizAnswered] = useState(false);
+  const [taskCompleted, setTaskCompleted] = useState(false);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<Map<string, string>>(new Map());
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (progress && !Array.isArray(progress)) {
-      setCompleted(progress.completed);
+      setCompleted(progress.completed || false);
+      setQuizAnswered(progress.quiz_completed || false);
+      setTaskCompleted(progress.assignment_submitted || false);
     }
   }, [progress]);
 
@@ -50,98 +75,29 @@ const LessonView = () => {
       <div className="min-h-screen bg-background text-foreground font-mono flex items-center justify-center">
         <div className="text-center">
           <p className="text-sm text-muted-foreground">Lesson not found</p>
-          <Button onClick={() => navigate('/book')} className="mt-4" variant="outline">
-            Return to Book
+          <Button onClick={() => navigate('/learn')} className="mt-4" variant="outline">
+            Return to Lessons
           </Button>
         </div>
       </div>
     );
   }
 
-  // Show reader view only
-  return (
-    <AppLayout>
-      <div className="max-w-md mx-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-muted p-4 z-10 animate-fade-in">
-          <div className="flex items-center gap-3 mb-2">
-            <button 
-              className="p-1 hover:bg-muted/50 rounded transition-all duration-200 hover:scale-110"
-              onClick={() => navigate('/learn')}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <div className="flex items-center gap-3 flex-1">
-              <h1 className="font-bold text-lg leading-tight animate-fade-in [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
-                {lesson.title}
-              </h1>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-sm animate-fade-in [animation-delay:0.4s] opacity-0 [animation-fill-mode:forwards]">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs border-accent/50 text-accent animate-pulse">
-                {completed ? '✅ Complete' : '🔁 In Progress'}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Clock className="h-3 w-3 animate-pulse" />
-              <span>Est: {lesson.estimated_time}min</span>
-            </div>
-          </div>
-        </div>
-        <div className="p-4 space-y-6 animate-fade-in [animation-delay:0.8s] opacity-0 [animation-fill-mode:forwards]">
-          {/* Chapter Text */}
-          <Card className="bg-card border-muted hover:shadow-lg transition-all duration-300 border-l-4 border-l-accent">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <Flame className="h-4 w-4 text-accent animate-pulse" />
-                <h2 className="font-bold text-sm">CHAPTER TEXT</h2>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="prose prose-sm max-w-none">
-                <div className="whitespace-pre-line text-sm leading-relaxed italic text-foreground/90">
-                  {lesson.body_text}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          {/* Mark as Complete Button */}
-          <Card className="bg-card border-muted">
-            <CardContent className="pt-6">
-              <Button 
-                size="lg"
-                disabled={completed}
-                onClick={() => {
-                  updateProgress.mutate({
-                    lesson_id: lesson.id,
-                    content_read: true,
-                    quiz_completed: false,
-                    assignment_submitted: false,
-                    ritual_completed: false,
-                    completed: true,
-                    completed_at: new Date().toISOString()
-                  });
-                  setCompleted(true);
-                  toast({
-                    title: "Lesson marked as complete",
-                    description: "Your completion has been recorded."
-                  });
-                }}
-                className={`w-full font-mono ${
-                  completed 
-                    ? 'bg-muted text-muted-foreground cursor-not-allowed' 
-                    : 'bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground'
-                }`}
-              >
-                {completed ? 'COMPLETED' : 'MARK AS COMPLETE'}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </AppLayout>
-  );
+  // Show reader view if in reader mode
+  if (viewMode === 'reader') {
+    return (
+      <AppLayout>
+        <LessonReader
+          lesson={lesson}
+          progress={progress}
+          onBack={() => setViewMode('interactive')}
+          onProgressUpdate={(newProgress) => {
+            updateProgress.mutate(newProgress);
+          }}
+        />
+      </AppLayout>
+    );
+  }
 
   const currentQuiz = quizzes?.[currentQuizIndex];
   const totalQuizzes = quizzes?.length || 0;
@@ -202,7 +158,7 @@ const LessonView = () => {
     });
   };
 
-  const handleAnswerSelect = (quizId: string, answer: any) => {
+  const handleAnswerSelect = (quizId: string, answer: string) => {
     if (!quizAnswered) {
       const newAnswers = new Map(selectedAnswers);
       newAnswers.set(quizId, answer);
@@ -218,11 +174,11 @@ const LessonView = () => {
       assignment_submitted: true,
       ritual_completed: true
     });
-        toast({
-          title: "Chapter Completed",
-          description: "Your indoctrination deepens. Return to the Book to continue."
-        });
-        navigate('/book');
+    toast({
+      title: "Chapter Completed",
+      description: "Your indoctrination deepens. Return to the Book to continue."
+    });
+    navigate('/learn');
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -244,7 +200,7 @@ const LessonView = () => {
           <div className="flex items-center gap-3 mb-2">
             <button 
               className="p-1 hover:bg-muted/50 rounded transition-all duration-200 hover:scale-110"
-              onClick={() => navigate('/book')}
+              onClick={() => navigate('/learn')}
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
@@ -274,7 +230,7 @@ const LessonView = () => {
             </div>
             <div className="flex items-center gap-1 text-muted-foreground">
               <Clock className="h-3 w-3 animate-pulse" />
-              <span>Est: {lesson.estimated_time}min</span>
+              <span>Est: {lesson.estimated_time || 15}min</span>
             </div>
           </div>
           
@@ -319,7 +275,7 @@ const LessonView = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-sm">
-                <p className="mb-2">{lesson.assignment_text}</p>
+                <p className="mb-2">{lesson.assignment_text || "Complete the assigned task to proceed."}</p>
                 {lesson.ritual_text && (
                   <p className="text-accent text-xs">🔥 Ritual: {lesson.ritual_text}</p>
                 )}
@@ -363,7 +319,49 @@ const LessonView = () => {
             </CardContent>
           </Card>
 
-          {/* ... keep existing code (quiz section and remaining content) */}
+          {/* Quiz Section */}
+          {hasQuizzes && currentQuiz && (
+            <Card className="bg-card border-muted hover:shadow-lg transition-all duration-300 border-l-4 border-l-accent">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-accent">🧠</span>
+                  <h3 className="font-bold text-sm">KNOWLEDGE CHECK</h3>
+                  {quizAnswered && <CheckCircle className="h-4 w-4 text-emerald-500 ml-auto" />}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-sm">
+                  <p className="mb-4">{currentQuiz.question}</p>
+                  
+                  <div className="space-y-2">
+                    {currentQuiz.options.map((option, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleAnswerSelect(currentQuiz.id, option)}
+                        className={`w-full p-3 text-left rounded-lg border transition-all duration-200 ${
+                          selectedAnswers.get(currentQuiz.id) === option
+                            ? 'border-accent bg-accent/10 text-accent'
+                            : 'border-muted hover:border-accent/50'
+                        }`}
+                        disabled={quizAnswered}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {selectedAnswers.has(currentQuiz.id) && !quizAnswered && (
+                    <Button 
+                      onClick={handleQuizSubmit}
+                      className="w-full mt-4 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
+                    >
+                      {currentQuizIndex < totalQuizzes - 1 ? 'Next Question' : 'Submit Quiz'}
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
           
           {/* Actions */}
           <Card className="bg-card border-muted">

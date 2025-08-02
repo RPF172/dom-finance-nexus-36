@@ -2,10 +2,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, BookOpen, Target, CheckCircle, Lock, Calendar } from 'lucide-react';
-import { MixedContentItem } from '@/hooks/useContentSequence';
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import { Chapter } from '@/hooks/useChapters';
-import { Lesson } from '@/hooks/useLessons';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 
