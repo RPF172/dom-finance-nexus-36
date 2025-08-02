@@ -2,37 +2,14 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, BookOpen, Target, CheckCircle, Lock, Calendar } from 'lucide-react';
-import { MixedContentItem } from '@/hooks/useContentSequence';
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import { Chapter } from '@/hooks/useChapters';
-import { Lesson } from '@/hooks/useLessons';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
-interface BaseContent {
-  id: string;
-  title: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-interface Chapter extends BaseContent {
-  type: 'chapter';
-  description?: string;
-  order?: number;
-  module_id?: string;
-  published?: boolean;
-}
-
-interface Lesson extends BaseContent {
-  type: 'lesson';
-  objective?: string;
-  body_text?: string;
-  module_id?: string;
-  order?: number;
-  published?: boolean;
-  featured_image_url?: string;
-}
+// Import types from hooks
+import type { Chapter } from '@/hooks/useChapters';
+import type { Lesson } from '@/hooks/useLessons';
 
 type MixedContentItem = Chapter | Lesson;
 
@@ -195,9 +172,12 @@ export const ContentCard: React.FC<ContentCardProps> = ({
             <Button 
               variant="outline" 
               className="w-full bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+              asChild
             >
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Review {isChapter ? 'Chapter' : 'Lesson'}
+              <Link to={isChapter ? `/chapter/${item.id}` : `/lesson/${item.id}`}>
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Review {isChapter ? 'Chapter' : 'Lesson'}
+              </Link>
             </Button>
           ) : isLocked ? (
             <Button 
@@ -211,9 +191,12 @@ export const ContentCard: React.FC<ContentCardProps> = ({
           ) : (
             <Button 
               className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+              asChild
             >
-              <BookOpen className="w-4 h-4 mr-2" />
-              Start {isChapter ? 'Chapter' : 'Lesson'}
+              <Link to={isChapter ? `/chapter/${item.id}` : `/lesson/${item.id}`}>
+                <BookOpen className="w-4 h-4 mr-2" />
+                Start {isChapter ? 'Chapter' : 'Lesson'}
+              </Link>
             </Button>
           )}
         </div>
