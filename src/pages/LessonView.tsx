@@ -21,18 +21,11 @@ const LessonView = () => {
   const { data: progress } = useUserProgress(id);
   const updateProgress = useUpdateProgress();
 
-  const [viewMode, setViewMode] = useState<'reader' | 'exercises'>('reader');
-  const [taskCompleted, setTaskCompleted] = useState(false);
-  const [quizAnswered, setQuizAnswered] = useState(false);
-  const [selectedAnswers, setSelectedAnswers] = useState<Map<string, any>>(new Map());
-  const [confession, setConfession] = useState('');
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [completed, setCompleted] = useState(progress?.completed || false);
 
   useEffect(() => {
     if (progress && !Array.isArray(progress)) {
-      setTaskCompleted(progress.assignment_submitted);
-      setQuizAnswered(progress.quiz_completed);
+      setCompleted(progress.completed);
     }
   }, [progress]);
 
@@ -65,23 +58,90 @@ const LessonView = () => {
     );
   }
 
-  // Show reader view by default or when explicitly selected
-  if (viewMode === 'reader') {
-    return (
-      <LessonReader
-        lesson={lesson}
-        progress={progress}
-        onBack={() => navigate('/book')}
-        onProgressUpdate={(progressData) => {
-          updateProgress.mutate(progressData);
-          // Switch to exercises after reading is complete
-          if (progressData.content_read) {
-            setViewMode('exercises');
-          }
-        }}
-      />
-    );
-  }
+  // Show reader view only
+  return (
+    <AppLayout>
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-muted p-4 z-10 animate-fade-in">
+          <div className="flex items-center gap-3 mb-2">
+            <button 
+              className="p-1 hover:bg-muted/50 rounded transition-all duration-200 hover:scale-110"
+              onClick={() => navigate('/learn')}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="flex items-center gap-3 flex-1">
+              <h1 className="font-bold text-lg leading-tight animate-fade-in [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
+                {lesson.title}
+              </h1>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-sm animate-fade-in [animation-delay:0.4s] opacity-0 [animation-fill-mode:forwards]">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs border-accent/50 text-accent animate-pulse">
+                {completed ? '✅ Complete' : '🔁 In Progress'}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <Clock className="h-3 w-3 animate-pulse" />
+              <span>Est: {lesson.estimated_time}min</span>
+            </div>
+          </div>
+        </div>
+        <div className="p-4 space-y-6 animate-fade-in [animation-delay:0.8s] opacity-0 [animation-fill-mode:forwards]">
+          {/* Chapter Text */}
+          <Card className="bg-card border-muted hover:shadow-lg transition-all duration-300 border-l-4 border-l-accent">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <Flame className="h-4 w-4 text-accent animate-pulse" />
+                <h2 className="font-bold text-sm">CHAPTER TEXT</h2>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="prose prose-sm max-w-none">
+                <div className="whitespace-pre-line text-sm leading-relaxed italic text-foreground/90">
+                  {lesson.body_text}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          {/* Mark as Complete Button */}
+          <Card className="bg-card border-muted">
+            <CardContent className="pt-6">
+              <Button 
+                size="lg"
+                disabled={completed}
+                onClick={() => {
+                  updateProgress.mutate({
+                    lesson_id: lesson.id,
+                    content_read: true,
+                    quiz_completed: false,
+                    assignment_submitted: false,
+                    ritual_completed: false,
+                    completed: true,
+                    completed_at: new Date().toISOString()
+                  });
+                  setCompleted(true);
+                  toast({
+                    title: "Lesson marked as complete",
+                    description: "Your completion has been recorded."
+                  });
+                }}
+                className={`w-full font-mono ${
+                  completed 
+                    ? 'bg-muted text-muted-foreground cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground'
+                }`}
+              >
+                {completed ? 'COMPLETED' : 'MARK AS COMPLETE'}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </AppLayout>
+  );
 
   const currentQuiz = quizzes?.[currentQuizIndex];
   const totalQuizzes = quizzes?.length || 0;

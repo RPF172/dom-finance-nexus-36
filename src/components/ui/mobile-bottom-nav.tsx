@@ -15,8 +15,8 @@ interface NavItem {
 }
 
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
-  { href: isAuthenticated ? '/social' : '/pledgehall', icon: Home, label: 'Home' },
-  { href: '/read', icon: BookOpen, label: 'Read' },
+  { href: '/learn', icon: BookOpen, label: 'Training' },
+  { href: '/pledgehall', icon: Home, label: 'Dashboard' },
   { href: '/social', icon: Users, label: 'Social' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
@@ -24,6 +24,10 @@ const getNavItems = (isAuthenticated: boolean): NavItem[] => [
 export function MobileBottomNav() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Track menu collapse for mobile nav
+  const handleNavClick = () => {
+    if (sidebarOpen) setSidebarOpen(false);
+  } 
   
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -46,7 +50,6 @@ export function MobileBottomNav() {
         {navItems.map((item) => {
           const isActive = location.pathname === item.href;
           const Icon = item.icon;
-          
           return (
             <Link
               key={item.href}
@@ -58,6 +61,7 @@ export function MobileBottomNav() {
                   : "text-muted-foreground hover:text-foreground active:text-primary"
               )}
               aria-label={item.label}
+              onClick={handleNavClick}
             >
               <div className="relative">
                 <Icon 

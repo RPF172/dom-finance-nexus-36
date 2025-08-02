@@ -43,17 +43,56 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
   // Simulate reading progress based on scroll and time
   useEffect(() => {
     if (!isReading) return;
+  const [readingProgress, setReadingProgress] = useState(0);
+  const [isReading, setIsReading] = useState(false);
+  const [hasStartedReading, setHasStartedReading] = useState(false);
+  const contentRef = React.useRef<HTMLDivElement>(null);
 
-    const interval = setInterval(() => {
-      setReadingProgress(prev => {
-        const newProgress = Math.min(prev + 1, 100);
-        
-        // Mark content as read when 90% progress reached
-        if (newProgress >= 90 && !progress?.content_read) {
-          onProgressUpdate({
-            lesson_id: lesson.id,
-            content_read: true,
-            quiz_completed: progress?.quiz_completed || false,
+  // Update reading progress based on scroll depth
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return;
+      const el = contentRef.current;
+      const scrollTop = el.scrollTop;
+      const scrollHeight = el.scrollHeight - el.clientHeight;
+      const percent = scrollHeight > 0 ? Math.min(100, Math.round((scrollTop / scrollHeight) * 100)) : 0;
+      setReadingProgress(percent);
+      if (percent >= 90 && !progress?.content_read) {
+        onProgressUpdate({
+          lesson_id: lesson.id,
+          content_read: true,
+          quiz_completed: progress?.quiz_completed || false,
+          assignment_submitted: progress?.assignment_submitted || false,
+  // Update reading progress based on scroll depth
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return;
+      const el = contentRef.current;
+      const scrollTop = el.scrollTop;
+      const scrollHeight = el.scrollHeight - el.clientHeight;
+      const percent = scrollHeight > 0 ? Math.min(100, Math.round((scrollTop / scrollHeight) * 100)) : 0;
+      setReadingProgress(percent);
+      if (percent >= 90 && !progress?.content_read) {
+        onProgressUpdate({
+          lesson_id: lesson.id,
+          content_read: true,
+          quiz_completed: progress?.quiz_completed || false,
+          assignment_submitted: progress?.assignment_submitted || false,
+          ritual_completed: progress?.ritual_completed || false
+        });
+      }
+    };
+    const el = contentRef.current;
+    if (el) {
+      el.addEventListener('scroll', handleScroll);
+      // Initial check
+      handleScroll();
+    }
+    return () => {
+      if (el) el.removeEventListener('scroll', handleScroll);
+    };
+  }, [progress, lesson.id, onProgressUpdate]);
             assignment_submitted: progress?.assignment_submitted || false,
             ritual_completed: progress?.ritual_completed || false
           });
@@ -62,30 +101,42 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         return newProgress;
       });
     }, estimatedReadingTime * 600 / 100); // Distribute over estimated reading time
-
-    return () => clearInterval(interval);
-  }, [isReading, estimatedReadingTime, lesson.id, progress, onProgressUpdate]);
-
-  const handleStartReading = () => {
-    setIsReading(true);
-    setHasStartedReading(true);
-  };
-
-  const handlePauseReading = () => {
-    setIsReading(false);
-  };
-
-  const overallProgress = calculateOverallProgress();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Enhanced Header */}
-      <div className="sticky top-0 bg-background/95 backdrop-blur-lg border-b border-border z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost" 
-              size="sm"
+  // Update reading progress based on scroll depth
+  // Update reading progress based on scroll depth
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return;
+      const el = contentRef.current;
+      const scrollTop = el.scrollTop;
+      const scrollHeight = el.scrollHeight - el.clientHeight;
+      const percent = scrollHeight > 0 ? Math.min(100, Math.round((scrollTop / scrollHeight) * 100)) : 0;
+      setReadingProgress(percent);
+      if (percent >= 90 && !progress?.content_read) {
+        onProgressUpdate({
+          lesson_id: lesson.id,
+          content_read: true,
+          quiz_completed: progress?.quiz_completed || false,
+          assignment_submitted: progress?.assignment_submitted || false,
+          ritual_completed: progress?.ritual_completed || false
+        });
+      }
+    };
+    const el = contentRef.current;
+    if (el) {
+      el.addEventListener('scroll', handleScroll);
+      // Initial check
+      handleScroll();
+    }
+    return () => {
+      if (el) el.removeEventListener('scroll', handleScroll);
+    };
+  }, [progress, lesson.id, onProgressUpdate]);
+      handleScroll();
+    }
+    return () => {
+      if (el) el.removeEventListener('scroll', handleScroll);
+    };
+  }, [progress, lesson.id, onProgressUpdate]);
               onClick={onBack}
               className="hover:bg-muted/50"
             >
@@ -213,10 +264,14 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
                 </div>
 
                 {/* Lesson Text */}
-                <div className={cn(
-                  "prose prose-sm max-w-none transition-all duration-300",
-                  !hasStartedReading && "blur-sm opacity-60 pointer-events-none"
-                )}>
+                <div
+                  ref={contentRef}
+                  className={cn(
+                    "prose prose-sm max-w-none transition-all duration-300 overflow-y-auto",
+                    !hasStartedReading && "blur-sm opacity-60 pointer-events-none",
+                    "max-h-[60vh]"
+                  )}
+                >
                   <div className="whitespace-pre-line text-base leading-relaxed text-foreground/90 font-inter">
                     {lesson.body_text}
                   </div>
