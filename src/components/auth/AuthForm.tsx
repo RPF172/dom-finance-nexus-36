@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CollarIdModal } from '@/components/ui/CollarIdModal';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [collarId, setCollarId] = useState<string | null>(null);
+  const [showCollarModal, setShowCollarModal] = useState(false);
+  // Collar ID generator: R + 5-6 random digits
+  function generateCollarId() {
+    const digits = Math.floor(10000 + Math.random() * 900000); // 5-6 digits
+    return `R${digits}`;
+  }
   const [rememberMe, setRememberMe] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -115,8 +123,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         }
       } else {
         const redirectUrl = `${window.location.origin}/pledgehall`;
-        
-        const { error } = await supabase.auth.signUp({
+        const collarIdValue = generateCollarId();
+        const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
           options: {
@@ -127,7 +135,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             }
           }
         });
-        
         if (error) {
           toast({
             title: "Indoctrination failed",
@@ -135,6 +142,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             variant: "destructive",
           });
         } else {
+          // Insert collar_id into profiles table
+          const userId = data?.user?.id;
+          if (userId) {
+            await supabase.from('profiles').update({ collar_id: collarIdValue }).eq('user_id', userId);
+            setCollarId(collarIdValue);
+            setShowCollarModal(true);
+          }
           toast({
             title: "Begin processing",
             description: "Check your email to confirm your commitment to the Institution.",
@@ -142,27 +156,41 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         }
       }
     } catch (error) {
-      toast({
-        title: "System failure",
-        description: "The Institution's systems are temporarily unavailable.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [field]: e.target.value }));
-  };
-
   return (
-    <div className="min-h-screen bg-card text-foreground flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8 border border-border rounded-xl shadow-lg bg-card">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold font-cinzel text-[hsl(var(--secondary-foreground))]">
-            MAGAT University Login
+    <>
+      <div className="min-h-screen bg-card text-foreground flex items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8 border border-border rounded-xl shadow-lg bg-card">
+          {/* Header */}
+          <div className="text-center space-y-4">
+            <h1 className="text-3xl font-bold font-cinzel text-[hsl(var(--secondary-foreground))]">
+              MAGAT University Login
+            </h1>
+            <p className="text-sm text-muted-foreground italic">
+              "Obedience is the Tuition. Ownership is the Degree."
+            </p>
+          </div>
+          {/* Tab Toggle */}
+          <div className="flex bg-secondary rounded-lg p-1 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
+            <button
+              type="button"
+              className={`flex-1 py-3 px-4 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 ${isLogin ? 'bg-card text-foreground shadow-md border border-border' : 'bg-secondary text-secondary-foreground shadow-lg border border-border'}`}
+              onClick={() => setIsLogin(true)}
+            >
+              Login
+            </button>
+            {/* ...existing code... */}
+          </div>
+          {/* ...existing code... */}
+        </div>
+      </div>
+      {collarId && (
+        <CollarIdModal
+          open={showCollarModal}
+          collarId={collarId}
+          onClose={() => setShowCollarModal(false)}
+        />
+      )}
+    </>
           </h1>
           <p className="text-sm text-muted-foreground italic">
             "Obedience is the Tuition. Ownership is the Degree."
