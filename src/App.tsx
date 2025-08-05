@@ -5,7 +5,7 @@ import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { MobileBottomNav } from "@/components/ui/mobile-bottom-nav";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+adx
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PledgeHall from "./pages/PledgeHall";

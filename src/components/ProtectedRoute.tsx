@@ -16,9 +16,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         navigate('/auth');
-      } else {
-        setIsAuthenticated(true);
+        setLoading(false);
+        return;
       }
+      // Check if user is admin
+      const { data: userRole } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+      if (userRole && userRole.role === 'admin') {
+        setIsAuthenticated(true);
+        setLoading(false);
+        return;
+      }
+      // TODO: Insert subscription check here if needed for non-admins
+      setIsAuthenticated(true); // fallback: allow access for all authenticated users
       setLoading(false);
     };
     checkAuth();

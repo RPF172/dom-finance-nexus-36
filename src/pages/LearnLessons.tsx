@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useContentSequence, useFallbackMixedContent } from '@/hooks/useContentSequence';
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { ContentCard } from '@/components/ContentCard';
+import { ContentEditorModal } from '@/components/admin/ContentEditorModal';
 import { ChapterSkeleton } from '@/components/ChapterSkeleton';
 import { Flame } from 'lucide-react';
 import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
@@ -13,6 +14,8 @@ import ProtectedContent from '@/components/ProtectedContent';
 
 const LearnLessons = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [editingModule, setEditingModule] = useState<any | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
   const navigate = useNavigate();
 
   // Try to use content sequence first, fallback to mixed content
@@ -101,6 +104,12 @@ const LearnLessons = () => {
     navigate(`/lesson/${item.content.id}`);
   };
 
+  // Admin: handle edit click
+  const handleEditClick = (item: any) => {
+    setEditingModule(item);
+    setEditorOpen(true);
+  };
+
   const completedModules = progressData?.filter(p => p.completed).length || 0;
   const totalModules = modulesOnly.length;
 
@@ -140,17 +149,40 @@ const LearnLessons = () => {
 
             {/* Blog-Style Content Feed */}
             <div className="max-w-4xl mx-auto space-y-8 mb-8">
+
               {visibleChapters.map((item, index) => (
-                <ContentCard
-                  key={`${item.type}-${item.content.id}`}
-                  item={item}
-                  index={index}
-                  isLocked={false}
-                  isCompleted={getLessonStatus(item, index) === 'complete'}
-                  progress={getLessonProgress(item)}
-                  onClick={() => handleContentClick(item)}
-                />
+                <div key={`${item.type}-${item.content.id}`} className="relative group">
+                  <ContentCard
+                    item={item}
+                    index={index}
+                    isLocked={false}
+                    isCompleted={getLessonStatus(item, index) === 'complete'}
+                    progress={getLessonProgress(item)}
+                    onClick={() => handleContentClick(item)}
+                  />
+                  {isAdmin && (
+                    <button
+                      className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 hover:bg-primary text-primary hover:text-white shadow transition"
+                      title="Edit Module"
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleEditClick(item);
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-4.243 1.415 1.415-4.243a4 4 0 01.828-1.414z" /></svg>
+                    </button>
+                  )}
+                </div>
               ))}
+          {/* Admin: Content Editor Modal for editing modules */}
+          {isAdmin && (
+            <ContentEditorModal
+              isOpen={editorOpen}
+              onClose={() => setEditorOpen(false)}
+              onSave={() => setEditorOpen(false)}
+              editingModule={editingModule}
+            />
+          )}
               
               {/* Loading skeletons */}
               {isLoadingMore && (

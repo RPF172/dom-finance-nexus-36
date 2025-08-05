@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BookOpen, GraduationCap, X } from 'lucide-react';
 import {
   Dialog,
@@ -12,18 +13,25 @@ import { ChapterEditorModal } from './ChapterEditorModal';
 
 import { cn } from '@/lib/utils';
 
+
 interface ContentEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
+  editingModule?: any | null;
 }
 
 export const ContentEditorModal: React.FC<ContentEditorModalProps> = ({
   isOpen,
   onClose,
-  onSave
+  onSave,
+  editingModule = null
 }) => {
-  const [activeTab, setActiveTab] = useState<'chapter' | 'lesson'>('chapter');
+  // Featured image state for lesson
+  const [featuredImage, setFeaturedImage] = useState<string>(editingModule?.featured_image_url || '');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [activeTab, setActiveTab] = useState<'chapter' | 'lesson'>(editingModule && editingModule.type === 'lesson' ? 'lesson' : 'chapter');
   const [isChapterEditorOpen, setIsChapterEditorOpen] = useState(false);
 
   const handleCreateChapter = () => {
@@ -104,20 +112,61 @@ export const ContentEditorModal: React.FC<ContentEditorModalProps> = ({
                   <GraduationCap className="h-8 w-8 text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Create Lesson</h3>
+                  <h3 className="text-lg font-semibold mb-2">{editingModule && editingModule.type === 'lesson' ? 'Edit Lesson' : 'Create Lesson'}</h3>
                   <p className="text-muted-foreground mb-4">
                     Lessons contain educational content, objectives, quizzes, assignments, and rituals for interactive learning.
                   </p>
+                  {/* Featured Image Upload */}
+                  <div className="mb-4 flex flex-col items-center gap-2">
+                    {featuredImage && (
+                      <img src={featuredImage} alt="Featured" className="w-48 h-28 object-cover rounded shadow" />
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+                        const { data, error } = await supabase.storage.from('MAGAT').upload(`featured-images/${fileName}`, file, { upsert: true });
+                        if (error) {
+                          alert('Image upload failed');
+                          setUploading(false);
+                          return;
+                        }
+                        const { data: publicUrlData } = supabase.storage.from('MAGAT').getPublicUrl(`featured-images/${fileName}`);
+                        setFeaturedImage(publicUrlData.publicUrl);
+                        setUploading(false);
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="mt-2"
+                      disabled={uploading}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {uploading ? 'Uploading...' : (featuredImage ? 'Change Featured Image' : 'Upload Featured Image')}
+                    </Button>
+                  </div>
                   <Button 
                     onClick={() => {
                       onClose();
-                      // Navigate to lesson editor - we'll implement this routing
-                      window.location.href = '/admin/content/lessons/new';
+                      // If editing, go to edit page, else go to new lesson page
+                      if (editingModule && editingModule.type === 'lesson') {
+                        window.location.href = `/admin/content/lessons/${editingModule.content?.id || editingModule.id}/edit`;
+                      } else {
+                        window.location.href = '/admin/content/lessons/new';
+                      }
                     }}
                     className="bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
                   >
                     <GraduationCap className="h-4 w-4 mr-2" />
-                    Create New Lesson
+                    {editingModule && editingModule.type === 'lesson' ? 'Edit Lesson' : 'Create New Lesson'}
                   </Button>
                 </div>
               </div>
