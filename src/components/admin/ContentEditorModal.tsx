@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import React, { useState, useRef } from 'react';
 import { BookOpen, GraduationCap, X } from 'lucide-react';
 import {
