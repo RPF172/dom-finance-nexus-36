@@ -85,18 +85,14 @@ const LearnLessons = () => {
     return 'in_progress';
   };
 
-  // Helper function to get lesson progress percentage
+  // Helper function to get lesson progress percentage (only content_read and quiz_completed)
   const getLessonProgress = (item: any) => {
     const progress = progressMap.get(item.content.id);
     if (!progress) return 0;
-    
     let completedCount = 0;
     if (progress.content_read) completedCount++;
     if (progress.quiz_completed) completedCount++;
-    if (progress.assignment_submitted) completedCount++;
-    if (progress.ritual_completed) completedCount++;
-    
-    return Math.round((completedCount / 4) * 100);
+    return Math.round((completedCount / 2) * 100);
   };
 
   // Handle content click
