@@ -1,12 +1,37 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, BookOpen, Target, CheckCircle, Lock, Calendar } from 'lucide-react';
-import { MixedContentItem } from '@/hooks/useContentSequence';
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import { Chapter } from '@/hooks/useChapters';
-import { Lesson } from '@/hooks/useLessons';
 import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
+
+interface BaseContent {
+  id: string;
+  title: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface Chapter extends BaseContent {
+  type: 'chapter';
+  description?: string;
+  order?: number;
+  module_id?: string;
+  published?: boolean;
+}
+
+interface Lesson extends BaseContent {
+  type: 'lesson';
+  objective?: string;
+  body_text?: string;
+  module_id?: string;
+  order?: number;
+  published?: boolean;
+  featured_image_url?: string;
+}
+
+type MixedContentItem = Chapter | Lesson;
 
 interface ContentCardProps {
   item: MixedContentItem;
@@ -26,31 +51,31 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   onClick
 }) => {
   const isChapter = item.type === 'chapter';
-  const content = item.content as Chapter | Lesson;
+  const content = item;
   
   const getEstimatedTime = () => {
     if (isChapter) {
-      const chapter = content as Chapter;
-      return Math.ceil((chapter.body_text?.length || 0) / 1000);
-    } else {
-      const lesson = content as Lesson;
-      return lesson.estimated_time || 45;
+      return 15; // Default chapter reading time
     }
+    const lesson = item as Lesson;
+    return Math.max(3, Math.ceil((lesson.body_text?.length || 0) / 200));
   };
 
   const getFallbackImage = () => {
     const fallbackImages = [
-      'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?w=800&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1469474968028-56623f02e425?w=800&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=800&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=800&h=400&fit=crop'
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=450&fit=crop',
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop',
+      'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=450&fit=crop'
     ];
     return fallbackImages[index % fallbackImages.length];
   };
 
   const getImageSrc = () => {
-    return (content as any).featured_image_url || getFallbackImage();
+    if (isChapter) {
+      return getFallbackImage();
+    }
+    const lesson = item as Lesson;
+    return lesson.featured_image_url || getFallbackImage();
   };
 
   const getCardBadge = () => {
@@ -127,7 +152,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              {formatDate((content as any).created_at || new Date().toISOString())}
+              {formatDate(content.created_at || new Date().toISOString())}
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
@@ -143,47 +168,50 @@ export const ContentCard: React.FC<ContentCardProps> = ({
         </h2>
 
         {/* Objective for Lessons */}
-        {!isChapter && (content as Lesson).objective && (
+        {!isChapter && (item as Lesson).objective && (
           <div className="p-3 bg-muted/50 rounded-lg border-l-4 border-primary">
             <p className="text-sm font-medium text-foreground">
               Learning Objective
             </p>
             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-              {(content as Lesson).objective}
+              {(item as Lesson).objective}
             </p>
           </div>
         )}
 
-        {/* Content Preview */}
-        {(isChapter ? (content as Chapter).body_text : (content as Lesson).body_text) && (
-          <p className="text-muted-foreground line-clamp-3 leading-relaxed">
-            {isChapter 
-              ? (content as Chapter).body_text 
-              : (content as Lesson).body_text
-            }
+        {/* Description for Chapters */}
+        {isChapter && (item as Chapter).description && (
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+            {(item as Chapter).description}
           </p>
         )}
 
-        {/* Action Footer */}
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="flex items-center gap-2">
-            {isChapter ? (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <BookOpen className="w-3 h-3" />
-                Reading
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Target className="w-3 h-3" />
-                Interactive Learning
-              </div>
-            )}
-          </div>
-          
-          {!isLocked && (
-            <div className="text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
-              {isCompleted ? 'Review' : 'Continue'} →
-            </div>
+        {/* Action Button */}
+        <div className="pt-2">
+          {isCompleted ? (
+            <Button 
+              variant="outline" 
+              className="w-full bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Review {isChapter ? 'Chapter' : 'Lesson'}
+            </Button>
+          ) : isLocked ? (
+            <Button 
+              variant="outline" 
+              className="w-full border-muted-foreground/30 text-muted-foreground"
+              disabled
+            >
+              <Lock className="w-4 h-4 mr-2" />
+              Complete Previous {isChapter ? 'Chapter' : 'Lesson'}
+            </Button>
+          ) : (
+            <Button 
+              className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Start {isChapter ? 'Chapter' : 'Lesson'}
+            </Button>
           )}
         </div>
       </div>

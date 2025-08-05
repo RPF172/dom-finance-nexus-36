@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { useSubscription } from '@/hooks/useSubscription';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import { ContentCarousel } from '@/components/ContentCarousel';
@@ -10,17 +13,45 @@ import TokenomicsSection from '@/components/TokenomicsSection';
 import AcademicRoadmapSection from '@/components/AcademicRoadmapSection';
 import InteractiveLessonPreview from '@/components/InteractiveLessonPreview';
 import TeamSection from '@/components/TeamSection';
-
 import FooterSection from '@/components/FooterSection';
 import StatsCounter from '@/components/StatsCounter';
 import InvestorModal from '@/components/InvestorModal';
 import AppLayout from '@/components/layout/AppLayout';
 import BlinkingArrow from '@/components/BlinkingArrow';
 import RecentLessonsCarousel from '@/components/RecentLessonsCarousel';
+import SubscriptionModal from '@/components/SubscriptionModal';
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
   const [hasScrolledToTrigger, setHasScrolledToTrigger] = useState(false);
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const { checkSubscription } = useSubscription();
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+
+  useEffect(() => {
+    // Handle subscription redirect
+    const subscription = searchParams.get('subscription');
+    if (subscription === 'success') {
+      toast({
+        title: "Subscription Successful",
+        description: "Welcome to MAGAT University! You now have full access to all content.",
+        variant: "default",
+      });
+      checkSubscription(); // Refresh subscription status
+      // Clear URL params
+      window.history.replaceState({}, '', '/');
+    } else if (subscription === 'cancelled') {
+      toast({
+        title: "Subscription Cancelled",
+        description: "Your subscription was cancelled. You can try again anytime.",
+        variant: "destructive",
+      });
+      setShowSubscriptionModal(true);
+      // Clear URL params
+      window.history.replaceState({}, '', '/');
+    }
+  }, [searchParams, toast, checkSubscription]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,6 +153,11 @@ const Index = () => {
       <InvestorModal 
         open={showModal} 
         onOpenChange={setShowModal}
+      />
+      
+      <SubscriptionModal 
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
       />
     </div>
   );

@@ -22,7 +22,7 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
   // Main
-  { path: '/pledgehall', icon: Home, label: 'Dashboard', description: 'Command Center', category: 'main' },
+  { path: '/pledgehall', icon: Home, label: 'Home', description: 'Your Dashboard', category: 'main' },
   
   // Learning
   { path: '/read', icon: BookOpen, label: 'Read', description: 'Narrative Chapters', category: 'learning' },

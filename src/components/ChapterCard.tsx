@@ -8,13 +8,22 @@ import { ChapterIllustration } from '@/components/ChapterIllustration';
 import { ReadingProgressRing } from '@/components/ReadingProgressRing';
 import { cn } from '@/lib/utils';
 
+interface Chapter {
+  id: string;
+  title: string;
+  description?: string;
+  order?: number;
+  module_id?: string;
+  published?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 interface ChapterCardProps {
-  lesson: any;
-  index: number;
-  status: 'locked' | 'in_progress' | 'complete';
-  progress: number;
-  estimatedTime?: number;
-  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  chapter: Chapter;
+  onClick: () => void;
+  isActive?: boolean;
+  progress?: number;
 }
 
 const difficultyColors = {
@@ -30,15 +39,13 @@ const statusIcons = {
 };
 
 export const ChapterCard: React.FC<ChapterCardProps> = ({
-  lesson,
-  index,
-  status,
+  chapter,
+  onClick,
+  isActive,
   progress,
-  estimatedTime = 15,
-  difficulty = 'beginner'
 }) => {
-  const isLocked = status === 'locked';
-  const isComplete = status === 'complete';
+  const isLocked = chapter.published === false;
+  const isComplete = chapter.published === true;
   
   return (
     <Card 
@@ -47,24 +54,24 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({
         "border-2 bg-gradient-to-br from-card via-card to-card/80",
         isLocked && "opacity-60 hover:opacity-80",
         isComplete && "border-emerald-500/30 shadow-emerald-500/10",
-        status === 'in_progress' && "border-accent/30 shadow-accent/10"
+        isActive && "border-accent/30 shadow-accent/10"
       )}
     >
       {/* Chapter Illustration */}
       <div className="relative h-48 sm:h-56">
         <ChapterIllustration
-          chapterIndex={index}
-          title={lesson.title}
+          chapterIndex={chapter.order || 0}
+          title={chapter.title}
           className="h-full"
         />
         
         {/* Status and Progress Overlay */}
         <div className="absolute top-4 right-4 flex items-center gap-2">
-          {status === 'in_progress' && progress > 0 && (
+          {progress !== undefined && progress > 0 && (
             <ReadingProgressRing progress={progress} size="sm" />
           )}
           <div className="p-2 bg-black/50 backdrop-blur-sm rounded-full">
-            {statusIcons[status]}
+            {statusIcons[chapter.published ? 'complete' : 'locked']}
           </div>
         </div>
 
@@ -72,17 +79,17 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({
         <div className="absolute top-4 left-4">
           <div className={cn(
             "px-2 py-1 rounded-full text-xs font-medium border backdrop-blur-sm",
-            difficultyColors[difficulty]
+            difficultyColors['beginner'] // Assuming a default difficulty for now
           )}>
             <Star className="h-3 w-3 inline mr-1" />
-            {difficulty.toUpperCase()}
+            BEGINNER
           </div>
         </div>
 
         {/* Chapter Number Overlay */}
         <div className="absolute bottom-4 left-4">
           <div className="bg-accent text-accent-foreground px-3 py-1 rounded-full font-mono text-sm font-bold">
-            #{index + 1}
+            #{chapter.order || 0 + 1}
           </div>
         </div>
       </div>
@@ -91,31 +98,30 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({
         {/* Title and Metadata */}
         <div className="space-y-2">
           <h3 className="font-institutional text-lg leading-tight uppercase tracking-wide group-hover:text-accent transition-colors">
-            {lesson.title}
+            {chapter.title}
           </h3>
           
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              <span>{estimatedTime} min</span>
+              <span>15 min</span>
             </div>
             <div className="text-xs">
-              {status === 'complete' && '✓ Complete'}
-              {status === 'in_progress' && `🔓 ${progress}% done`}
-              {status === 'locked' && '🔒 Locked'}
+              {chapter.published && '✓ Complete'}
+              {chapter.published === false && '🔒 Locked'}
             </div>
           </div>
         </div>
 
         {/* Objective Preview */}
-        {lesson.objective && (
+        {chapter.description && (
           <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-            {lesson.objective}
+            {chapter.description}
           </p>
         )}
 
         {/* Prerequisites Notice */}
-        {status === 'locked' && index > 0 && (
+        {isLocked && chapter.order !== undefined && chapter.order > 0 && (
           <div className="bg-muted/50 border border-muted p-3 rounded-lg">
             <p className="text-xs text-muted-foreground">
               Complete the previous chapter to unlock
@@ -125,26 +131,19 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({
 
         {/* Action Button */}
         <div className="pt-2">
-          {status === 'complete' ? (
+          {chapter.published ? (
             <Button 
               variant="outline" 
               className="w-full bg-emerald-950/30 border-emerald-800 text-emerald-400 hover:bg-emerald-900/50"
-              asChild
+              onClick={onClick}
             >
-              <Link to={`/lesson/${lesson.id}`}>REVIEW CHAPTER</Link>
-            </Button>
-          ) : status === 'in_progress' ? (
-            <Button 
-              className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70"
-              asChild
-            >
-              <Link to={`/lesson/${lesson.id}`}>CONTINUE READING</Link>
+              <Link to={`/lesson/${chapter.id}`}>REVIEW CHAPTER</Link>
             </Button>
           ) : (
             <Button 
               variant="outline" 
               className="w-full border-muted-foreground/30 text-muted-foreground"
-              disabled
+              onClick={onClick}
             >
               COMPLETE PREVIOUS CHAPTER
             </Button>
