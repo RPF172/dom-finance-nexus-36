@@ -9,6 +9,7 @@ import { ContentManagerFAB } from '@/components/admin/ContentManagerFAB';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
+import ProtectedContent from '@/components/ProtectedContent';
 
 const ReadChapters = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -78,76 +79,78 @@ const ReadChapters = () => {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Enhanced Header */}
-          <div className="text-center mb-12 space-y-6">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-6 h-6 bg-accent animate-pulse"></div>
-              <h1 className="text-4xl lg:text-5xl font-institutional uppercase tracking-wide bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                NARRATIVE CHAPTERS
-              </h1>
+      <ProtectedContent>
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Enhanced Header */}
+            <div className="text-center mb-12 space-y-6">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <div className="w-6 h-6 bg-accent animate-pulse"></div>
+                <h1 className="text-4xl lg:text-5xl font-institutional uppercase tracking-wide bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  NARRATIVE CHAPTERS
+                </h1>
+              </div>
+              
+              <div className="max-w-2xl mx-auto space-y-4">
+                <p className="text-xl text-muted-foreground">
+                  {chaptersOnly.length} chapters available
+                </p>
+              </div>
             </div>
-            
-            <div className="max-w-2xl mx-auto space-y-4">
-              <p className="text-xl text-muted-foreground">
-                {chaptersOnly.length} chapters available
-              </p>
-            </div>
-          </div>
 
-          {/* Blog-Style Content Feed */}
-          <div className="max-w-4xl mx-auto space-y-8 mb-8">
-            {visibleChapters.map((item, index) => (
-              <ContentCard
-                key={`${item.type}-${item.content.id}`}
-                item={item}
-                index={index}
-                isLocked={false} // Chapters are always accessible
-                isCompleted={false}
-                progress={0}
-                onClick={() => handleContentClick(item)}
-              />
-            ))}
-            
-            {/* Loading skeletons */}
-            {isLoadingMore && (
-              <div className="space-y-8">
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <ChapterSkeleton key={`skeleton-${index}`} />
-                ))}
+            {/* Blog-Style Content Feed */}
+            <div className="max-w-4xl mx-auto space-y-8 mb-8">
+              {visibleChapters.map((item, index) => (
+                <ContentCard
+                  key={`${item.type}-${item.content.id}`}
+                  item={item}
+                  index={index}
+                  isLocked={false} // Chapters are always accessible
+                  isCompleted={false}
+                  progress={0}
+                  onClick={() => handleContentClick(item)}
+                />
+              ))}
+              
+              {/* Loading skeletons */}
+              {isLoadingMore && (
+                <div className="space-y-8">
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <ChapterSkeleton key={`skeleton-${index}`} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Load More Sentinel */}
+            {hasMore && (
+              <div ref={loadMoreRef} className="flex justify-center py-8">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Flame className="h-4 w-4 animate-pulse" />
+                  <span className="text-sm font-mono">Loading more chapters...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Completion Message */}
+            {!hasMore && chaptersOnly.length > 0 && (
+              <div className="text-center py-12 border-t border-border">
+                <div className="max-w-md mx-auto space-y-4">
+                  <div className="text-2xl font-institutional uppercase tracking-wide text-accent">
+                    All Chapters Available
+                  </div>
+                  <p className="text-sm text-muted-foreground font-mono">
+                    You have access to all narrative chapters in the collection.
+                  </p>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Load More Sentinel */}
-          {hasMore && (
-            <div ref={loadMoreRef} className="flex justify-center py-8">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Flame className="h-4 w-4 animate-pulse" />
-                <span className="text-sm font-mono">Loading more chapters...</span>
-              </div>
-            </div>
-          )}
-
-          {/* Completion Message */}
-          {!hasMore && chaptersOnly.length > 0 && (
-            <div className="text-center py-12 border-t border-border">
-              <div className="max-w-md mx-auto space-y-4">
-                <div className="text-2xl font-institutional uppercase tracking-wide text-accent">
-                  All Chapters Available
-                </div>
-                <p className="text-sm text-muted-foreground font-mono">
-                  You have access to all narrative chapters in the collection.
-                </p>
-              </div>
-            </div>
-          )}
+          {/* Admin Chapter Manager FAB */}
+          {isAdmin && <ContentManagerFAB />}
         </div>
-
-        {/* Admin Chapter Manager FAB */}
-        {isAdmin && <ContentManagerFAB />}
-      </div>
+      </ProtectedContent>
     </AppLayout>
   );
 };

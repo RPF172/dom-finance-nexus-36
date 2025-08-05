@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Video, Clock, AlertTriangle } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
+import ProtectedContent from '@/components/ProtectedContent';
 
 interface Assignment {
   id: string;
@@ -125,99 +126,101 @@ const Assignments: React.FC = () => {
 
   return (
     <AppLayout>
-      <div className="p-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="mb-8 animate-fade-in">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-3 text-xl font-institutional tracking-wider uppercase">
-                  <div className="w-6 h-6 bg-accent animate-pulse"></div>
-                  ASSIGNMENTS
+      <ProtectedContent>
+        <div className="p-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="mb-8 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-3 text-xl font-institutional tracking-wider uppercase">
+                    <div className="w-6 h-6 bg-accent animate-pulse"></div>
+                    ASSIGNMENTS
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    Rank: INITIATE WHELP
+                  </div>
+                  <div className="w-32 bg-muted h-1 rounded-full mt-2 overflow-hidden">
+                    <div className="bg-accent h-1 rounded-full w-2/3 animate-pulse"></div>
+                  </div>
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
-                  Rank: INITIATE WHELP
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground">Tasks Remaining</div>
+                  <div className="text-3xl font-bold text-destructive animate-pulse">3</div>
+                  <div className="text-xs text-destructive mt-1">URGENT</div>
                 </div>
-                <div className="w-32 bg-muted h-1 rounded-full mt-2 overflow-hidden">
-                  <div className="bg-accent h-1 rounded-full w-2/3 animate-pulse"></div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-muted-foreground">Tasks Remaining</div>
-                <div className="text-3xl font-bold text-destructive animate-pulse">3</div>
-                <div className="text-xs text-destructive mt-1">URGENT</div>
               </div>
             </div>
-          </div>
-          {/* Assignment Cards */}
-          <div className="space-y-4 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
-            {filteredAssignments
-              .sort((a, b) => a.week_number - b.week_number || a.module_number - b.module_number)
-              .map((assignment, index) => (
-                <Card key={assignment.id} className="institutional-card hover:scale-105 transition-all duration-300 hover:shadow-xl" style={{ animationDelay: `${0.5 + index * 0.1}s` }}>
-                  <CardContent className="p-4 cursor-pointer" onClick={() => setSelectedAssignment(assignment)}>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex gap-2 text-xs text-muted-foreground">
-                        <span>Week {assignment.week_number}</span>
-                        <span>Module {assignment.module_number}</span>
-                        <span className="font-bold">{assignment.title}</span>
+            {/* Assignment Cards */}
+            <div className="space-y-4 animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
+              {filteredAssignments
+                .sort((a, b) => a.week_number - b.week_number || a.module_number - b.module_number)
+                .map((assignment, index) => (
+                  <Card key={assignment.id} className="institutional-card hover:scale-105 transition-all duration-300 hover:shadow-xl" style={{ animationDelay: `${0.5 + index * 0.1}s` }}>
+                    <CardContent className="p-4 cursor-pointer" onClick={() => setSelectedAssignment(assignment)}>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-2 text-xs text-muted-foreground">
+                          <span>Week {assignment.week_number}</span>
+                          <span>Module {assignment.module_number}</span>
+                          <span className="font-bold">{assignment.title}</span>
+                        </div>
+                        <div className="text-sm text-muted-foreground">{assignment.description}</div>
+                        <div className="text-xs">Objective: {assignment.objective}</div>
+                        <div className="text-xs">Due: {assignment.due_date}</div>
+                        <div className="text-xs">Status: {assignment.status}</div>
                       </div>
-                      <div className="text-sm text-muted-foreground">{assignment.description}</div>
-                      <div className="text-xs">Objective: {assignment.objective}</div>
-                      <div className="text-xs">Due: {assignment.due_date}</div>
-                      <div className="text-xs">Status: {assignment.status}</div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+            {/* Assignment Details Modal */}
+            {selectedAssignment && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                <div className="bg-card rounded-lg shadow-lg p-6 max-w-lg w-full">
+                  <h2 className="text-xl font-bold mb-2">{selectedAssignment.title}</h2>
+                  <div className="mb-2">Week {selectedAssignment.week_number} | Module {selectedAssignment.module_number}</div>
+                  <div className="mb-2 text-muted-foreground">{selectedAssignment.description}</div>
+                  <div className="mb-2 text-sm">Objective: {selectedAssignment.objective}</div>
+                  <div className="mb-2 text-sm">Instructions: {selectedAssignment.instructions}</div>
+                  <div className="mb-2 text-sm">Due: {selectedAssignment.due_date}</div>
+                  {/* Media display */}
+                  {selectedAssignment.media_urls && selectedAssignment.media_urls.length > 0 && (
+                    <div className="mb-2">
+                      <div className="font-bold text-sm mb-1">Attached Media:</div>
+                      <div className="flex gap-2 flex-wrap">
+                        {selectedAssignment.media_urls.map((url, i) => (
+                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="underline text-primary">Media {i+1}</a>
+                        ))}
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-          </div>
-          {/* Assignment Details Modal */}
-          {selectedAssignment && (
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-              <div className="bg-card rounded-lg shadow-lg p-6 max-w-lg w-full">
-                <h2 className="text-xl font-bold mb-2">{selectedAssignment.title}</h2>
-                <div className="mb-2">Week {selectedAssignment.week_number} | Module {selectedAssignment.module_number}</div>
-                <div className="mb-2 text-muted-foreground">{selectedAssignment.description}</div>
-                <div className="mb-2 text-sm">Objective: {selectedAssignment.objective}</div>
-                <div className="mb-2 text-sm">Instructions: {selectedAssignment.instructions}</div>
-                <div className="mb-2 text-sm">Due: {selectedAssignment.due_date}</div>
-                {/* Media display */}
-                {selectedAssignment.media_urls && selectedAssignment.media_urls.length > 0 && (
-                  <div className="mb-2">
-                    <div className="font-bold text-sm mb-1">Attached Media:</div>
-                    <div className="flex gap-2 flex-wrap">
-                      {selectedAssignment.media_urls.map((url, i) => (
-                        <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="underline text-primary">Media {i+1}</a>
-                      ))}
+                  )}
+                  {/* Submission Fields */}
+                  <div className="mt-4">
+                    <label className="block mb-1 font-bold">Submit your work:</label>
+                    <textarea
+                      className="w-full border rounded p-2 mb-2"
+                      rows={4}
+                      value={submissionText}
+                      onChange={e => setSubmissionText(e.target.value)}
+                      placeholder="Enter your response..."
+                    />
+                    <input
+                      type="file"
+                      multiple
+                      className="mb-2"
+                      onChange={e => setMediaFiles(Array.from(e.target.files || []))}
+                    />
+                    <div className="flex gap-2">
+                      <Button variant="default" onClick={() => {/* handle submit logic */}}>Submit</Button>
+                      <Button variant="ghost" onClick={() => setSelectedAssignment(null)}>Close</Button>
                     </div>
-                  </div>
-                )}
-                {/* Submission Fields */}
-                <div className="mt-4">
-                  <label className="block mb-1 font-bold">Submit your work:</label>
-                  <textarea
-                    className="w-full border rounded p-2 mb-2"
-                    rows={4}
-                    value={submissionText}
-                    onChange={e => setSubmissionText(e.target.value)}
-                    placeholder="Enter your response..."
-                  />
-                  <input
-                    type="file"
-                    multiple
-                    className="mb-2"
-                    onChange={e => setMediaFiles(Array.from(e.target.files || []))}
-                  />
-                  <div className="flex gap-2">
-                    <Button variant="default" onClick={() => {/* handle submit logic */}}>Submit</Button>
-                    <Button variant="ghost" onClick={() => setSelectedAssignment(null)}>Close</Button>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      </ProtectedContent>
     </AppLayout>
   );
 };

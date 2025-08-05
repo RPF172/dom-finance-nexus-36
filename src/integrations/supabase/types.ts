@@ -145,6 +145,80 @@ export type Database = {
         }
         Relationships: []
       }
+      assignments: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          description: string
+          humiliation_score: number | null
+          id: string
+          instructions: string
+          module_number: number
+          objective: string
+          requires_proof: boolean
+          review_notes: string | null
+          reviewed_by: string | null
+          status: string
+          submission_date: string | null
+          submission_media: Json | null
+          submission_text: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          week_number: number
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          description: string
+          humiliation_score?: number | null
+          id?: string
+          instructions: string
+          module_number: number
+          objective: string
+          requires_proof?: boolean
+          review_notes?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submission_date?: string | null
+          submission_media?: Json | null
+          submission_text?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          week_number: number
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          humiliation_score?: number | null
+          id?: string
+          instructions?: string
+          module_number?: number
+          objective?: string
+          requires_proof?: boolean
+          review_notes?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submission_date?: string | null
+          submission_media?: Json | null
+          submission_text?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          week_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignments_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chapters: {
         Row: {
           body_text: string | null
@@ -618,7 +692,10 @@ export type Database = {
           id: string
           stripe_customer_id: string | null
           subscribed: boolean
+          subscription_amount: number | null
           subscription_end: string | null
+          subscription_price_id: string | null
+          subscription_status: string | null
           subscription_tier: string | null
           updated_at: string
           user_id: string | null
@@ -629,7 +706,10 @@ export type Database = {
           id?: string
           stripe_customer_id?: string | null
           subscribed?: boolean
+          subscription_amount?: number | null
           subscription_end?: string | null
+          subscription_price_id?: string | null
+          subscription_status?: string | null
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string | null
@@ -640,7 +720,10 @@ export type Database = {
           id?: string
           stripe_customer_id?: string | null
           subscribed?: boolean
+          subscription_amount?: number | null
           subscription_end?: string | null
+          subscription_price_id?: string | null
+          subscription_status?: string | null
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string | null
