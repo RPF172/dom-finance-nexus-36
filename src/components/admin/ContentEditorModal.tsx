@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { BookOpen, GraduationCap, X } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Dialog,
   DialogContent,
