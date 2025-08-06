@@ -4,11 +4,13 @@ import { useAllUserProgress } from '@/hooks/useProgress';
 import { ContentCard } from '@/components/ContentCard';
 import { ContentEditorModal } from '@/components/admin/ContentEditorModal';
 import { ChapterSkeleton } from '@/components/ChapterSkeleton';
-import { Flame } from 'lucide-react';
+import { Flame, GraduationCap } from 'lucide-react';
 import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
 import { ContentManagerFAB } from '@/components/admin/ContentManagerFAB';
 import { supabase } from '@/integrations/supabase/client';
 import WeekEditorModal from '@/components/admin/WeekEditorModal';
+import { useWeeks } from '@/hooks/useWeeks';
+import { WeekCard } from '@/components/WeekCard';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import ProtectedContent from '@/components/ProtectedContent';
@@ -19,6 +21,9 @@ const LearnLessons = () => {
   const [editorOpen, setEditorOpen] = useState(false);
   const [weekModalOpen, setWeekModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Fetch weeks
+  const { data: weeks, isLoading: weeksLoading } = useWeeks();
 
   // Try to use content sequence first, fallback to mixed content
   const { data: sequencedContent, isLoading: isSequenceLoading } = useContentSequence();
@@ -66,7 +71,7 @@ const LearnLessons = () => {
     batchSize: 6
   });
 
-  if (isLoading) {
+  if (isLoading || weeksLoading) {
     return (
       <AppLayout>
         <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center">
