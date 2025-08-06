@@ -1,0 +1,271 @@
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { BookOpen, CheckSquare, FileText, RotateCcw, Upload } from 'lucide-react';
+import { WeekData } from '@/hooks/useWeeks';
+import { useUserSubmissions, useUserStepProgress, useCreateSubmission, useUpdateStepProgress } from '@/hooks/useSubmissions';
+import { useImageUpload } from '@/hooks/useImageUpload';
+import { toast } from 'sonner';
+
+interface WeekContentTabsProps {
+  weekData: WeekData;
+}
+
+export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) => {
+  const [activeTab, setActiveTab] = useState('content');
+  const { data: submissions = [] } = useUserSubmissions(weekData.id);
+  const { data: stepProgress = [] } = useUserStepProgress(weekData.id);
+  const createSubmission = useCreateSubmission();
+  const updateStepProgress = useUpdateStepProgress();
+  const { uploadImage, uploading } = useImageUpload();
+
+  const [taskResponses, setTaskResponses] = useState<Record<string, string>>({});
+  const [assignmentResponses, setAssignmentResponses] = useState<Record<string, string>>({});
+
+  const handleTaskSubmission = async (taskId: string) => {
+    const textResponse = taskResponses[taskId];
+    if (!textResponse?.trim()) {
+      toast.error('Please provide a response before submitting');
+      return;
+    }
+
+    try {
+      await createSubmission.mutateAsync({
+        week_id: weekData.id,
+        task_id: taskId,
+        text_response: textResponse
+      });
+      
+      setTaskResponses(prev => ({ ...prev, [taskId]: '' }));
+      toast.success('Task submitted successfully!');
+    } catch (error) {
+      toast.error('Failed to submit task');
+    }
+  };
+
+  const handleAssignmentSubmission = async (assignmentId: string) => {
+    const textResponse = assignmentResponses[assignmentId];
+    if (!textResponse?.trim()) {
+      toast.error('Please provide a response before submitting');
+      return;
+    }
+
+    try {
+      await createSubmission.mutateAsync({
+        week_id: weekData.id,
+        assignment_id: assignmentId,
+        text_response: textResponse
+      });
+      
+      setAssignmentResponses(prev => ({ ...prev, [assignmentId]: '' }));
+      toast.success('Assignment submitted successfully!');
+    } catch (error) {
+      toast.error('Failed to submit assignment');
+    }
+  };
+
+  const handleStepToggle = async (stepId: string, completed: boolean) => {
+    try {
+      await updateStepProgress.mutateAsync({
+        reviewStepId: stepId,
+        completed,
+        weekId: weekData.id
+      });
+      toast.success(completed ? 'Step marked as complete!' : 'Step marked as incomplete');
+    } catch (error) {
+      toast.error('Failed to update step progress');
+    }
+  };
+
+  const isTaskSubmitted = (taskId: string) => 
+    submissions.some(s => s.task_id === taskId);
+  
+  const isAssignmentSubmitted = (assignmentId: string) => 
+    submissions.some(s => s.assignment_id === assignmentId);
+
+  const isStepCompleted = (stepId: string) => 
+    stepProgress.some(p => p.review_step_id === stepId && p.completed);
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="content" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            Content Read
+          </TabsTrigger>
+          <TabsTrigger value="tasks" className="flex items-center gap-2">
+            <CheckSquare className="h-4 w-4" />
+            Tasks
+          </TabsTrigger>
+          <TabsTrigger value="assignments" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Assignments
+          </TabsTrigger>
+          <TabsTrigger value="review" className="flex items-center gap-2">
+            <RotateCcw className="h-4 w-4" />
+            Review
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="content" className="space-y-4 mt-6">
+          <div className="space-y-4">
+            {weekData.modules.map((module, index) => (
+              <Card key={module.id}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Badge variant="outline">Module {index + 1}</Badge>
+                    {module.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm max-w-none text-foreground">
+                    {module.content.split('\n\n').map((paragraph, pIndex) => (
+                      <p key={pIndex} className="mb-4">{paragraph}</p>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="tasks" className="space-y-4 mt-6">
+          <div className="space-y-4">
+            {weekData.tasks.map((task, index) => {
+              const submitted = isTaskSubmitted(task.id);
+              return (
+                <Card key={task.id}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">Task {index + 1}</Badge>
+                        {task.title}
+                      </div>
+                      {submitted && (
+                        <Badge variant="default" className="bg-green-500">
+                          Submitted
+                        </Badge>
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {task.description && (
+                      <p className="text-muted-foreground">{task.description}</p>
+                    )}
+                    
+                    {!submitted && (
+                      <div className="space-y-4">
+                        <Textarea
+                          placeholder="Your response..."
+                          value={taskResponses[task.id] || ''}
+                          onChange={(e) => setTaskResponses(prev => ({
+                            ...prev,
+                            [task.id]: e.target.value
+                          }))}
+                          className="min-h-[100px]"
+                        />
+                        <Button 
+                          onClick={() => handleTaskSubmission(task.id)}
+                          disabled={createSubmission.isPending || !taskResponses[task.id]?.trim()}
+                          className="w-full"
+                        >
+                          Submit Task
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="assignments" className="space-y-4 mt-6">
+          <div className="space-y-4">
+            {weekData.assignments.map((assignment, index) => {
+              const submitted = isAssignmentSubmitted(assignment.id);
+              return (
+                <Card key={assignment.id}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">Assignment {index + 1}</Badge>
+                        {assignment.title}
+                      </div>
+                      {submitted && (
+                        <Badge variant="default" className="bg-green-500">
+                          Submitted
+                        </Badge>
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {assignment.description && (
+                      <p className="text-muted-foreground">{assignment.description}</p>
+                    )}
+                    
+                    {!submitted && (
+                      <div className="space-y-4">
+                        <Textarea
+                          placeholder="Your assignment response..."
+                          value={assignmentResponses[assignment.id] || ''}
+                          onChange={(e) => setAssignmentResponses(prev => ({
+                            ...prev,
+                            [assignment.id]: e.target.value
+                          }))}
+                          className="min-h-[150px]"
+                        />
+                        <Button 
+                          onClick={() => handleAssignmentSubmission(assignment.id)}
+                          disabled={createSubmission.isPending || !assignmentResponses[assignment.id]?.trim()}
+                          className="w-full"
+                        >
+                          Submit Assignment
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="review" className="space-y-4 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Week {weekData.week_number} Review Checklist</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {weekData.review_steps.map((step) => {
+                  const completed = isStepCompleted(step.id);
+                  return (
+                    <div key={step.id} className="flex items-center space-x-3">
+                      <Checkbox
+                        checked={completed}
+                        onCheckedChange={(checked) => 
+                          handleStepToggle(step.id, checked as boolean)
+                        }
+                        disabled={updateStepProgress.isPending}
+                      />
+                      <span className={`flex-1 ${completed ? 'line-through text-muted-foreground' : ''}`}>
+                        {step.description}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};

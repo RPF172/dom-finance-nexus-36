@@ -165,6 +165,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          week_id: string | null
           week_number: number
         }
         Insert: {
@@ -186,6 +187,7 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
+          week_id?: string | null
           week_number: number
         }
         Update: {
@@ -207,6 +209,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          week_id?: string | null
           week_number?: number
         }
         Relationships: [
@@ -215,6 +218,13 @@ export type Database = {
             columns: ["reviewed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "weeks"
             referencedColumns: ["id"]
           },
         ]
@@ -685,6 +695,131 @@ export type Database = {
           },
         ]
       }
+      review_steps: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          order_index: number
+          updated_at: string | null
+          week_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          order_index?: number
+          updated_at?: string | null
+          week_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          order_index?: number
+          updated_at?: string | null
+          week_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_steps_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "weeks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      step_progress: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          id: string
+          review_step_id: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          id?: string
+          review_step_id?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          id?: string
+          review_step_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_progress_review_step_id_fkey"
+            columns: ["review_step_id"]
+            isOneToOne: false
+            referencedRelation: "review_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submissions: {
+        Row: {
+          assignment_id: string | null
+          id: string
+          media_url: string | null
+          metadata: Json | null
+          submitted_at: string | null
+          task_id: string | null
+          text_response: string | null
+          user_id: string
+          week_id: string | null
+        }
+        Insert: {
+          assignment_id?: string | null
+          id?: string
+          media_url?: string | null
+          metadata?: Json | null
+          submitted_at?: string | null
+          task_id?: string | null
+          text_response?: string | null
+          user_id: string
+          week_id?: string | null
+        }
+        Update: {
+          assignment_id?: string | null
+          id?: string
+          media_url?: string | null
+          metadata?: Json | null
+          submitted_at?: string | null
+          task_id?: string | null
+          text_response?: string | null
+          user_id?: string
+          week_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "weeks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -729,6 +864,44 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      tasks: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          order_index: number
+          title: string
+          updated_at: string | null
+          week_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_index?: number
+          title: string
+          updated_at?: string | null
+          week_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_index?: number
+          title?: string
+          updated_at?: string | null
+          week_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "weeks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tributes: {
         Row: {
@@ -858,6 +1031,80 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      week_modules: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          order_index: number
+          title: string
+          updated_at: string | null
+          week_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          order_index?: number
+          title: string
+          updated_at?: string | null
+          week_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          order_index?: number
+          title?: string
+          updated_at?: string | null
+          week_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "week_modules_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "weeks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weeks: {
+        Row: {
+          created_at: string | null
+          id: string
+          objective: string | null
+          title: string
+          total_assignments: number | null
+          total_modules: number | null
+          total_tasks: number | null
+          updated_at: string | null
+          week_number: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          objective?: string | null
+          title: string
+          total_assignments?: number | null
+          total_modules?: number | null
+          total_tasks?: number | null
+          updated_at?: string | null
+          week_number: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          objective?: string | null
+          title?: string
+          total_assignments?: number | null
+          total_modules?: number | null
+          total_tasks?: number | null
+          updated_at?: string | null
+          week_number?: number
         }
         Relationships: []
       }
