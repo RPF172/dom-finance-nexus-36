@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useWeekData } from '@/hooks/useWeeks';
 import AppLayout from '@/components/layout/AppLayout';
 import { Flame } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import WeekContentEditor from '@/components/admin/WeekContentEditor';
 
 const TABS = [
   { key: 'content', label: 'Content Read' },
@@ -16,6 +18,25 @@ const WeekView: React.FC = () => {
   const navigate = useNavigate();
   const { data: week, isLoading } = useWeekData(weekId!);
   const [activeTab, setActiveTab] = useState('content');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  React.useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: userRole } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .maybeSingle();
+        setIsAdmin(!!userRole);
+      } else {
+        setIsAdmin(false);
+      }
+    };
+    checkAdmin();
+  }, []);
 
   if (isLoading) {
     return (
@@ -45,8 +66,15 @@ const WeekView: React.FC = () => {
         <div className="mb-8 text-center">
           <div className="text-xs text-muted-foreground mb-2">WEEK {week.week_number}</div>
           <h1 className="text-3xl font-bold mb-2">{week.title}</h1>
-          <p className="text-muted-foreground mb-4">{week.description || week.objective}</p>
+          <p className="text-muted-foreground mb-4">{week.objective}</p>
         </div>
+
+        {/* Admin Content Editor */}
+        {isAdmin && (
+          <div className="mb-8">
+            <WeekContentEditor weekId={week.id} onSaved={() => window.location.reload()} />
+          </div>
+        )}
 
         {/* 2x2 Quadrant Tabs */}
         <div className="grid grid-cols-2 gap-4 mb-8">
