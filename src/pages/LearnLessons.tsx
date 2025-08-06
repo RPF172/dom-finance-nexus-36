@@ -8,6 +8,7 @@ import { Flame } from 'lucide-react';
 import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
 import { ContentManagerFAB } from '@/components/admin/ContentManagerFAB';
 import { supabase } from '@/integrations/supabase/client';
+import WeekEditorModal from '@/components/admin/WeekEditorModal';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import ProtectedContent from '@/components/ProtectedContent';
@@ -16,6 +17,7 @@ const LearnLessons = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [editingModule, setEditingModule] = useState<any | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [weekModalOpen, setWeekModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // Try to use content sequence first, fallback to mixed content
@@ -118,7 +120,25 @@ const LearnLessons = () => {
       <ProtectedContent>
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Enhanced Header */}
+          {/* Enhanced Header */}
+          {isAdmin && (
+            <div className="flex justify-end mb-6">
+              <button
+                className="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90 font-semibold shadow"
+                onClick={() => setWeekModalOpen(true)}
+              >
+                + Create New Week
+              </button>
+            </div>
+          )}
+          {/* Admin: Week Editor Modal */}
+          {isAdmin && (
+            <WeekEditorModal
+              isOpen={weekModalOpen}
+              onClose={() => setWeekModalOpen(false)}
+              onCreated={() => setWeekModalOpen(false)}
+            />
+          )}
             <div className="text-center mb-12 space-y-6">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <div className="w-6 h-6 bg-accent animate-pulse"></div>
