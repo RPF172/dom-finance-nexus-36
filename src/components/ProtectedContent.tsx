@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
 import SubscriptionModal from './SubscriptionModal';
 import { LoadingSpinner } from './ui/loading-spinner';
@@ -14,12 +15,31 @@ const ProtectedContent: React.FC<ProtectedContentProps> = ({
 }) => {
   const { subscribed, loading } = useSubscription();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (!loading && !subscribed && showModal) {
+    const checkAdmin = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: userRole } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .maybeSingle();
+        setIsAdmin(!!userRole);
+      } else {
+        setIsAdmin(false);
+      }
+    };
+    checkAdmin();
+  }, []);
+
+  useEffect(() => {
+    if (!loading && !subscribed && showModal && !isAdmin) {
       setShowSubscriptionModal(true);
     }
-  }, [loading, subscribed, showModal]);
+  }, [loading, subscribed, showModal, isAdmin]);
 
   if (loading) {
     return (
@@ -29,7 +49,7 @@ const ProtectedContent: React.FC<ProtectedContentProps> = ({
     );
   }
 
-  if (!subscribed) {
+  if (!subscribed && !isAdmin) {
     return (
       <>
         <div className="min-h-screen flex items-center justify-center">
