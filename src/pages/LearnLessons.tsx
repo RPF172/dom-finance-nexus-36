@@ -68,10 +68,12 @@ const LearnLessons = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Flame className="w-12 h-12 text-primary animate-pulse mx-auto" />
-          <p className="text-muted-foreground">Loading modules...</p>
+      <AppLayout>
+        <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <Flame className="w-12 h-12 text-primary animate-pulse mx-auto" />
+            <p className="text-muted-foreground">Loading modules...</p>
+          </div>
         </div>
       </AppLayout>
     );
