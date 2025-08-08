@@ -3,7 +3,8 @@ import { SocialFeed } from '@/components/social/SocialFeed';
 import AppLayout from '@/components/layout/AppLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { FriendsList } from '@/components/social/FriendsList';
 export default function Social() {
   const [currentUser, setCurrentUser] = useState<{
     id: string;
@@ -74,9 +75,28 @@ export default function Social() {
             </div>
           </div>
 
-          <div className="max-w-2xl mx-auto animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
-            <SocialFeed currentUser={currentUser} />
-          </div>
+            <Tabs defaultValue="feed" className="w-full">
+              <TabsList className="grid grid-cols-3 w-full">
+                <TabsTrigger value="feed">Feed</TabsTrigger>
+                <TabsTrigger value="online">Online</TabsTrigger>
+                <TabsTrigger value="chat">Chat</TabsTrigger>
+              </TabsList>
+              <TabsContent value="feed">
+                <div className="max-w-2xl mx-auto animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
+                  <SocialFeed currentUser={currentUser} />
+                </div>
+              </TabsContent>
+              <TabsContent value="online">
+                <div className="max-w-2xl mx-auto animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards] mt-4">
+                  <FriendsList currentUserId={currentUser?.id} />
+                </div>
+              </TabsContent>
+              <TabsContent value="chat">
+                <div className="max-w-2xl mx-auto animate-fade-in [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards] mt-4 rounded-md border bg-card p-6">
+                  <p className="text-muted-foreground">Direct chat is coming soon.</p>
+                </div>
+              </TabsContent>
+            </Tabs>
         </div>
       </div>
     </AppLayout>
