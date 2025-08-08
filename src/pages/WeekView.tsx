@@ -5,7 +5,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import { Flame } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import WeekContentEditor from '@/components/admin/WeekContentEditor';
-
+import { WeekContentTabs } from '@/components/WeekContentTabs';
 
 const WeekView: React.FC = () => {
   const { weekId } = useParams<{ weekId: string }>();
@@ -70,64 +70,9 @@ const WeekView: React.FC = () => {
           </div>
         )}
 
-        {/* Combined Ordered Content */}
+        {/* Week interactive content */}
         <div className="rounded-lg border bg-card p-6">
-          {(() => {
-            const tasks = [...(week.tasks || [])].sort((a,b) => (a.order_index ?? 0) - (b.order_index ?? 0));
-            const modules = [...(week.modules || [])].sort((a,b) => (a.order_index ?? 0) - (b.order_index ?? 0));
-            const assignment = (week.assignments || [])[0];
-            const seqTypes = ['task','module','task','module','task','assignment','task'] as const;
-            let ti = 0, mi = 0;
-            const out: Array<{ type: 'task' | 'module' | 'assignment'; item: any }> = [];
-            for (const type of seqTypes) {
-              if (type === 'task' && ti < tasks.length) out.push({ type, item: tasks[ti++] });
-              else if (type === 'module' && mi < modules.length) out.push({ type, item: modules[mi++] });
-              else if (type === 'assignment' && assignment) out.push({ type, item: assignment });
-            }
-            while (ti < tasks.length || mi < modules.length) {
-              if (ti < tasks.length) out.push({ type: 'task', item: tasks[ti++] });
-              if (mi < modules.length) out.push({ type: 'module', item: modules[mi++] });
-            }
-            let taskCount = 0, moduleCount = 0, assignmentCount = 0;
-            return (
-              <div className="space-y-4">
-                <div className="text-xs uppercase text-muted-foreground">Week {week.week_number}</div>
-                {out.map((entry, idx) => {
-                  if (entry.type === 'task') {
-                    taskCount += 1;
-                    return (
-                      <div key={`task-${entry.item.id}`} className="rounded-md border border-border/60 bg-background p-4">
-                        <div className="text-sm font-semibold mb-1">Task {taskCount}: {entry.item.title}</div>
-                        {entry.item.description && (
-                          <p className="text-sm text-muted-foreground">{entry.item.description}</p>
-                        )}
-                      </div>
-                    );
-                  }
-                  if (entry.type === 'module') {
-                    moduleCount += 1;
-                    return (
-                      <div key={`module-${entry.item.id}`} className="rounded-md border border-border/60 bg-background p-4">
-                        <div className="text-sm font-semibold mb-1">Training Module {moduleCount}: {entry.item.title}</div>
-                        {entry.item.content && (
-                          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{entry.item.content}</p>
-                        )}
-                      </div>
-                    );
-                  }
-                  assignmentCount += 1;
-                  return (
-                    <div key={`assignment-${entry.item.id || idx}`} className="rounded-md border border-accent/60 bg-accent/10 p-4">
-                      <div className="text-sm font-semibold mb-1">Assignment {assignmentCount}: {entry.item.title || 'Assignment'}</div>
-                      {entry.item.description && (
-                        <p className="text-sm text-muted-foreground">{entry.item.description}</p>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })()}
+          <WeekContentTabs weekData={week} />
         </div>
       </div>
     </AppLayout>
