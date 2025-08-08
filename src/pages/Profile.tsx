@@ -12,6 +12,7 @@ import { HeaderImageUpload } from '@/components/profile/HeaderImageUpload';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfileOverview } from '@/hooks/useProfileOverview';
 import { useProfileActivity } from '@/hooks/useProfileActivity';
+import ObedienceStatusCard from '@/components/gamification/ObedienceStatusCard';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Crown, 
@@ -351,6 +352,8 @@ const Profile: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
+
+              <ObedienceStatusCard targetUserId={targetId} />
 
               {/* Badges & Relics */}
               <Card>

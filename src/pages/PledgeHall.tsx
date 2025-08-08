@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AppLayout from '@/components/layout/AppLayout';
+import ObedienceStatusCard from '@/components/gamification/ObedienceStatusCard';
 
 interface UserProfile {
   id: string;
@@ -141,6 +142,8 @@ const PledgeHall: React.FC = () => {
               <p className="text-xs text-muted-foreground mt-1">Status: PROGRESSING</p>
             </Card>
           </div>
+
+          <ObedienceStatusCard />
 
           {/* Current Task */}
           <Card className="institutional-card p-6 border-accent bg-gradient-to-r from-card to-accent/5 hover:shadow-lg transition-all duration-300">
