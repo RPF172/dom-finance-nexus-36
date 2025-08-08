@@ -12,15 +12,13 @@ const WeekContentEditor: React.FC<WeekContentEditorProps> = ({ weekId, onSaved }
   const [moduleContent, setModuleContent] = useState('');
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [assignmentTitle, setAssignmentTitle] = useState('');
-  const [assignmentDescription, setAssignmentDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSaveModule = async () => {
     setLoading(true);
     setError(null);
-    const { error } = await supabase.from('modules').insert({
+    const { error } = await supabase.from('week_modules').insert({
       week_id: weekId,
       title: moduleTitle,
       content: moduleContent,
@@ -51,22 +49,6 @@ const WeekContentEditor: React.FC<WeekContentEditorProps> = ({ weekId, onSaved }
     }
   };
 
-  const handleSaveAssignment = async () => {
-    setLoading(true);
-    setError(null);
-    const { error } = await supabase.from('assignments').insert({
-      week_id: weekId,
-      title: assignmentTitle,
-      description: assignmentDescription,
-    });
-    setLoading(false);
-    if (error) setError(error.message);
-    else {
-      setAssignmentTitle('');
-      setAssignmentDescription('');
-      onSaved && onSaved();
-    }
-  };
 
   return (
     <div className="space-y-8">
@@ -104,24 +86,6 @@ const WeekContentEditor: React.FC<WeekContentEditorProps> = ({ weekId, onSaved }
         />
         <Button onClick={handleSaveTask} disabled={loading} className="w-full">
           {loading ? 'Saving...' : 'Save Task'}
-        </Button>
-      </div>
-      <div>
-        <h3 className="font-bold mb-2">Add Assignment</h3>
-        <input
-          className="input mb-2 w-full"
-          placeholder="Assignment Title"
-          value={assignmentTitle}
-          onChange={e => setAssignmentTitle(e.target.value)}
-        />
-        <textarea
-          className="input mb-2 w-full"
-          placeholder="Assignment Description"
-          value={assignmentDescription}
-          onChange={e => setAssignmentDescription(e.target.value)}
-        />
-        <Button onClick={handleSaveAssignment} disabled={loading} className="w-full">
-          {loading ? 'Saving...' : 'Save Assignment'}
         </Button>
       </div>
       {error && <div className="text-red-500 text-sm">{error}</div>}
