@@ -10,6 +10,8 @@ import { useProfile, useUpdateProfile } from '@/hooks/useProfile';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { HeaderImageUpload } from '@/components/profile/HeaderImageUpload';
 import { supabase } from '@/integrations/supabase/client';
+import { useProfileOverview } from '@/hooks/useProfileOverview';
+import { useProfileActivity } from '@/hooks/useProfileActivity';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Crown, 
@@ -64,6 +66,10 @@ const Profile: React.FC = () => {
 
   const { data: ownProfile, isLoading: ownProfileLoading } = useProfile();
   const updateProfile = useUpdateProfile();
+
+  const targetId = viewedProfile?.user_id;
+  const { data: overview } = useProfileOverview(targetId);
+  const { data: activity } = useProfileActivity(targetId, 10);
 
   // Get current user
   useEffect(() => {
@@ -324,23 +330,23 @@ const Profile: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center space-y-1">
                       <BookOpen className="h-6 w-6 mx-auto text-primary" />
-                      <div className="text-2xl font-bold">9</div>
-                      <div className="text-xs text-muted-foreground">Chapters Completed</div>
+                      <div className="text-2xl font-bold">{overview?.lessons_completed_count ?? 0}</div>
+                      <div className="text-xs text-muted-foreground">Lessons Completed</div>
                     </div>
                     <div className="text-center space-y-1">
                       <ClipboardList className="h-6 w-6 mx-auto text-primary" />
-                      <div className="text-2xl font-bold">27</div>
-                      <div className="text-xs text-muted-foreground">Assignments Done</div>
+                      <div className="text-2xl font-bold">{overview?.posts_count ?? 0}</div>
+                      <div className="text-xs text-muted-foreground">Posts</div>
                     </div>
                     <div className="text-center space-y-1">
-                      <Zap className="h-6 w-6 mx-auto text-destructive" />
-                      <div className="text-2xl font-bold text-destructive">3</div>
-                      <div className="text-xs text-muted-foreground">Punishments Received</div>
+                      <Award className="h-6 w-6 mx-auto text-primary" />
+                      <div className="text-2xl font-bold">{overview?.likes_received_count ?? 0}</div>
+                      <div className="text-xs text-muted-foreground">Likes Received</div>
                     </div>
                     <div className="text-center space-y-1">
-                      <DollarSign className="h-6 w-6 mx-auto text-green-500" />
-                      <div className="text-2xl font-bold text-green-500">$142.69</div>
-                      <div className="text-xs text-muted-foreground">Tribute Given</div>
+                      <MessageCircle className="h-6 w-6 mx-auto text-primary" />
+                      <div className="text-2xl font-bold">{overview?.comments_received_count ?? 0}</div>
+                      <div className="text-xs text-muted-foreground">Comments Received</div>
                     </div>
                   </div>
                 </CardContent>
@@ -386,37 +392,25 @@ const Profile: React.FC = () => {
                   <CardTitle className="text-lg tracking-wide">RECENT ACTIVITY</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    <div className="flex-1">
-                      <div className="text-sm font-medium">Finished "Chapter V: Erosion"</div>
-                      <div className="text-xs text-muted-foreground">2 hours ago</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                    <ClipboardList className="h-5 w-5 text-primary" />
-                    <div className="flex-1">
-                      <div className="text-sm font-medium">Submitted: "Video of Humiliation"</div>
-                      <div className="text-xs text-muted-foreground">1 day ago</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 p-3 bg-destructive/10 rounded-lg border border-destructive/20">
-                    <Zap className="h-5 w-5 text-destructive" />
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-destructive">Missed Task: "Public Degradation" ❌</div>
-                      <div className="text-xs text-muted-foreground">2 days ago</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-                    <DollarSign className="h-5 w-5 text-green-500" />
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-green-500">Paid Tribute: $20</div>
-                      <div className="text-xs text-muted-foreground">3 days ago</div>
-                    </div>
-                  </div>
+                  {activity && activity.length > 0 ? (
+                    activity.map((item) => (
+                      <div key={item.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                        {item.activity_type === 'lesson' ? (
+                          <BookOpen className="h-5 w-5 text-primary" />
+                        ) : (
+                          <MessageCircle className="h-5 w-5 text-primary" />
+                        )}
+                        <div className="flex-1">
+                          <div className="text-sm font-medium">{item.title ?? 'Activity'}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {new Date(item.occurred_at).toLocaleString()}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-muted-foreground">No recent activity.</div>
+                  )}
                 </CardContent>
               </Card>
 

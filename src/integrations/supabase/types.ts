@@ -1075,6 +1075,7 @@ export type Database = {
       weeks: {
         Row: {
           created_at: string | null
+          description: string | null
           id: string
           objective: string | null
           title: string
@@ -1086,6 +1087,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          description?: string | null
           id?: string
           objective?: string | null
           title: string
@@ -1097,6 +1099,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          description?: string | null
           id?: string
           objective?: string | null
           title?: string
@@ -1128,6 +1131,36 @@ export type Database = {
           pending_count: number
           approved_count: number
           rejected_count: number
+        }[]
+      }
+      get_profile_overview: {
+        Args: { _target_user_id: string; _viewer_user_id?: string }
+        Returns: {
+          user_id: string
+          display_name: string
+          avatar_url: string
+          cover_photo_url: string
+          is_premium: boolean
+          premium_color: string
+          joined_at: string
+          posts_count: number
+          likes_received_count: number
+          comments_received_count: number
+          lessons_completed_count: number
+        }[]
+      }
+      get_recent_activity: {
+        Args: {
+          _target_user_id: string
+          _viewer_user_id?: string
+          _limit?: number
+        }
+        Returns: {
+          activity_type: string
+          id: string
+          occurred_at: string
+          title: string
+          description: string
         }[]
       }
       get_user_premium_status: {
