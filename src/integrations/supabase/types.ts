@@ -454,6 +454,66 @@ export type Database = {
         }
         Relationships: []
       }
+      obedience_points_ledger: {
+        Row: {
+          action_key: string | null
+          action_type: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          points: number
+          user_id: string
+        }
+        Insert: {
+          action_key?: string | null
+          action_type: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          points: number
+          user_id: string
+        }
+        Update: {
+          action_key?: string | null
+          action_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      obedience_tiers: {
+        Row: {
+          code: string
+          created_at: string | null
+          max_points: number | null
+          min_points: number
+          order_index: number
+          title: string
+          unlocks: Json
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          max_points?: number | null
+          min_points: number
+          order_index?: number
+          title: string
+          unlocks?: Json
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          max_points?: number | null
+          min_points?: number
+          order_index?: number
+          title?: string
+          unlocks?: Json
+        }
+        Relationships: []
+      }
       post_comments: {
         Row: {
           content: string
@@ -1013,6 +1073,50 @@ export type Database = {
           },
         ]
       }
+      user_obedience_summary: {
+        Row: {
+          alpha_approved: boolean
+          created_at: string | null
+          last_activity_at: string | null
+          last_decay_run_at: string | null
+          shame_mark: boolean
+          tier_code: string | null
+          total_points: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alpha_approved?: boolean
+          created_at?: string | null
+          last_activity_at?: string | null
+          last_decay_run_at?: string | null
+          shame_mark?: boolean
+          tier_code?: string | null
+          total_points?: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alpha_approved?: boolean
+          created_at?: string | null
+          last_activity_at?: string | null
+          last_decay_run_at?: string | null
+          shame_mark?: boolean
+          tier_code?: string | null
+          total_points?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_obedience_summary_tier_code_fkey"
+            columns: ["tier_code"]
+            isOneToOne: false
+            referencedRelation: "obedience_tiers"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -1120,6 +1224,18 @@ export type Database = {
         Args: { user1_id: string; user2_id: string }
         Returns: boolean
       }
+      award_op: {
+        Args: {
+          _user_id: string
+          _action_type: string
+          _action_key: string
+          _base_points: number
+          _limit_per_day?: number
+          _window_hours?: number
+          _metadata?: Json
+        }
+        Returns: number
+      }
       check_email_exists: {
         Args: { email_to_check: string }
         Returns: boolean
@@ -1163,6 +1279,10 @@ export type Database = {
           description: string
         }[]
       }
+      get_tier_for_points: {
+        Args: { _points: number }
+        Returns: string
+      }
       get_user_premium_status: {
         Args: { user_id: string }
         Returns: boolean
@@ -1189,7 +1309,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user" | "pledge"
+      app_role: "admin" | "user" | "pledge" | "alpha"
       post_type: "text" | "image" | "video" | "link"
       privacy_level: "public" | "friends" | "private"
     }
@@ -1319,7 +1439,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user", "pledge"],
+      app_role: ["admin", "user", "pledge", "alpha"],
       post_type: ["text", "image", "video", "link"],
       privacy_level: ["public", "friends", "private"],
     },
