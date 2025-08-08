@@ -153,23 +153,42 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
 
         <TabsContent value="content" className="space-y-4 mt-6">
           <div className="space-y-4">
-            {weekData.modules.map((module, index) => (
-              <Card key={module.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Badge variant="outline">Module {index + 1}</Badge>
-                    {module.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose prose-sm max-w-none text-foreground">
-                    {module.content.split('\n\n').map((paragraph, pIndex) => (
-                      <p key={pIndex} className="mb-4">{paragraph}</p>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {weekData.modules.map((module, index) => {
+              const completed = isModuleCompleted(module.id);
+              return (
+                <Card key={module.id} className={`relative ${completed ? 'border-success ring-1 ring-success/40' : ''}`}>
+                  {completed && (
+                    <div className="absolute -top-2 -left-2 bg-background rounded-full p-1 border border-success">
+                      <CheckCircle className="h-5 w-5 text-success" />
+                    </div>
+                  )}
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">Module {index + 1}</Badge>
+                        {module.title}
+                      </div>
+                      <div>
+                        <Button
+                          variant={completed ? 'secondary' : 'default'}
+                          disabled={completed || toggleModuleProgress.isPending}
+                          onClick={() => toggleModuleProgress.mutate({ weekModuleId: module.id, completed: true })}
+                        >
+                          {completed ? 'Completed' : 'Mark as complete'}
+                        </Button>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="prose prose-sm max-w-none text-foreground">
+                      {module.content.split('\n\n').map((paragraph, pIndex) => (
+                        <p key={pIndex} className="mb-4">{paragraph}</p>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
 
@@ -178,7 +197,12 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
             {weekData.tasks.map((task, index) => {
               const submitted = isTaskSubmitted(task.id);
               return (
-                <Card key={task.id}>
+                <Card key={task.id} className={`relative ${submitted ? 'border-success ring-1 ring-success/40' : ''}`}>
+                  {submitted && (
+                    <div className="absolute -top-2 -left-2 bg-background rounded-full p-1 border border-success">
+                      <CheckCircle className="h-5 w-5 text-success" />
+                    </div>
+                  )}
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -186,7 +210,7 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                         {task.title}
                       </div>
                       {submitted && (
-                        <Badge variant="default" className="bg-green-500">
+                        <Badge variant="default" className="bg-success text-success-foreground">
                           Submitted
                         </Badge>
                       )}
@@ -196,7 +220,6 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                     {task.description && (
                       <p className="text-muted-foreground">{task.description}</p>
                     )}
-                    
                     {!submitted && (
                       <div className="space-y-4">
                         <Textarea
@@ -208,9 +231,24 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                           }))}
                           className="min-h-[100px]"
                         />
+                        <div className="flex items-center gap-3">
+                          <Input
+                            type="file"
+                            accept="image/*,video/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
+                              setTaskFiles(prev => ({ ...prev, [task.id]: file }));
+                            }}
+                          />
+                          {taskFiles[task.id] && (
+                            <span className="text-sm text-muted-foreground truncate">
+                              {taskFiles[task.id]?.name}
+                            </span>
+                          )}
+                        </div>
                         <Button 
                           onClick={() => handleTaskSubmission(task.id)}
-                          disabled={createSubmission.isPending || !taskResponses[task.id]?.trim()}
+                          disabled={createSubmission.isPending || uploading || (!taskResponses[task.id]?.trim() && !taskFiles[task.id])}
                           className="w-full"
                         >
                           Submit Task
@@ -229,7 +267,12 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
             {weekData.assignments.map((assignment, index) => {
               const submitted = isAssignmentSubmitted(assignment.id);
               return (
-                <Card key={assignment.id}>
+                <Card key={assignment.id} className={`relative ${submitted ? 'border-success ring-1 ring-success/40' : ''}`}>
+                  {submitted && (
+                    <div className="absolute -top-2 -left-2 bg-background rounded-full p-1 border border-success">
+                      <CheckCircle className="h-5 w-5 text-success" />
+                    </div>
+                  )}
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -237,7 +280,7 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                         {assignment.title}
                       </div>
                       {submitted && (
-                        <Badge variant="default" className="bg-green-500">
+                        <Badge variant="default" className="bg-success text-success-foreground">
                           Submitted
                         </Badge>
                       )}
@@ -247,7 +290,6 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                     {assignment.description && (
                       <p className="text-muted-foreground">{assignment.description}</p>
                     )}
-                    
                     {!submitted && (
                       <div className="space-y-4">
                         <Textarea
@@ -259,9 +301,24 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                           }))}
                           className="min-h-[150px]"
                         />
+                        <div className="flex items-center gap-3">
+                          <Input
+                            type="file"
+                            accept="image/*,video/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
+                              setAssignmentFiles(prev => ({ ...prev, [assignment.id]: file }));
+                            }}
+                          />
+                          {assignmentFiles[assignment.id] && (
+                            <span className="text-sm text-muted-foreground truncate">
+                              {assignmentFiles[assignment.id]?.name}
+                            </span>
+                          )}
+                        </div>
                         <Button 
                           onClick={() => handleAssignmentSubmission(assignment.id)}
-                          disabled={createSubmission.isPending || !assignmentResponses[assignment.id]?.trim()}
+                          disabled={createSubmission.isPending || uploading || (!assignmentResponses[assignment.id]?.trim() && !assignmentFiles[assignment.id])}
                           className="w-full"
                         >
                           Submit Assignment
@@ -285,7 +342,15 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                 {weekData.review_steps.map((step) => {
                   const completed = isStepCompleted(step.id);
                   return (
-                    <div key={step.id} className="flex items-center space-x-3">
+                    <div
+                      key={step.id}
+                      className={`relative flex items-center gap-3 rounded-md border p-3 ${completed ? 'border-success' : 'border-border'}`}
+                    >
+                      {completed && (
+                        <div className="absolute -top-2 -left-2 bg-background rounded-full p-0.5 border border-success">
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        </div>
+                      )}
                       <Checkbox
                         checked={completed}
                         onCheckedChange={(checked) => 
@@ -304,6 +369,14 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
           </Card>
         </TabsContent>
       </Tabs>
+
+      {allComplete && nextWeekId && (
+        <div className="mt-6">
+          <Button className="w-full" onClick={() => navigate(`/learn/${nextWeekId}`)}>
+            Proceed to Week {weekData.week_number + 1}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
