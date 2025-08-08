@@ -6,10 +6,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, CheckSquare, FileText, RotateCcw, Upload } from 'lucide-react';
-import { WeekData } from '@/hooks/useWeeks';
+import { BookOpen, CheckSquare, FileText, RotateCcw, Upload, CheckCircle } from 'lucide-react';
+import { WeekData, useWeeks } from '@/hooks/useWeeks';
 import { useUserSubmissions, useUserStepProgress, useCreateSubmission, useUpdateStepProgress } from '@/hooks/useSubmissions';
 import { useImageUpload } from '@/hooks/useImageUpload';
+import { useModuleProgress, useToggleModuleProgress } from '@/hooks/useModuleProgress';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 interface WeekContentTabsProps {
@@ -26,22 +28,42 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
 
   const [taskResponses, setTaskResponses] = useState<Record<string, string>>({});
   const [assignmentResponses, setAssignmentResponses] = useState<Record<string, string>>({});
+  const [taskFiles, setTaskFiles] = useState<Record<string, File | null>>({});
+  const [assignmentFiles, setAssignmentFiles] = useState<Record<string, File | null>>({});
+
+  const moduleIds = weekData.modules.map((m) => m.id);
+  const { data: moduleProgress = [] } = useModuleProgress(moduleIds);
+  const toggleModuleProgress = useToggleModuleProgress();
+  const { data: weeks = [] } = useWeeks();
+  const navigate = useNavigate();
+
+  const isModuleCompleted = (moduleId: string) =>
+    moduleProgress.some((p) => p.week_module_id === moduleId && p.completed);
+
 
   const handleTaskSubmission = async (taskId: string) => {
     const textResponse = taskResponses[taskId];
-    if (!textResponse?.trim()) {
-      toast.error('Please provide a response before submitting');
+    const file = taskFiles[taskId] || null;
+    if (!textResponse?.trim() && !file) {
+      toast.error('Add a response or attach a file before submitting');
       return;
     }
 
     try {
+      let mediaUrl: string | undefined;
+      if (file) {
+        mediaUrl = await uploadImage(file, 'headers') || undefined;
+      }
+
       await createSubmission.mutateAsync({
         week_id: weekData.id,
         task_id: taskId,
-        text_response: textResponse
+        text_response: textResponse?.trim() ? textResponse : undefined,
+        media_url: mediaUrl
       });
       
       setTaskResponses(prev => ({ ...prev, [taskId]: '' }));
+      setTaskFiles(prev => ({ ...prev, [taskId]: null }));
       toast.success('Task submitted successfully!');
     } catch (error) {
       toast.error('Failed to submit task');
@@ -50,19 +72,27 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
 
   const handleAssignmentSubmission = async (assignmentId: string) => {
     const textResponse = assignmentResponses[assignmentId];
-    if (!textResponse?.trim()) {
-      toast.error('Please provide a response before submitting');
+    const file = assignmentFiles[assignmentId] || null;
+    if (!textResponse?.trim() && !file) {
+      toast.error('Add a response or attach a file before submitting');
       return;
     }
 
     try {
+      let mediaUrl: string | undefined;
+      if (file) {
+        mediaUrl = await uploadImage(file, 'headers') || undefined;
+      }
+
       await createSubmission.mutateAsync({
         week_id: weekData.id,
         assignment_id: assignmentId,
-        text_response: textResponse
+        text_response: textResponse?.trim() ? textResponse : undefined,
+        media_url: mediaUrl
       });
       
       setAssignmentResponses(prev => ({ ...prev, [assignmentId]: '' }));
+      setAssignmentFiles(prev => ({ ...prev, [assignmentId]: null }));
       toast.success('Assignment submitted successfully!');
     } catch (error) {
       toast.error('Failed to submit assignment');
@@ -90,6 +120,14 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
 
   const isStepCompleted = (stepId: string) => 
     stepProgress.some(p => p.review_step_id === stepId && p.completed);
+
+  const allModulesCompleted = weekData.modules.every(m => isModuleCompleted(m.id));
+  const allTasksSubmitted = weekData.tasks.every(t => isTaskSubmitted(t.id));
+  const allAssignmentsSubmitted = weekData.assignments.every(a => isAssignmentSubmitted(a.id));
+  const allReviewStepsCompleted = weekData.review_steps.every(s => isStepCompleted(s.id));
+  const allComplete = allModulesCompleted && allTasksSubmitted && allAssignmentsSubmitted && allReviewStepsCompleted;
+  const nextWeek = weeks.find(w => w.week_number === weekData.week_number + 1);
+  const nextWeekId = nextWeek?.id;
 
   return (
     <div className="max-w-4xl mx-auto">

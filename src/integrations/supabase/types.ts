@@ -418,6 +418,36 @@ export type Database = {
           },
         ]
       }
+      module_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+          week_module_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+          week_module_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+          week_module_id?: string
+        }
+        Relationships: []
+      }
       modules: {
         Row: {
           created_at: string | null

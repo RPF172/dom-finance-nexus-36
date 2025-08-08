@@ -37,6 +37,10 @@
     --input: 0 0% 15%; /* Dark obsidian for inputs */
     --ring: 356 75% 47%; /* Ritual Crimson for focus */
 
+    /* Success tokens */
+    --success: 142 70% 45%; /* Emerald */
+    --success-foreground: 0 0% 98%;
+
     --radius: 0rem; /* Sharp, surgical edges */
 
     /* OBSIDIAN CUT Brand Colors - HSL Values */
