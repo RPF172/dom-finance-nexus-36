@@ -9,6 +9,8 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AppLayout from '@/components/layout/AppLayout';
 import ObedienceStatusCard from '@/components/gamification/ObedienceStatusCard';
+import ObedienceLedgerList from '@/components/gamification/ObedienceLedgerList';
+import ObedienceLeaderboardCard from '@/components/gamification/ObedienceLeaderboardCard';
 
 interface UserProfile {
   id: string;
@@ -143,7 +145,11 @@ const PledgeHall: React.FC = () => {
             </Card>
           </div>
 
-          <ObedienceStatusCard />
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ObedienceStatusCard />
+            <ObedienceLeaderboardCard />
+          </div>
+          <ObedienceLedgerList />
 
           {/* Current Task */}
           <Card className="institutional-card p-6 border-accent bg-gradient-to-r from-card to-accent/5 hover:shadow-lg transition-all duration-300">
