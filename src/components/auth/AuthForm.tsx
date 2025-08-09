@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CollarIdModal } from '@/components/ui/CollarIdModal';
+
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,13 +17,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [collarId, setCollarId] = useState<string | null>(null);
-  const [showCollarModal, setShowCollarModal] = useState(false);
-  // Collar ID generator: R + 5-6 random digits
-  function generateCollarId() {
-    const digits = Math.floor(10000 + Math.random() * 900000); // 5-6 digits
-    return `R${digits}`;
-  }
+// Collar ID disabled on sign up; generator retained for future use
+// const [collarId, setCollarId] = useState<string | null>(null);
+// const [showCollarModal, setShowCollarModal] = useState(false);
+// function generateCollarId() {
+//   const digits = Math.floor(10000 + Math.random() * 900000);
+//   return `R${digits}`;
+// }
   const [rememberMe, setRememberMe] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -123,7 +123,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         }
       } else {
         const redirectUrl = `${window.location.origin}/pledgehall`;
-        const collarIdValue = generateCollarId();
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
@@ -142,13 +141,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             variant: "destructive",
           });
         } else {
-          // Insert collar_id into profiles table
-          const userId = data?.user?.id;
-          if (userId) {
-            await supabase.from('profiles').update({ collar_id: collarIdValue }).eq('user_id', userId);
-            setCollarId(collarIdValue);
-            setShowCollarModal(true);
-          }
           toast({
             title: "Begin processing",
             description: "Check your email to confirm your commitment to the Institution.",
@@ -266,13 +258,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         </button>
       </div>
 
-      {showCollarModal && collarId && (
-        <CollarIdModal 
-          open={showCollarModal}
-          collarId={collarId} 
-          onClose={() => setShowCollarModal(false)} 
-        />
-      )}
+{/* Collar ID modal intentionally disabled on registration. Kept for future use. */}
     </div>
   );
 };
