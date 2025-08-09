@@ -17,13 +17,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-// Collar ID disabled on sign up; generator retained for future use
-// const [collarId, setCollarId] = useState<string | null>(null);
-// const [showCollarModal, setShowCollarModal] = useState(false);
-// function generateCollarId() {
-//   const digits = Math.floor(10000 + Math.random() * 900000);
-//   return `R${digits}`;
-// }
+  const [registrationStep, setRegistrationStep] = useState(1); // 1 = collar ID, 2 = full form
+  const [collarIdVerified, setCollarIdVerified] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -65,7 +60,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   }, [navigate]);
 
   const validateForm = () => {
-    if (!isLogin && !formData.collarId) {
+    if (!isLogin && registrationStep === 1 && !formData.collarId) {
       toast({
         title: "Collar ID required",
         description: "You must provide your assigned Collar ID to register.",
@@ -74,7 +69,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       return false;
     }
     
-    if (!formData.email || !formData.password) {
+    if (registrationStep === 2 && (!formData.email || !formData.password)) {
       toast({
         title: "Your entry was rejected",
         description: "All fields must be completed to proceed.",
@@ -83,7 +78,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       return false;
     }
     
-    if (formData.password.length < 8) {
+    if (registrationStep === 2 && formData.password.length < 8) {
       toast({
         title: "Passphrase insufficient",
         description: "Your weakness requires at least 8 characters.",
@@ -92,7 +87,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       return false;
     }
     
-    if (!isLogin && !formData.collarName) {
+    if (!isLogin && registrationStep === 2 && !formData.collarName) {
       toast({
         title: "Identification required",
         description: "You must provide a collar name for processing.",
@@ -102,6 +97,63 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     }
     
     return true;
+  };
+
+  const validateCollarId = async () => {
+    if (!formData.collarId) return false;
+    
+    const { data, error } = await supabase
+      .from('collars')
+      .select('collar_id, registered')
+      .eq('collar_id', formData.collarId)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error checking collar ID:', error);
+      return false;
+    }
+    
+    return data && !data.registered;
+  };
+
+  const handleCollarIdValidation = async () => {
+    if (!formData.collarId) {
+      toast({
+        title: "Collar ID required",
+        description: "You must provide your assigned Collar ID to register.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const isValid = await validateCollarId();
+      
+      if (isValid) {
+        setCollarIdVerified(true);
+        setRegistrationStep(2);
+        toast({
+          title: "Collar ID verified",
+          description: "Proceed with your registration.",
+        });
+      } else {
+        toast({
+          title: "Invalid Collar ID",
+          description: "This Collar ID does not exist or is already registered.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Verification failed",
+        description: error?.message || "Unable to verify Collar ID.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -152,6 +204,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             variant: "destructive",
           });
         } else {
+          // Mark collar as registered after successful signup
+          if (data.user && formData.collarId) {
+            await supabase
+              .from('collars')
+              .update({ registered: true })
+              .eq('collar_id', formData.collarId);
+          }
+          
           toast({
             title: "Begin processing",
             description: "Check your email to confirm your commitment to the Institution.",
@@ -181,108 +241,145 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {!isLogin && (
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
-              Collar ID
-            </label>
-            <Input
-              type="text"
-              value={formData.collarId}
-              onChange={(e) => setFormData(prev => ({ ...prev, collarId: e.target.value }))}
-              className="bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
-              placeholder="Enter your assigned Collar ID"
-              required={!isLogin}
-            />
-          </div>
-        )}
-        
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
-            Identification Code
-          </label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-steel-silver/60" />
-            <Input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              className="pl-10 bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
-              placeholder="Enter email address"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
-            Security Passphrase
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-steel-silver/60" />
-            <Input
-              type={showPassword ? "text" : "password"}
-              value={formData.password}
-              onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-              className="pl-10 pr-10 bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
-              placeholder="Enter passphrase"
-              required
-            />
-            <button
+        {!isLogin && registrationStep === 1 && (
+          <>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+                Collar ID
+              </label>
+              <Input
+                type="text"
+                value={formData.collarId}
+                onChange={(e) => setFormData(prev => ({ ...prev, collarId: e.target.value }))}
+                className="bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+                placeholder="Enter your assigned Collar ID"
+                required
+              />
+            </div>
+            <Button 
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-steel-silver/60 hover:text-steel-silver"
+              onClick={handleCollarIdValidation}
+              className="w-full" 
+              disabled={loading}
+              variant="default"
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-          </div>
-        </div>
-
-        {!isLogin && (
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
-              Designation Name
-            </label>
-            <Input
-              type="text"
-              value={formData.collarName}
-              onChange={(e) => setFormData(prev => ({ ...prev, collarName: e.target.value }))}
-              className="bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
-              placeholder="Enter your chosen designation"
-              required={!isLogin}
-            />
-          </div>
+              {loading ? 'VERIFYING...' : 'VERIFY COLLAR ID'}
+            </Button>
+          </>
         )}
 
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="remember"
-            checked={rememberMe}
-            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-          />
-          <label htmlFor="remember" className="text-sm text-steel-silver/80">
-            Remember credentials
-          </label>
-        </div>
+        {(isLogin || (!isLogin && registrationStep === 2)) && (
+          <>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+                Identification Code
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-steel-silver/60" />
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  className="pl-10 bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+                  placeholder="Enter email address"
+                  required
+                />
+              </div>
+            </div>
 
-        <Button 
-          type="submit" 
-          className="w-full" 
-          disabled={loading}
-          variant="default"
-        >
-          {loading ? 'PROCESSING...' : (isLogin ? 'ENTER FACILITY' : 'BEGIN PROCESSING')}
-        </Button>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+                Security Passphrase
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-steel-silver/60" />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  className="pl-10 pr-10 bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+                  placeholder="Enter passphrase"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-steel-silver/60 hover:text-steel-silver"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            {!isLogin && registrationStep === 2 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+                  Designation Name
+                </label>
+                <Input
+                  type="text"
+                  value={formData.collarName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, collarName: e.target.value }))}
+                  className="bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+                  placeholder="Enter your chosen designation"
+                  required
+                />
+              </div>
+            )}
+
+            {isLogin && (
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                />
+                <label htmlFor="remember" className="text-sm text-steel-silver/80">
+                  Remember credentials
+                </label>
+              </div>
+            )}
+
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={loading}
+              variant="default"
+            >
+              {loading ? 'PROCESSING...' : (isLogin ? 'ENTER FACILITY' : 'BEGIN PROCESSING')}
+            </Button>
+          </>
+        )}
       </form>
 
-      <div className="text-center">
+      <div className="text-center space-y-2">
         <button
           type="button"
-          onClick={() => setIsLogin(!isLogin)}
+          onClick={() => {
+            setIsLogin(!isLogin);
+            setRegistrationStep(1);
+            setCollarIdVerified(false);
+            setFormData({ collarId: '', email: '', password: '', collarName: '' });
+          }}
           className="text-sm text-steel-silver/80 hover:text-ritual-crimson transition-colors"
         >
           {isLogin ? 'Need to register? Begin processing' : 'Already processed? Enter facility'}
         </button>
+        
+        {!isLogin && registrationStep === 1 && (
+          <div>
+            <a 
+              href="#" 
+              className="text-sm text-ritual-crimson hover:text-ritual-crimson/80 transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                // Add your collar ID request logic here
+              }}
+            >
+              Need a collar ID?
+            </a>
+          </div>
+        )}
       </div>
 
 {/* Collar ID modal intentionally disabled on registration. Kept for future use. */}

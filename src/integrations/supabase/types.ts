@@ -273,6 +273,30 @@ export type Database = {
           },
         ]
       }
+      collars: {
+        Row: {
+          collar_id: string
+          created_at: string
+          id: string
+          registered: boolean
+          updated_at: string
+        }
+        Insert: {
+          collar_id: string
+          created_at?: string
+          id?: string
+          registered?: boolean
+          updated_at?: string
+        }
+        Update: {
+          collar_id?: string
+          created_at?: string
+          id?: string
+          registered?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       content_sequence: {
         Row: {
           content_id: string
