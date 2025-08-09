@@ -28,6 +28,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [formData, setFormData] = useState({
+    collarId: '',
     email: '',
     password: '',
     collarName: ''
@@ -64,6 +65,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   }, [navigate]);
 
   const validateForm = () => {
+    if (!isLogin && !formData.collarId) {
+      toast({
+        title: "Collar ID required",
+        description: "You must provide your assigned Collar ID to register.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
     if (!formData.email || !formData.password) {
       toast({
         title: "Your entry was rejected",
@@ -129,6 +139,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           options: {
             emailRedirectTo: redirectUrl,
             data: {
+              collar_id: formData.collarId,
               collar_name: formData.collarName,
               rank: 'Initiate Whelp',
             }
@@ -170,6 +181,22 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {!isLogin && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
+              Collar ID
+            </label>
+            <Input
+              type="text"
+              value={formData.collarId}
+              onChange={(e) => setFormData(prev => ({ ...prev, collarId: e.target.value }))}
+              className="bg-obsidian-grey border-steel-silver/30 text-steel-silver placeholder:text-steel-silver/40"
+              placeholder="Enter your assigned Collar ID"
+              required={!isLogin}
+            />
+          </div>
+        )}
+        
         <div className="space-y-2">
           <label className="text-sm font-medium text-steel-silver uppercase tracking-wide">
             Identification Code
