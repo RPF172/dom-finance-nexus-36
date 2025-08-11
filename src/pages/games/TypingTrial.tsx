@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { TYPING_TIERS, TierConfig, TierCode } from '@/config/typingTrialConfig';
 import { TYPING_TEXTS } from '@/data/typingTrialTexts';
 import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 interface ResultRecord {
   ts: number;
@@ -77,6 +80,8 @@ const TypingTrial: React.FC = () => {
     (canonical as HTMLLinkElement).href = window.location.origin + '/games/typing-trial';
   }, []);
 
+  const { toast } = useToast();
+
   const [stage, setStage] = useState<'start'|'play'|'result'>('start');
   const [selectedTier, setSelectedTier] = useState<TierCode>('recruit');
   const [unlocks, setUnlocks] = useState<UnlockMap>(() => {
@@ -106,11 +111,20 @@ const TypingTrial: React.FC = () => {
   const errors = useMemo(() => Math.max(0, input.length - Math.round(input.length * accuracy)), [input.length, accuracy]);
 
   // Focus loss anti-cheat
-  useEffect(() => {
-    const onBlur = () => setFocusLosses(v => v + 1);
-    window.addEventListener('blur', onBlur);
-    return () => window.removeEventListener('blur', onBlur);
-  }, []);
+useEffect(() => {
+  const onBlur = () => {
+    setFocusLosses(prev => {
+      const next = prev + 1;
+      toast({
+        title: 'Focus lost',
+        description: `Warning ${next}/${FocusLossMax}. Maintain attention.`,
+      });
+      return next;
+    });
+  };
+  window.addEventListener('blur', onBlur);
+  return () => window.removeEventListener('blur', onBlur);
+}, [toast]);
 
   useEffect(() => {
     if (focusLosses >= FocusLossMax && stage === 'play') {
@@ -304,28 +318,45 @@ const TypingTrial: React.FC = () => {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+<CardContent>
+                <div className="mb-3">
+                  <Progress value={Math.max(0, Math.min(100, (remaining / timeLimit) * 100))} aria-label="Time remaining" />
+                  <div className="sr-only" aria-live="polite">Time left {Math.ceil(remaining)} seconds</div>
+                </div>
                 <div className="mb-4 p-4 bg-muted/30 border-2 border-border">
                   <p className="font-mono text-lg leading-relaxed select-none">
                     {target.split('').map((ch, idx) => {
                       const typed = input[idx];
-                      const state = typed == null ? 'pending' : (typed === ch ? 'correct' : 'wrong');
+                      const current = idx === input.length;
+                      const state = typed == null ? (current ? 'current' : 'pending') : (typed === ch ? 'correct' : 'wrong');
                       return (
                         <span key={idx} className={cn(
                           state === 'correct' && 'text-foreground',
-                          state === 'wrong' && 'text-destructive',
-                          state === 'pending' && 'text-muted-foreground'
+                          state === 'wrong' && 'bg-destructive/20 text-foreground border-b-2 border-destructive/60',
+                          state === 'pending' && 'text-muted-foreground',
+                          state === 'current' && 'text-foreground bg-primary/10 border-b-2 border-primary'
                         )}>{ch}</span>
                       );
                     })}
                   </p>
                 </div>
 
-                <textarea
+<textarea
                   value={input}
                   onChange={(e) => onInputChange(e.target.value)}
                   onPaste={(e) => e.preventDefault()}
-                  className="w-full h-32 obsidian-input p-3 font-mono text-base"
+                  onCopy={(e) => e.preventDefault()}
+                  onCut={(e) => e.preventDefault()}
+                  onContextMenu={(e) => e.preventDefault()}
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  inputMode="text"
+                  autoComplete="off"
+                  className={cn(
+                    'w-full h-32 obsidian-input p-3 font-mono text-base',
+                    input.length > 0 && input[input.length - 1] !== target[input.length - 1] && 'ring-2 ring-destructive animate-scale-in'
+                  )}
                   placeholder="Begin typing here. Pasting is disabled."
                   aria-label="Typing input"
                 />
@@ -346,7 +377,7 @@ const TypingTrial: React.FC = () => {
                 <CardTitle className="text-lg">Results</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+<div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                   <div><div className="text-xs text-muted-foreground">Tier</div><div className="font-semibold">{tierCfg.name}</div></div>
                   <div><div className="text-xs text-muted-foreground">WPM</div><div className="font-semibold">{lastResult.wpm}</div></div>
                   <div><div className="text-xs text-muted-foreground">Accuracy</div><div className="font-semibold">{Math.round(lastResult.accuracy*100)}%</div></div>
@@ -354,11 +385,26 @@ const TypingTrial: React.FC = () => {
                   <div><div className="text-xs text-muted-foreground">Score</div><div className="font-semibold">{lastResult.score}</div></div>
                 </div>
 
+                <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="obsidian-card p-3 flex items-center justify-between text-sm">
+                    <span>WPM ≥ {reqWpm}</span>
+                    {lastResult.wpm >= reqWpm ? <CheckCircle className="text-success" size={20} /> : <XCircle className="text-destructive" size={20} />}
+                  </div>
+                  <div className="obsidian-card p-3 flex items-center justify-between text-sm">
+                    <span>Accuracy ≥ {Math.round(tierCfg.minAccuracy*100)}%</span>
+                    {lastResult.accuracy >= tierCfg.minAccuracy ? <CheckCircle className="text-success" size={20} /> : <XCircle className="text-destructive" size={20} />}
+                  </div>
+                  <div className="obsidian-card p-3 flex items-center justify-between text-sm">
+                    <span>Time ≤ {timeLimit}s</span>
+                    {lastResult.timeTaken <= timeLimit ? <CheckCircle className="text-success" size={20} /> : <XCircle className="text-destructive" size={20} />}
+                  </div>
+                </div>
+
                 <div className="mb-6">
                   {lastResult.accuracy === 1 && (
                     <div className="text-sm text-success">Perfect accuracy bonus +100</div>
                   )}
-                  {lastResult.wpm >= reqWpm && lastResult.accuracy >= tierCfg.minAccuracy ? (
+                  {(lastResult.wpm >= reqWpm && lastResult.accuracy >= tierCfg.minAccuracy && lastResult.timeTaken <= timeLimit) ? (
                     <p className="text-base font-semibold">Verdict: Clearance achieved. Proceed when ordered.</p>
                   ) : (
                     <p className="text-base font-semibold text-destructive">Verdict: Standards not met. Again.</p>
@@ -368,6 +414,14 @@ const TypingTrial: React.FC = () => {
                 <div className="flex flex-wrap gap-3">
                   <Button onClick={() => startGame()}>Play Again</Button>
                   <Button variant="secondary" onClick={() => { setStage('start'); }}>Tier Select</Button>
+                  {(lastResult.wpm >= reqWpm && lastResult.accuracy >= tierCfg.minAccuracy && lastResult.timeTaken <= timeLimit) && (() => {
+                    const order = TYPING_TIERS.map(t => t.code);
+                    const idx = order.indexOf(selectedTier);
+                    const next = order[idx + 1] as TierCode | undefined;
+                    return next ? (
+                      <Button variant="secondary" onClick={() => { setSelectedTier(next); setStage('start'); }}>Next Tier</Button>
+                    ) : null;
+                  })()}
                   <Link to="/compete"><Button variant="outline">Back to Compete</Button></Link>
                 </div>
               </CardContent>
