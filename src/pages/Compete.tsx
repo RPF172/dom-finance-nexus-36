@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useProfile } from '@/hooks/useProfile';
 import { useObedience } from '@/hooks/useObedience';
 import { Link } from 'react-router-dom';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 const games = [
   { id: 'typing-trial', title: 'Typing Trial', description: 'Militarized speed & accuracy drill.', href: '/games/typing-trial' },
@@ -93,6 +94,16 @@ const Compete: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
+                  {g.id === 'typing-trial' && (
+                    <div className="mb-4 -mx-6">
+                      <OptimizedImage
+                        src="/lovable-uploads/38c87cb9-bd70-4250-a4da-29dd99c28e51.png"
+                        alt="Typing Trial — Prove your precision poster"
+                        aspectRatio="video"
+                        className="w-full object-cover"
+                      />
+                    </div>
+                  )}
                   <p className="text-sm text-muted-foreground mb-4">{g.description}</p>
                   {g.href && (
                     <Link to={g.href} className="inline-block"><Button>Play</Button></Link>

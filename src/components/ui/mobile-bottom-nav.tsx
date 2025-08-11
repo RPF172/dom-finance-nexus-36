@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Users, User, Menu } from 'lucide-react';
+import { Home, Trophy, Users, User, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,7 +15,7 @@ interface NavItem {
 }
 
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
-  { href: '/learn', icon: BookOpen, label: 'Training' },
+  { href: '/compete', icon: Trophy, label: 'Compete' },
   { href: '/pledgehall', icon: Home, label: 'Dashboard' },
   { href: '/social', icon: Users, label: 'Social' },
   { href: '/profile', icon: User, label: 'Profile' },
