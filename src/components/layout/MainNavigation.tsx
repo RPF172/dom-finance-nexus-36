@@ -8,7 +8,8 @@ import {
   MessageSquare, 
   User, 
   DollarSign,
-  Shield
+  Shield,
+  Trophy
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,6 +24,7 @@ interface NavItem {
 const navigationItems: NavItem[] = [
   // Main
   { path: '/pledgehall', icon: Home, label: 'Home', description: 'Your Dashboard', category: 'main' },
+  { path: '/compete', icon: Trophy, label: 'Compete', description: 'Games Hub', category: 'main' },
   
   // Learning
   { path: '/read', icon: BookOpen, label: 'Read', description: 'Narrative Chapters', category: 'learning' },
