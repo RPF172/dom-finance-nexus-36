@@ -23,6 +23,7 @@ export default {
 				body: ['IBM Plex Mono', 'Cormorant', 'serif'],
 				mono: ['IBM Plex Mono', 'Consolas', 'monospace'],
 				italic: ['Cormorant', 'serif'],
+				stencil: ['Stardos Stencil', 'Rakkas', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useProfile } from '@/hooks/useProfile';
 import { useObedience } from '@/hooks/useObedience';
+import { Link } from 'react-router-dom';
 
 const games = [
-  { id: 'game-1', title: 'Daily Duel', description: 'Face off in rapid challenges.' },
+  { id: 'typing-trial', title: 'Typing Trial', description: 'Militarized speed & accuracy drill.', href: '/games/typing-trial' },
   { id: 'game-2', title: 'Tier Trials', description: 'Climb through escalating tasks.' },
   { id: 'game-3', title: 'Quiz Gauntlet', description: 'Test knowledge under pressure.' },
   { id: 'game-4', title: 'Endurance Run', description: 'Maintain streaks to win.' },
@@ -87,11 +89,14 @@ const Compete: React.FC = () => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{g.title}</CardTitle>
-                    <Badge variant="outline">Coming Soon</Badge>
+                    <Badge variant="outline">{g.href ? 'Playable' : 'Coming Soon'}</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">{g.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{g.description}</p>
+                  {g.href && (
+                    <Link to={g.href} className="inline-block"><Button>Play</Button></Link>
+                  )}
                 </CardContent>
               </Card>
             ))}
