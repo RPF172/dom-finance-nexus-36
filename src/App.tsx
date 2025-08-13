@@ -25,6 +25,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Compete from "./pages/Compete";
 import TypingTrial from "./pages/games/TypingTrial";
+import { LearningExperience } from "./pages/LearningExperience";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
                 <Route path="/admin/*" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                 <Route path="/compete" element={<ProtectedRoute><Compete /></ProtectedRoute>} />
                 <Route path="/games/typing-trial" element={<ProtectedRoute><TypingTrial /></ProtectedRoute>} />
+                <Route path="/learning-experience" element={<ProtectedRoute><LearningExperience /></ProtectedRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

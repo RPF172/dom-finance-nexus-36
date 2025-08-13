@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { BookOpen, GraduationCap, Clock, Trophy, TrendingUp } from 'lucide-react';
+import { Clock, BookOpen, Users, Calendar, TrendingUp, Award, ChevronRight, Play, Target, GraduationCap, Trophy } from 'lucide-react';
 import { useContentSequence, useFallbackMixedContent } from '@/hooks/useContentSequence';
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { useWeeks } from '@/hooks/useWeeks';
