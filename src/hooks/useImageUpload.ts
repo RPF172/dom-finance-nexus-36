@@ -15,8 +15,8 @@ export const useImageUpload = () => {
       if (!user) throw new Error('Not authenticated');
 
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      const filePath = `${folder}/${fileName}`;
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${folder}/${fileName}`;
 
       const { error: uploadError, data } = await supabase.storage
         .from('magat')
