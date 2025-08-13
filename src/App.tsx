@@ -11,6 +11,7 @@ import PledgeHall from "./pages/PledgeHall";
 import BookReader from "./pages/BookReader";
 import ReadChapters from "./pages/ReadChapters";
 import LearnLessons from "./pages/LearnLessons";
+import LearningHub from "./pages/LearningHub";
 import WeekView from "./pages/WeekView";
 import LessonView from "./pages/LessonView";
 import { ChapterView } from "./pages/ChapterView";
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/pledgehall" element={<ProtectedRoute><PledgeHall /></ProtectedRoute>} />
+                <Route path="/learning-hub" element={<ProtectedRoute><LearningHub /></ProtectedRoute>} />
                 <Route path="/doctrine" element={<ProtectedRoute><BookReader /></ProtectedRoute>} />
                 <Route path="/read" element={<ProtectedRoute><ReadChapters /></ProtectedRoute>} />
                 <Route path="/learn" element={<ProtectedRoute><LearnLessons /></ProtectedRoute>} />

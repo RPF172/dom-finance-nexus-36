@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Trophy, Users, User, Menu } from 'lucide-react';
+import { Home, Trophy, Users, User, Menu, BookOpen, Gamepad2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,10 +15,10 @@ interface NavItem {
 }
 
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
-  { href: '/compete', icon: Trophy, label: 'Compete' },
   { href: '/pledgehall', icon: Home, label: 'Dashboard' },
-  { href: '/social', icon: Users, label: 'Social' },
-  { href: '/profile', icon: User, label: 'Profile' },
+  { href: '/learning-hub', icon: BookOpen, label: 'Learning' },
+  { href: '/social', icon: Users, label: 'Community' },
+  { href: '/compete', icon: Gamepad2, label: 'Games' },
 ];
 
 export function MobileBottomNav() {

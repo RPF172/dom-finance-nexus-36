@@ -18,26 +18,26 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   description: string;
-  category: 'main' | 'learning' | 'social' | 'admin';
+  category: 'main' | 'learning' | 'social' | 'games' | 'account' | 'admin';
 }
 
 const navigationItems: NavItem[] = [
-  // Main
-  { path: '/pledgehall', icon: Home, label: 'Home', description: 'Your Dashboard', category: 'main' },
-  { path: '/compete', icon: Trophy, label: 'Compete', description: 'Games Hub', category: 'main' },
+  // Main Dashboard
+  { path: '/pledgehall', icon: Home, label: 'Dashboard', description: 'Your Hub', category: 'main' },
   
-  // Learning
-  { path: '/read', icon: BookOpen, label: 'Read', description: 'Narrative Chapters', category: 'learning' },
-  { path: '/learn', icon: PenTool, label: 'Learn', description: 'Educational Lessons', category: 'learning' },
-  { path: '/assignments', icon: PenTool, label: 'Assignments', description: 'Your Tasks', category: 'learning' },
+  // Learning Hub (unified)
+  { path: '/learning-hub', icon: BookOpen, label: 'Learning Hub', description: 'Training & Stories', category: 'learning' },
   
-  // Social
-  { path: '/social', icon: MessageSquare, label: 'Social Feed', description: 'Community', category: 'social' },
-  { path: '/friends', icon: Users, label: 'Connections', description: 'Your Network', category: 'social' },
+  // Community  
+  { path: '/social', icon: MessageSquare, label: 'Community', description: 'Social Feed', category: 'social' },
+  { path: '/friends', icon: Users, label: 'Friends', description: 'Your Network', category: 'social' },
   
-  // User
-  { path: '/tribute', icon: DollarSign, label: 'Tribute', description: 'Payments', category: 'main' },
-  { path: '/profile', icon: User, label: 'Profile', description: 'Your Account', category: 'main' },
+  // Games
+  { path: '/compete', icon: Trophy, label: 'Games', description: 'Compete & Play', category: 'games' },
+  
+  // Profile & Account
+  { path: '/profile', icon: User, label: 'Profile', description: 'Your Account', category: 'account' },
+  { path: '/tribute', icon: DollarSign, label: 'Tribute', description: 'Payments', category: 'account' },
   
   // Admin
   { path: '/admin', icon: Shield, label: 'Admin Panel', description: 'Management', category: 'admin' },
@@ -56,6 +56,8 @@ const MainNavigation: React.FC = () => {
     main: navigationItems.filter(item => item.category === 'main'),
     learning: navigationItems.filter(item => item.category === 'learning'),
     social: navigationItems.filter(item => item.category === 'social'),
+    games: navigationItems.filter(item => item.category === 'games'),
+    account: navigationItems.filter(item => item.category === 'account'),
     admin: navigationItems.filter(item => item.category === 'admin'),
   };
 
@@ -92,10 +94,11 @@ const MainNavigation: React.FC = () => {
 
   return (
     <div className="h-full py-6">
-      <NavSection title="Dashboard" items={groupedItems.main.slice(0, 1)} />
+      <NavSection title="Dashboard" items={groupedItems.main} />
       <NavSection title="Learning" items={groupedItems.learning} />
       <NavSection title="Community" items={groupedItems.social} />
-      <NavSection title="Account" items={groupedItems.main.slice(1)} />
+      <NavSection title="Games" items={groupedItems.games} />
+      <NavSection title="Account" items={groupedItems.account} />
       <NavSection title="Administration" items={groupedItems.admin} />
     </div>
   );
