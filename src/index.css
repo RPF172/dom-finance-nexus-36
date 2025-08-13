@@ -8,61 +8,91 @@
 
 @layer base {
   :root {
-    /* OBSIDIAN CUT Color System */
-    --background: 0 0% 4%; /* Jet Black */
-    --foreground: 0 0% 80%; /* Steel Silver */
+    /* Enhanced OBSIDIAN CUT Color System */
+    --background: 0 0% 3%; /* Deeper Jet Black */
+    --foreground: 0 0% 85%; /* Brighter Steel Silver */
 
-    --card: 0 0% 10%; /* Obsidian Grey */
-    --card-foreground: 0 0% 80%; /* Steel Silver */
+    --card: 0 0% 8%; /* Enhanced Obsidian Grey */
+    --card-foreground: 0 0% 85%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 80%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 90%;
 
-    --primary: 356 75% 47%; /* Ritual Crimson */
-    --primary-foreground: 0 0% 95%;
+    --primary: 356 80% 50%; /* Enhanced Ritual Crimson */
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 356 80% 60%; /* Brighter glow variant */
 
-    --secondary: 0 0% 10%; /* Obsidian Grey */
-    --secondary-foreground: 0 0% 80%;
+    --secondary: 0 0% 12%; /* Lighter secondary */
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 0 0% 15%; /* Darker obsidian */
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 18%; /* More contrast for muted */
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 356 75% 47%; /* Ritual Crimson */
-    --accent-foreground: 0 0% 95%;
+    --accent: 356 80% 50%; /* Enhanced accent */
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 356 75% 47%; /* Ritual Crimson */
-    --destructive-foreground: 0 0% 95%;
+    --destructive: 356 85% 55%; /* Slightly brighter destructive */
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 20%; /* Dark borders */
-    --input: 0 0% 15%; /* Dark obsidian for inputs */
-    --ring: 356 75% 47%; /* Ritual Crimson for focus */
+    --border: 0 0% 25%; /* More visible borders */
+    --input: 0 0% 12%; /* Lighter input background */
+    --ring: 356 80% 50%; /* Enhanced focus ring */
 
-    /* Success tokens */
-    --success: 142 70% 45%; /* Emerald */
+    /* Enhanced Success tokens */
+    --success: 142 75% 50%; /* Brighter emerald */
     --success-foreground: 0 0% 98%;
+    --success-glow: 142 75% 60%;
 
-    --radius: 0rem; /* Sharp, surgical edges */
+    /* Warning tokens */
+    --warning: 38 85% 60%; /* Amber warning */
+    --warning-foreground: 0 0% 98%;
+    --warning-glow: 38 85% 70%;
 
-    /* OBSIDIAN CUT Brand Colors - HSL Values */
-    --jet-black: 0 0% 4%;
-    --obsidian-grey: 0 0% 10%;
-    --steel-silver: 0 0% 80%;
-    --ritual-crimson: 356 75% 47%;
+    /* Info tokens */
+    --info: 217 75% 60%; /* Blue info */
+    --info-foreground: 0 0% 98%;
+    --info-glow: 217 75% 70%;
 
-    /* Gradients */
-    --obsidian-gradient: linear-gradient(135deg, hsl(0 0% 10%) 0%, hsl(0 0% 4%) 100%);
-    --crimson-glow: 0 0 20px 2px hsl(356 75% 47% / 0.3);
-    --obsidian-shadow: 0 8px 32px hsl(0 0% 0% / 0.8), 0 2px 8px hsl(0 0% 0% / 0.6);
+    --radius: 0.5rem; /* Slightly rounded for modern feel */
+
+    /* Enhanced Brand Colors - HSL Values */
+    --jet-black: 0 0% 3%;
+    --obsidian-grey: 0 0% 8%;
+    --steel-silver: 0 0% 85%;
+    --ritual-crimson: 356 80% 50%;
+
+    /* Enhanced Gradients */
+    --obsidian-gradient: linear-gradient(135deg, hsl(0 0% 12%) 0%, hsl(0 0% 3%) 100%);
+    --crimson-gradient: linear-gradient(135deg, hsl(356 80% 50%) 0%, hsl(356 85% 45%) 100%);
+    --success-gradient: linear-gradient(135deg, hsl(142 75% 50%) 0%, hsl(142 80% 45%) 100%);
+    --surface-gradient: linear-gradient(135deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%);
+    
+    /* Enhanced Shadows & Glows */
+    --crimson-glow: 0 0 24px 4px hsl(356 80% 50% / 0.4);
+    --crimson-glow-strong: 0 0 32px 8px hsl(356 80% 50% / 0.6);
+    --success-glow: 0 0 24px 4px hsl(142 75% 50% / 0.4);
+    --obsidian-shadow: 0 10px 40px hsl(0 0% 0% / 0.9), 0 4px 12px hsl(0 0% 0% / 0.7);
+    --surface-shadow: 0 4px 16px hsl(0 0% 0% / 0.6), 0 2px 6px hsl(0 0% 0% / 0.4);
+    --elevated-shadow: 0 16px 64px hsl(0 0% 0% / 0.8), 0 8px 24px hsl(0 0% 0% / 0.6);
 
     /* Sidebar tokens */
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 80%;
-    --sidebar-primary: 356 75% 47%;
-    --sidebar-primary-foreground: 0 0% 95%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 80%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 356 75% 47%;
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 85%;
+    --sidebar-primary: 356 80% 50%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 85%;
+    --sidebar-border: 0 0% 25%;
+    --sidebar-ring: 356 80% 50%;
+
+    /* Mobile-specific enhancements */
+    --mobile-touch-size: 44px;
+    --mobile-safe-area: env(safe-area-inset-bottom);
+    
+    /* Animation easing */
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
   }
 }
 
@@ -96,152 +126,291 @@
 }
 
 @layer components {
-  /* OBSIDIAN CUT Components */
+  /* Enhanced OBSIDIAN CUT Components */
   .obsidian-header {
-    @apply bg-secondary text-secondary-foreground border-b-2 border-border;
-    background: var(--obsidian-gradient);
+    @apply backdrop-blur-xl border-b border-border/50;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+    box-shadow: var(--surface-shadow);
   }
 
   .obsidian-card {
-    @apply bg-card border-2 border-border transition-all duration-200;
-    background: var(--obsidian-gradient);
-    box-shadow: var(--obsidian-shadow);
-    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    @apply border border-border/50 rounded-lg transition-all duration-300;
+    background: var(--surface-gradient);
+    box-shadow: var(--surface-shadow);
+    backdrop-filter: blur(8px);
   }
 
   .obsidian-card:hover {
-    box-shadow: var(--crimson-glow), var(--obsidian-shadow);
-    transform: perspective(1000px) rotateX(2deg) rotateY(-1deg);
-    border-color: hsl(var(--accent));
+    box-shadow: var(--crimson-glow), var(--elevated-shadow);
+    transform: translateY(-2px);
+    border-color: hsl(var(--accent) / 0.5);
+  }
+
+  .enhanced-card {
+    @apply bg-card/50 backdrop-blur-xl border border-border/30 rounded-xl p-6 transition-all duration-300;
+    background: var(--surface-gradient);
+    box-shadow: var(--surface-shadow);
+  }
+
+  .enhanced-card:hover {
+    box-shadow: var(--elevated-shadow);
+    transform: translateY(-4px) scale(1.02);
+    border-color: hsl(var(--accent) / 0.3);
+  }
+
+  .premium-card {
+    @apply relative overflow-hidden;
+    background: var(--crimson-gradient);
+    box-shadow: var(--crimson-glow-strong);
+  }
+
+  .premium-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-20;
+    background: linear-gradient(45deg, transparent 30%, hsl(var(--primary-glow)) 50%, transparent 70%);
+    animation: shimmer 3s infinite;
   }
 
   .obsidian-button {
-    @apply bg-primary text-primary-foreground transition-all duration-200 relative overflow-hidden;
-    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
-    box-shadow: inset 0 1px 0 hsl(var(--primary) / 0.5);
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300 relative overflow-hidden;
+    background: var(--crimson-gradient);
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--surface-shadow);
   }
 
   .obsidian-button:hover {
-    box-shadow: var(--crimson-glow), inset 0 1px 0 hsl(var(--primary) / 0.5);
-    transform: perspective(500px) rotateX(1deg);
+    box-shadow: var(--crimson-glow), var(--elevated-shadow);
+    transform: translateY(-2px);
   }
 
   .obsidian-button:active {
-    box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.5);
-    transform: perspective(500px) rotateX(-1deg);
+    transform: translateY(0);
+    box-shadow: var(--surface-shadow);
+  }
+
+  .glass-button {
+    @apply backdrop-blur-xl border border-border/30 rounded-lg px-6 py-3 font-medium transition-all duration-300;
+    background: hsl(var(--card) / 0.6);
+    box-shadow: var(--surface-shadow);
+  }
+
+  .glass-button:hover {
+    background: hsl(var(--card) / 0.8);
+    border-color: hsl(var(--accent) / 0.5);
+    box-shadow: var(--elevated-shadow);
   }
 
   .obsidian-input {
-    @apply bg-input border-2 border-border focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-200;
-    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    @apply bg-input/50 backdrop-blur-sm border border-border/50 rounded-lg px-4 py-3 transition-all duration-300;
+    box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.1);
   }
 
+  .obsidian-input:focus {
+    border-color: hsl(var(--accent));
+    box-shadow: 0 0 0 3px hsl(var(--accent) / 0.1), var(--surface-shadow);
+  }
+
+  /* Enhanced Layout Components */
   .section-container {
-    @apply max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12;
   }
 
   .page-header {
-    @apply text-center space-y-4 pb-8 mb-12;
-    border-bottom: 2px solid hsl(var(--border));
+    @apply text-center space-y-6 pb-12 mb-16;
   }
 
   .grid-cards {
     @apply grid gap-6 md:gap-8;
   }
 
-  /* Obsidian Interactions */
+  /* Enhanced Interactions */
   .crimson-glow-hover {
-    @apply transition-all duration-200 ease-out;
+    @apply transition-all duration-300;
+    transition-timing-function: var(--ease-out-quart);
   }
 
   .crimson-glow-hover:hover {
     box-shadow: var(--crimson-glow);
-    border-color: hsl(var(--accent));
+    transform: translateY(-4px);
   }
 
   .obsidian-tilt {
-    @apply transition-all duration-200 ease-out;
+    @apply transition-all duration-300;
+    transition-timing-function: var(--ease-spring);
   }
 
   .obsidian-tilt:hover {
-    transform: perspective(1000px) rotateX(2deg) rotateY(-1deg) translateY(-2px);
+    transform: perspective(1000px) rotateX(2deg) rotateY(-1deg) translateY(-4px);
   }
 
   .pressed-obsidian {
-    @apply transition-all duration-100;
+    @apply transition-all duration-150;
   }
 
   .pressed-obsidian:active {
-    box-shadow: inset 0 2px 8px hsl(0 0% 0% / 0.6);
-    transform: translateY(1px);
+    transform: scale(0.98) translateY(1px);
   }
 
   .focus-crimson {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
-  /* Mobile-first touch optimizations */
+  /* Enhanced Mobile Optimizations */
   .touch-target {
-    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+    min-height: var(--mobile-touch-size);
+    min-width: var(--mobile-touch-size);
+    @apply flex items-center justify-center cursor-pointer;
   }
 
   .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 safe-area-inset-bottom;
+    @apply fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl border-t border-border/30;
+    background: hsl(var(--card) / 0.95);
+    padding-bottom: var(--mobile-safe-area);
+    box-shadow: 0 -8px 32px hsl(0 0% 0% / 0.3);
   }
 
-  .thumb-zone {
-    @apply pb-safe-bottom;
+  .mobile-safe-area {
+    padding-bottom: max(1rem, var(--mobile-safe-area));
   }
 
-  .safe-area-inset-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
+  .enhanced-mobile-card {
+    @apply mx-4 mb-6 rounded-2xl border border-border/30 backdrop-blur-sm transition-all duration-300;
+    background: var(--surface-gradient);
+    box-shadow: var(--surface-shadow);
   }
 
-  .mobile-card {
-    @apply p-4 mx-4 mb-4 rounded-lg bg-card border border-border shadow-sm touch-target;
+  .enhanced-mobile-card:active {
+    transform: scale(0.98);
+    box-shadow: var(--surface-shadow);
   }
 
-  .mobile-button {
-    @apply touch-target px-6 py-3 text-base font-medium rounded-lg transition-all duration-200 active:scale-95;
+  .mobile-button-primary {
+    @apply w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300;
+    background: var(--crimson-gradient);
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--surface-shadow);
+    min-height: var(--mobile-touch-size);
   }
 
-  /* Responsive text sizes for mobile */
+  .mobile-button-primary:active {
+    transform: scale(0.98);
+    box-shadow: inset 0 2px 8px hsl(0 0% 0% / 0.3);
+  }
+
+  .mobile-button-secondary {
+    @apply w-full py-4 px-6 rounded-xl font-semibold text-lg border border-border/50 backdrop-blur-sm transition-all duration-300;
+    background: hsl(var(--card) / 0.6);
+    min-height: var(--mobile-touch-size);
+  }
+
+  .mobile-button-secondary:active {
+    transform: scale(0.98);
+    background: hsl(var(--card) / 0.8);
+  }
+
+  /* Responsive Typography */
   @media (max-width: 640px) {
-    .mobile-text-sm { font-size: 0.875rem; }
-    .mobile-text-base { font-size: 1rem; }
-    .mobile-text-lg { font-size: 1.125rem; }
-    .mobile-text-xl { font-size: 1.25rem; }
-    .mobile-text-2xl { font-size: 1.5rem; }
+    .mobile-h1 { @apply text-3xl font-bold leading-tight; }
+    .mobile-h2 { @apply text-2xl font-semibold leading-tight; }
+    .mobile-h3 { @apply text-xl font-semibold; }
+    .mobile-body { @apply text-base leading-relaxed; }
+    .mobile-small { @apply text-sm; }
+    .mobile-tiny { @apply text-xs; }
   }
 
-  /* Thumb-friendly spacing */
-  .thumb-spacing {
-    @apply space-y-4 px-4;
+  /* Enhanced Thumb Navigation */
+  .thumb-friendly {
+    @apply px-6 py-4 space-y-6;
   }
 
-  .mobile-grid {
-    @apply grid gap-4 p-4;
+  .thumb-grid {
+    @apply grid gap-6 p-6;
   }
 
-  /* Pull-to-refresh indicator */
+  /* Pull-to-Refresh Enhancement */
   .pull-to-refresh {
-    @apply fixed top-0 left-0 right-0 h-1 bg-primary transform -translate-y-full transition-transform duration-300 z-50;
+    @apply fixed top-0 left-0 right-0 h-2 z-50 transition-all duration-300;
+    background: var(--crimson-gradient);
+    transform: translateY(-100%);
+    border-radius: 0 0 8px 8px;
   }
 
   .pull-to-refresh.active {
-    @apply translate-y-0;
+    transform: translateY(0);
+    box-shadow: var(--crimson-glow);
   }
 
-  /* Obsidian Cut Utilities */
+  /* Loading States */
+  .skeleton {
+    @apply bg-muted/30 animate-pulse rounded-lg;
+    background: linear-gradient(90deg, hsl(var(--muted)) 0%, hsl(var(--muted) / 0.5) 50%, hsl(var(--muted)) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .loading-shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .loading-shimmer::before {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent 0%, hsl(var(--foreground) / 0.1) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+  }
+
+  /* Enhanced Utility Classes */
   .obsidian-gradient {
     background: var(--obsidian-gradient);
   }
 
-  .crimson-shadow {
+  .surface-gradient {
+    background: var(--surface-gradient);
+  }
+
+  .crimson-gradient {
+    background: var(--crimson-gradient);
+  }
+
+  .success-gradient {
+    background: var(--success-gradient);
+  }
+
+  .crimson-glow {
     box-shadow: var(--crimson-glow);
   }
 
-  .obsidian-clip {
-    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  .success-glow {
+    box-shadow: var(--success-glow);
+  }
+
+  .elevated-shadow {
+    box-shadow: var(--elevated-shadow);
+  }
+
+  .glass-morphism {
+    @apply backdrop-blur-xl border border-border/20;
+    background: hsl(var(--background) / 0.6);
+  }
+
+  /* Accessibility Enhancements */
+  .screen-reader-only {
+    @apply sr-only;
+  }
+
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  .high-contrast {
+    @apply contrast-125 saturate-150;
+  }
+
+  /* Motion Preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .reduced-motion {
+      @apply transition-none;
+      animation: none;
+    }
   }
 }

@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
-import { MobileBottomNav } from "@/components/ui/mobile-bottom-nav";
+import { EnhancedMobileNav } from "@/components/ui/enhanced-mobile-nav";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -62,7 +62,8 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
-            <MobileBottomNav />
+        {/* Replace old mobile nav with enhanced version */}
+        <EnhancedMobileNav />
           </div>
         </BrowserRouter>
       </ErrorBoundary>
