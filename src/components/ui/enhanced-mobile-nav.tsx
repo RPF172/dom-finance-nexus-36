@@ -22,7 +22,7 @@ interface NavItem {
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
   { href: '/pledgehall', icon: Home, label: 'Dashboard' },
   { href: '/learning-hub', icon: BookOpen, label: 'Learning', gradient: true },
-  { href: '/social', icon: Users, label: 'Community' },
+  { href: '/community', icon: Users, label: 'Community' },
   { href: '/compete', icon: Gamepad2, label: 'Games' },
 ];
 

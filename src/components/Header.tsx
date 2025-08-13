@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import NotificationCenter from './notifications/NotificationCenter';
 import { useQuery } from '@tanstack/react-query';
 
 const Header: React.FC = () => {
