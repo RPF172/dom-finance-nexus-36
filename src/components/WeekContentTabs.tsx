@@ -52,7 +52,7 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
     try {
       let mediaUrl: string | undefined;
       if (file) {
-        mediaUrl = await uploadImage(file, 'headers') || undefined;
+        mediaUrl = await uploadImage(file, 'avatars') || undefined;
       }
 
       await createSubmission.mutateAsync({
@@ -81,7 +81,7 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
     try {
       let mediaUrl: string | undefined;
       if (file) {
-        mediaUrl = await uploadImage(file, 'headers') || undefined;
+        mediaUrl = await uploadImage(file, 'avatars') || undefined;
       }
 
       await createSubmission.mutateAsync({
