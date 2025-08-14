@@ -215,8 +215,8 @@ export const LearningExperience = () => {
                 questions={quizzes?.map(q => ({
                   id: q.id,
                   question: q.question,
-                  options: q.options || [],
-                  correct_answer: q.answer || '',
+                  options: Array.isArray(q.options) ? q.options : [],
+                  correct_answer: typeof q.answer === 'string' ? q.answer : String(q.answer || ''),
                   explanation: q.explanation || undefined,
                   difficulty: 'medium' as const,
                   points: 10
