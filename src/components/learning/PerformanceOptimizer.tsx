@@ -25,14 +25,14 @@ interface OptimizedImageProps {
   priority?: boolean;
 }
 
-export const OptimizedImage = memo<OptimizedImageProps>(({ 
+export const OptimizedImage = memo(({ 
   src, 
   alt, 
   width, 
   height, 
   className = '',
   priority = false 
-}) => {
+}: OptimizedImageProps) => {
   const [imageSrc, setImageSrc] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasError, setHasError] = React.useState(false);
@@ -111,66 +111,8 @@ export const OptimizedImage = memo<OptimizedImageProps>(({
 
 OptimizedImage.displayName = 'OptimizedImage';
 
-// Virtualized List Component for large datasets
-interface VirtualizedListProps<T> {
-  items: T[];
-  itemHeight: number;
-  containerHeight: number;
-  renderItem: (item: T, index: number) => React.ReactNode;
-  overscan?: number;
-}
-
-export const VirtualizedList = memo(<T extends any>({
-  items,
-  itemHeight,
-  containerHeight,
-  renderItem,
-  overscan = 5
-}: VirtualizedListProps<T>) => {
-  const [scrollTop, setScrollTop] = React.useState(0);
-
-  const visibleRange = useMemo(() => {
-    const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
-    const endIndex = Math.min(
-      items.length - 1,
-      Math.floor((scrollTop + containerHeight) / itemHeight) + overscan
-    );
-    return { startIndex, endIndex };
-  }, [scrollTop, itemHeight, containerHeight, items.length, overscan]);
-
-  const visibleItems = useMemo(() => 
-    items.slice(visibleRange.startIndex, visibleRange.endIndex + 1),
-    [items, visibleRange]
-  );
-
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    setScrollTop(e.currentTarget.scrollTop);
-  }, []);
-
-  const totalHeight = items.length * itemHeight;
-  const offsetY = visibleRange.startIndex * itemHeight;
-
-  return (
-    <div
-      style={{ height: containerHeight, overflow: 'auto' }}
-      onScroll={handleScroll}
-      role="list"
-    >
-      <div style={{ height: totalHeight, position: 'relative' }}>
-        <div style={{ transform: `translateY(${offsetY}px)` }}>
-          {visibleItems.map((item, index) => 
-            renderItem(item, visibleRange.startIndex + index)
-          )}
-        </div>
-      </div>
-    </div>
-  );
-});
-
-VirtualizedList.displayName = 'VirtualizedList';
-
 // Debounced Search Hook
-export const useDebounce = <T>(value: T, delay: number): T => {
+export const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
 
   React.useEffect(() => {
@@ -198,7 +140,7 @@ interface OptimizedChartProps {
   className?: string;
 }
 
-export const OptimizedChart = memo<OptimizedChartProps>(({ data, type, className }) => {
+export const OptimizedChart = memo(({ data, type, className }: OptimizedChartProps) => {
   const chartData = useMemo(() => {
     // Expensive chart calculations
     return data.map(point => ({
@@ -329,10 +271,10 @@ interface LazyComponentProps {
   children: React.ReactNode;
 }
 
-export const LazyWrapper: React.FC<LazyComponentProps> = ({ 
+export const LazyWrapper = ({ 
   fallback = <LoadingSpinner />, 
   children 
-}) => {
+}: LazyComponentProps) => {
   return (
     <ErrorBoundary>
       <Suspense fallback={fallback}>
@@ -349,7 +291,7 @@ export const OptimizedLearningAnalytics = memo(() => (
   </LazyWrapper>
 ));
 
-export const OptimizedSessionTracker = memo<{ weekId?: string }>(({ weekId }) => (
+export const OptimizedSessionTracker = memo(({ weekId }: { weekId?: string }) => (
   <LazyWrapper>
     <LazySessionTracker weekId={weekId} />
   </LazyWrapper>

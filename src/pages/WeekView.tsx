@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import WeekContentEditor from '@/components/admin/WeekContentEditor';
 import { EnhancedContentManager } from '@/components/admin/EnhancedContentManager';
 import { WeekContentTabs } from '@/components/WeekContentTabs';
+import { AccessibilityProvider } from '@/components/ui/enhanced-accessibility';
 import { cn } from '@/lib/utils';
 
 const WeekView: React.FC = () => {
@@ -104,8 +105,9 @@ const WeekView: React.FC = () => {
   };
 
   return (
-    <AppLayout>
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <AccessibilityProvider>
+      <AppLayout>
+        <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Navigation */}
         <div className="flex items-center justify-between mb-6">
           <Button 
@@ -226,11 +228,17 @@ const WeekView: React.FC = () => {
         {/* Week Content */}
         <Card>
           <CardContent className="p-6">
-            <WeekContentTabs weekData={week} weekProgress={progress} />
+            <WeekContentTabs 
+              weekId={week.id} 
+              currentUserId={isAdmin ? 'admin' : undefined}
+              weekTitle={week.title}
+              onProgressUpdate={() => window.location.reload()}
+            />
           </CardContent>
         </Card>
       </div>
     </AppLayout>
+    </AccessibilityProvider>
   );
 };
 

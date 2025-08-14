@@ -98,26 +98,26 @@ export const PeerDiscussion: React.FC<PeerDiscussionProps> = ({
 
       if (error) throw error;
 
-      // Check which discussions the user has liked
-      if (currentUserId && data) {
-        const discussionIds = data.map(d => d.id);
-        const { data: likes } = await supabase
-          .from('discussion_likes')
-          .select('discussion_id')
-          .eq('user_id', currentUserId)
-          .in('discussion_id', discussionIds);
+        // Check which discussions the user has liked
+        if (currentUserId && data) {
+          const discussionIds = data.map(d => d.id);
+          const { data: likes } = await supabase
+            .from('discussion_likes')
+            .select('discussion_id')
+            .eq('user_id', currentUserId)
+            .in('discussion_id', discussionIds);
 
-        const likedIds = new Set(likes?.map(l => l.discussion_id));
-        
-        const discussionsWithLikes = data.map(discussion => ({
-          ...discussion,
-          user_has_liked: likedIds.has(discussion.id)
-        }));
+          const likedIds = new Set(likes?.map(l => l.discussion_id));
+          
+          const discussionsWithLikes = data.map(discussion => ({
+            ...discussion,
+            user_has_liked: likedIds.has(discussion.id)
+          }));
 
-        setDiscussions(discussionsWithLikes);
-      } else {
-        setDiscussions(data || []);
-      }
+          setDiscussions(discussionsWithLikes as Discussion[]);
+        } else {
+          setDiscussions((data || []) as Discussion[]);
+        }
     } catch (error) {
       console.error('Error fetching discussions:', error);
       toast({
@@ -147,7 +147,7 @@ export const PeerDiscussion: React.FC<PeerDiscussionProps> = ({
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setReplies(data || []);
+      setReplies((data || []) as DiscussionReply[]);
     } catch (error) {
       console.error('Error fetching replies:', error);
     }
@@ -310,16 +310,15 @@ export const PeerDiscussion: React.FC<PeerDiscussionProps> = ({
           <CardContent>
             <p className="whitespace-pre-wrap mb-4">{discussion.content}</p>
             <div className="flex items-center gap-4">
-              <AccessibleButton
+              <Button
                 onClick={() => toggleLike(discussion.id)}
                 variant="ghost"
                 size="sm"
-                ariaLabel={`${discussion.user_has_liked ? 'Unlike' : 'Like'} this discussion`}
                 className={discussion.user_has_liked ? 'text-primary' : ''}
               >
                 <ThumbsUp className="h-4 w-4 mr-1" />
                 {discussion.likes_count}
-              </AccessibleButton>
+              </Button>
               <span className="text-sm text-muted-foreground">
                 <MessageCircle className="h-4 w-4 inline mr-1" />
                 {discussion.replies_count} replies

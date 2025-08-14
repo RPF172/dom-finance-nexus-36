@@ -82,7 +82,7 @@ export const StudyGroup: React.FC<StudyGroupProps> = ({ weekId, currentUserId })
         current_members: group.study_group_members?.length || 0
       })) || [];
 
-      setStudyGroups(processedGroups);
+      setStudyGroups((processedGroups || []) as StudyGroup[]);
     } catch (error) {
       console.error('Error fetching study groups:', error);
       toast({
