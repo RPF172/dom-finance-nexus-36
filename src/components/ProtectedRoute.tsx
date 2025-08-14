@@ -17,17 +17,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
+          setLoading(false);
           navigate('/auth');
           return;
         }
         
         // For general protected routes, just check if user has a session
         setIsAuthenticated(true);
+        setLoading(false);
       } catch (error) {
         console.error('Auth check error:', error);
-        navigate('/auth');
-      } finally {
         setLoading(false);
+        navigate('/auth');
       }
     };
 
@@ -37,9 +38,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
         setIsAuthenticated(false);
+        setLoading(false);
         navigate('/auth');
       } else if (event === 'SIGNED_IN' && session) {
         setIsAuthenticated(true);
+        setLoading(false);
       }
     });
 
