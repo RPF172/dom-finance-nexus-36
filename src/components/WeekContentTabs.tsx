@@ -149,10 +149,11 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({
   }
 
   const getCompletionStats = () => {
-    const totalItems = modules.length + tasks.length + assignments.length + reviewSteps.length;
-    const completedItems = weekProgress?.progress_percentage || 0;
+    // Use the actual totals from weekData and completed counts from weekProgress
+    const totalItems = (weekData.total_modules || 0) + (weekData.total_tasks || 0) + (weekData.total_assignments || 0) + reviewSteps.length;
+    const completedItems = (weekProgress?.modules_completed || 0) + (weekProgress?.tasks_completed || 0) + (weekProgress?.assignments_completed || 0) + (weekProgress?.review_steps_completed || 0);
     
-    return { total: totalItems, completed: Math.round((completedItems / 100) * totalItems) };
+    return { total: totalItems, completed: completedItems };
   };
 
   const stats = getCompletionStats();
@@ -190,19 +191,31 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="modules" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
-            <span className="hidden sm:inline">Modules</span>
+            <span className="hidden sm:inline">
+              Modules ({weekProgress?.modules_completed || 0}/{weekData.total_modules || 0})
+            </span>
+            <span className="sm:hidden">Modules</span>
           </TabsTrigger>
           <TabsTrigger value="tasks" className="flex items-center gap-2">
             <Target className="h-4 w-4" />
-            <span className="hidden sm:inline">Tasks</span>
+            <span className="hidden sm:inline">
+              Tasks ({weekProgress?.tasks_completed || 0}/{weekData.total_tasks || 0})
+            </span>
+            <span className="sm:hidden">Tasks</span>
           </TabsTrigger>
           <TabsTrigger value="assignments" className="flex items-center gap-2">
             <Trophy className="h-4 w-4" />
-            <span className="hidden sm:inline">Assignments</span>
+            <span className="hidden sm:inline">
+              Assignments ({weekProgress?.assignments_completed || 0}/{weekData.total_assignments || 0})
+            </span>
+            <span className="sm:hidden">Assignments</span>
           </TabsTrigger>
           <TabsTrigger value="review" className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
-            <span className="hidden sm:inline">Review</span>
+            <span className="hidden sm:inline">
+              Review ({weekProgress?.review_steps_completed || 0}/{reviewSteps.length || 0})
+            </span>
+            <span className="sm:hidden">Review</span>
           </TabsTrigger>
           <TabsTrigger value="social" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
