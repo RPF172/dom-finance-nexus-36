@@ -13,33 +13,48 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/auth');
-        setLoading(false);
-        return;
-      }
-      // Check if user is admin
-      const { data: userRole } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-      if (userRole && userRole.role === 'admin') {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          navigate('/auth');
+          return;
+        }
+        
+        // For general protected routes, just check if user has a session
         setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Auth check error:', error);
+        navigate('/auth');
+      } finally {
         setLoading(false);
-        return;
       }
-      // TODO: Insert subscription check here if needed for non-admins
-      setIsAuthenticated(true); // fallback: allow access for all authenticated users
-      setLoading(false);
     };
+
     checkAuth();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        setIsAuthenticated(false);
+        navigate('/auth');
+      } else if (event === 'SIGNED_IN' && session) {
+        setIsAuthenticated(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Checking authentication...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+          <p className="text-muted-foreground">Checking authentication...</p>
+        </div>
+      </div>
+    );
   }
 
   return isAuthenticated ? <>{children}</> : null;
