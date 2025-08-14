@@ -1230,12 +1230,77 @@ export type Database = {
           },
         ]
       }
+      week_progress: {
+        Row: {
+          assignments_completed: number | null
+          completed_at: string | null
+          created_at: string | null
+          current_step: string | null
+          id: string
+          last_activity_at: string | null
+          modules_completed: number | null
+          progress_percentage: number | null
+          review_steps_completed: number | null
+          started_at: string | null
+          tasks_completed: number | null
+          updated_at: string | null
+          user_id: string
+          week_id: string
+        }
+        Insert: {
+          assignments_completed?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: string | null
+          id?: string
+          last_activity_at?: string | null
+          modules_completed?: number | null
+          progress_percentage?: number | null
+          review_steps_completed?: number | null
+          started_at?: string | null
+          tasks_completed?: number | null
+          updated_at?: string | null
+          user_id: string
+          week_id: string
+        }
+        Update: {
+          assignments_completed?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: string | null
+          id?: string
+          last_activity_at?: string | null
+          modules_completed?: number | null
+          progress_percentage?: number | null
+          review_steps_completed?: number | null
+          started_at?: string | null
+          tasks_completed?: number | null
+          updated_at?: string | null
+          user_id?: string
+          week_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "week_progress_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "weeks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       weeks: {
         Row: {
           created_at: string | null
           description: string | null
+          difficulty_level:
+            | Database["public"]["Enums"]["difficulty_level"]
+            | null
+          estimated_duration: number | null
           id: string
           objective: string | null
+          points_reward: number | null
+          prerequisites: Json | null
           title: string
           total_assignments: number | null
           total_modules: number | null
@@ -1246,8 +1311,14 @@ export type Database = {
         Insert: {
           created_at?: string | null
           description?: string | null
+          difficulty_level?:
+            | Database["public"]["Enums"]["difficulty_level"]
+            | null
+          estimated_duration?: number | null
           id?: string
           objective?: string | null
+          points_reward?: number | null
+          prerequisites?: Json | null
           title: string
           total_assignments?: number | null
           total_modules?: number | null
@@ -1258,8 +1329,14 @@ export type Database = {
         Update: {
           created_at?: string | null
           description?: string | null
+          difficulty_level?:
+            | Database["public"]["Enums"]["difficulty_level"]
+            | null
+          estimated_duration?: number | null
           id?: string
           objective?: string | null
+          points_reward?: number | null
+          prerequisites?: Json | null
           title?: string
           total_assignments?: number | null
           total_modules?: number | null
@@ -1290,8 +1367,16 @@ export type Database = {
         }
         Returns: number
       }
+      calculate_week_progress_percentage: {
+        Args: { _user_id: string; _week_id: string }
+        Returns: number
+      }
       check_email_exists: {
         Args: { email_to_check: string }
+        Returns: boolean
+      }
+      check_week_prerequisites: {
+        Args: { _user_id: string; _week_id: string }
         Returns: boolean
       }
       get_application_stats: {
@@ -1361,9 +1446,14 @@ export type Database = {
         Args: { _user_id: string; _lesson_id: string }
         Returns: boolean
       }
+      update_week_progress: {
+        Args: { _user_id: string; _week_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "pledge" | "alpha"
+      difficulty_level: "beginner" | "intermediate" | "advanced" | "expert"
       post_type: "text" | "image" | "video" | "link"
       privacy_level: "public" | "friends" | "private"
     }
@@ -1494,6 +1584,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "pledge", "alpha"],
+      difficulty_level: ["beginner", "intermediate", "advanced", "expert"],
       post_type: ["text", "image", "video", "link"],
       privacy_level: ["public", "friends", "private"],
     },
