@@ -12,6 +12,7 @@ import BookReader from "./pages/BookReader";
 import ReadChapters from "./pages/ReadChapters";
 import LearnLessons from "./pages/LearnLessons";
 import LearningHub from "./pages/LearningHub";
+import WeeksOverview from "./pages/WeeksOverview";
 import WeekView from "./pages/WeekView";
 import LessonView from "./pages/LessonView";
 import { ChapterView } from "./pages/ChapterView";
@@ -46,8 +47,8 @@ const App = () => (
                 <Route path="/learning-hub" element={<ProtectedRoute><LearningHub /></ProtectedRoute>} />
                 <Route path="/doctrine" element={<ProtectedRoute><BookReader /></ProtectedRoute>} />
                 <Route path="/read" element={<ProtectedRoute><ReadChapters /></ProtectedRoute>} />
-                <Route path="/learn" element={<ProtectedRoute><LearnLessons /></ProtectedRoute>} />
-                <Route path="/learn/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
+                <Route path="/learn" element={<ProtectedRoute><WeeksOverview /></ProtectedRoute>} />
+                <Route path="/weeks/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
                 <Route path="/lesson/:id" element={<ProtectedRoute><LessonView /></ProtectedRoute>} />
                 <Route path="/chapter/:chapterId" element={<ProtectedRoute><ChapterView /></ProtectedRoute>} />
                 <Route path="/assignments" element={<ProtectedRoute><Assignments /></ProtectedRoute>} />

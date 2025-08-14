@@ -6,9 +6,14 @@ export interface Week {
   week_number: number;
   title: string;
   objective?: string;
+  description?: string;
   total_modules: number;
   total_tasks: number;
   total_assignments: number;
+  prerequisites: string[];
+  difficulty_level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  estimated_duration: number; // in minutes
+  points_reward: number;
   created_at: string;
   updated_at: string;
 }
