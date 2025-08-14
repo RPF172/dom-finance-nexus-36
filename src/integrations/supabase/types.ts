@@ -332,6 +332,45 @@ export type Database = {
           },
         ]
       }
+      content_versions: {
+        Row: {
+          content: string | null
+          content_id: string
+          content_type: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          title: string | null
+          version_number: number
+        }
+        Insert: {
+          content?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          title?: string | null
+          version_number?: number
+        }
+        Update: {
+          content?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          title?: string | null
+          version_number?: number
+        }
+        Relationships: []
+      }
       dom_token: {
         Row: {
           created_at: string
@@ -380,6 +419,81 @@ export type Database = {
           source?: string | null
           subscribed_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      learning_analytics: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string
+          user_id: string
+          week_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string
+          user_id: string
+          week_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string
+          user_id?: string
+          week_id?: string | null
+        }
+        Relationships: []
+      }
+      learning_sessions: {
+        Row: {
+          activities_completed: number | null
+          created_at: string | null
+          device_type: string | null
+          duration_minutes: number | null
+          focus_score: number | null
+          id: string
+          session_end: string | null
+          session_start: string
+          updated_at: string | null
+          user_id: string
+          week_id: string | null
+        }
+        Insert: {
+          activities_completed?: number | null
+          created_at?: string | null
+          device_type?: string | null
+          duration_minutes?: number | null
+          focus_score?: number | null
+          id?: string
+          session_end?: string | null
+          session_start?: string
+          updated_at?: string | null
+          user_id: string
+          week_id?: string | null
+        }
+        Update: {
+          activities_completed?: number | null
+          created_at?: string | null
+          device_type?: string | null
+          duration_minutes?: number | null
+          focus_score?: number | null
+          id?: string
+          session_end?: string | null
+          session_start?: string
+          updated_at?: string | null
+          user_id?: string
+          week_id?: string | null
         }
         Relationships: []
       }
@@ -1388,6 +1502,18 @@ export type Database = {
           rejected_count: number
         }[]
       }
+      get_learning_insights: {
+        Args: { _user_id: string; _days_back?: number }
+        Returns: {
+          total_sessions: number
+          total_minutes: number
+          avg_session_duration: number
+          avg_focus_score: number
+          most_active_day: string
+          completion_rate: number
+          weekly_progress: Json
+        }[]
+      }
       get_profile_overview: {
         Args: { _target_user_id: string; _viewer_user_id?: string }
         Returns: {
@@ -1445,6 +1571,17 @@ export type Database = {
       is_lesson_unlocked_new: {
         Args: { _user_id: string; _lesson_id: string }
         Returns: boolean
+      }
+      track_learning_session: {
+        Args: {
+          _user_id: string
+          _week_id: string
+          _duration_minutes: number
+          _activities_completed?: number
+          _focus_score?: number
+          _device_type?: string
+        }
+        Returns: string
       }
       update_week_progress: {
         Args: { _user_id: string; _week_id: string }

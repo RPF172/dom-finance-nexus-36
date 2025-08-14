@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Flame, ArrowLeft, ArrowRight, Lock, Trophy, Clock, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import WeekContentEditor from '@/components/admin/WeekContentEditor';
+import { EnhancedContentManager } from '@/components/admin/EnhancedContentManager';
 import { WeekContentTabs } from '@/components/WeekContentTabs';
 import { cn } from '@/lib/utils';
 
@@ -218,7 +219,7 @@ const WeekView: React.FC = () => {
         {/* Admin Content Editor */}
         {isAdmin && (
           <div className="mb-8">
-            <WeekContentEditor weekId={week.id} onSaved={() => window.location.reload()} />
+            <EnhancedContentManager weekId={week.id} onSaved={() => window.location.reload()} />
           </div>
         )}
 

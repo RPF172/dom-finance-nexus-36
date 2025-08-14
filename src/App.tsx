@@ -14,6 +14,7 @@ import LearnLessons from "./pages/LearnLessons";
 import LearningHub from "./pages/LearningHub";
 import WeeksOverview from "./pages/WeeksOverview";
 import WeekView from "./pages/WeekView";
+import LearningAnalytics from "./pages/LearningAnalytics";
 import LessonView from "./pages/LessonView";
 import { ChapterView } from "./pages/ChapterView";
 import Assignments from "./pages/Assignments";
@@ -50,6 +51,7 @@ const App = () => (
                 <Route path="/learn" element={<ProtectedRoute><WeeksOverview /></ProtectedRoute>} />
                 <Route path="/learn/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
                 <Route path="/weeks/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
+                <Route path="/analytics" element={<ProtectedRoute><LearningAnalytics /></ProtectedRoute>} />
                 <Route path="/lesson/:id" element={<ProtectedRoute><LessonView /></ProtectedRoute>} />
                 <Route path="/chapter/:chapterId" element={<ProtectedRoute><ChapterView /></ProtectedRoute>} />
                 <Route path="/assignments" element={<ProtectedRoute><Assignments /></ProtectedRoute>} />

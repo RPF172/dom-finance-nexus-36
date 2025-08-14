@@ -5,11 +5,12 @@ import { EnhancedWeekCard } from '@/components/EnhancedWeekCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useWeeks } from '@/hooks/useWeeks';
 import { useAllWeekProgress, useWeekPrerequisites, useWeekProgressStats } from '@/hooks/useWeekProgress';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { TrendingUp, Clock, Trophy, BookOpen, Target } from 'lucide-react';
+import { TrendingUp, Clock, Trophy, BookOpen, Target, BarChart3 } from 'lucide-react';
 
 export default function WeeksOverview() {
   const navigate = useNavigate();
@@ -50,12 +51,24 @@ export default function WeeksOverview() {
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-foreground">
-            Your Learning Journey
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Track your progress through structured weekly content designed to advance your skills and knowledge.
-          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold text-foreground">
+                Your Learning Journey
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Track your progress through structured weekly content designed to advance your skills and knowledge.
+              </p>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/analytics')}
+              className="flex items-center gap-2"
+            >
+              <BarChart3 className="h-4 w-4" />
+              Analytics
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Dashboard */}

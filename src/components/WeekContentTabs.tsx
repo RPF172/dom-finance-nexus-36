@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MobileOptimizedTabs, MobileTabsList, MobileTabsTrigger, MobileTabsContent } from '@/components/ui/mobile-optimized-tabs';
+import { SessionTracker } from '@/components/learning/SessionTracker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -143,28 +145,39 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData, week
   const nextWeekId = nextWeek?.id;
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="content" className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4" />
-            Content Read
-          </TabsTrigger>
-          <TabsTrigger value="tasks" className="flex items-center gap-2">
-            <CheckSquare className="h-4 w-4" />
-            Tasks
-          </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Assignments
-          </TabsTrigger>
-          <TabsTrigger value="review" className="flex items-center gap-2">
-            <RotateCcw className="h-4 w-4" />
-            Review
-          </TabsTrigger>
-        </TabsList>
+    <div className="space-y-6">
+      {/* Session Tracker */}
+      <SessionTracker 
+        weekId={weekData.id}
+        onActivityComplete={() => {
+          // Will be called when user completes activities
+        }}
+      />
 
-        <TabsContent value="content" className="space-y-4 mt-6">
+      {/* Mobile-optimized tabs */}
+      <MobileOptimizedTabs value={activeTab} onValueChange={setActiveTab}>
+        <MobileTabsList>
+          <MobileTabsTrigger value="content" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            <span className="hidden sm:inline">Content Read</span>
+            <span className="sm:hidden">Content</span>
+          </MobileTabsTrigger>
+          <MobileTabsTrigger value="tasks" className="flex items-center gap-2">
+            <CheckSquare className="h-4 w-4" />
+            <span>Tasks</span>
+          </MobileTabsTrigger>
+          <MobileTabsTrigger value="assignments" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            <span className="hidden sm:inline">Assignments</span>
+            <span className="sm:hidden">Assign</span>
+          </MobileTabsTrigger>
+          <MobileTabsTrigger value="review" className="flex items-center gap-2">
+            <RotateCcw className="h-4 w-4" />
+            <span>Review</span>
+          </MobileTabsTrigger>
+        </MobileTabsList>
+
+        <MobileTabsContent value="content" className="space-y-4">
           <div className="space-y-4">
             {weekData.modules.map((module, index) => {
               const completed = isModuleCompleted(module.id);
@@ -207,9 +220,9 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData, week
               );
             })}
           </div>
-        </TabsContent>
+        </MobileTabsContent>
 
-        <TabsContent value="tasks" className="space-y-4 mt-6">
+        <MobileTabsContent value="tasks" className="space-y-4">
           <div className="space-y-4">
             {weekData.tasks.map((task, index) => {
               const submitted = isTaskSubmitted(task.id);
@@ -277,9 +290,9 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData, week
               );
             })}
           </div>
-        </TabsContent>
+        </MobileTabsContent>
 
-        <TabsContent value="assignments" className="space-y-4 mt-6">
+        <MobileTabsContent value="assignments" className="space-y-4">
           <div className="space-y-4">
             {weekData.assignments.map((assignment, index) => {
               const submitted = isAssignmentSubmitted(assignment.id);
@@ -347,9 +360,9 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData, week
               );
             })}
           </div>
-        </TabsContent>
+        </MobileTabsContent>
 
-        <TabsContent value="review" className="space-y-4 mt-6">
+        <MobileTabsContent value="review" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Week {weekData.week_number} Review Checklist</CardTitle>
@@ -384,8 +397,8 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData, week
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        </MobileTabsContent>
+      </MobileOptimizedTabs>
 
       {allComplete && nextWeekId && (
         <div className="mt-8 p-6 bg-success/10 border border-success/20 rounded-lg">
