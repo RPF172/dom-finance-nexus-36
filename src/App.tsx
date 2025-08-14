@@ -48,6 +48,7 @@ const App = () => (
                 <Route path="/doctrine" element={<ProtectedRoute><BookReader /></ProtectedRoute>} />
                 <Route path="/read" element={<ProtectedRoute><ReadChapters /></ProtectedRoute>} />
                 <Route path="/learn" element={<ProtectedRoute><WeeksOverview /></ProtectedRoute>} />
+                <Route path="/learn/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
                 <Route path="/weeks/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
                 <Route path="/lesson/:id" element={<ProtectedRoute><LessonView /></ProtectedRoute>} />
                 <Route path="/chapter/:chapterId" element={<ProtectedRoute><ChapterView /></ProtectedRoute>} />

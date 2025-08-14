@@ -138,7 +138,7 @@ export default function WeeksOverview() {
                     key={week.id}
                     week={week}
                     progress={getWeekProgress(week.id)}
-                    onClick={() => navigate(`/weeks/${week.id}`)}
+                    onClick={() => navigate(`/learn/${week.id}`)}
                   />
                 ))}
             </div>
@@ -154,7 +154,7 @@ export default function WeeksOverview() {
                 key={week.id}
                 week={week}
                 progress={getWeekProgress(week.id)}
-                onClick={() => navigate(`/weeks/${week.id}`)}
+                onClick={() => navigate(`/learn/${week.id}`)}
               />
             ))}
           </div>

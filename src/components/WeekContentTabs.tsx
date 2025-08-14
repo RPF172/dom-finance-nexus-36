@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, CheckSquare, FileText, RotateCcw, Upload, CheckCircle } from 'lucide-react';
 import { WeekData, useWeeks } from '@/hooks/useWeeks';
+import { WeekProgress, useUpdateWeekProgress } from '@/hooks/useWeekProgress';
 import { useUserSubmissions, useUserStepProgress, useCreateSubmission, useUpdateStepProgress } from '@/hooks/useSubmissions';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { useModuleProgress, useToggleModuleProgress } from '@/hooks/useModuleProgress';
@@ -16,14 +17,16 @@ import { toast } from 'sonner';
 
 interface WeekContentTabsProps {
   weekData: WeekData;
+  weekProgress?: WeekProgress | null;
 }
 
-export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) => {
+export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData, weekProgress }) => {
   const [activeTab, setActiveTab] = useState('content');
   const { data: submissions = [] } = useUserSubmissions(weekData.id);
   const { data: stepProgress = [] } = useUserStepProgress(weekData.id);
   const createSubmission = useCreateSubmission();
   const updateStepProgress = useUpdateStepProgress();
+  const updateWeekProgress = useUpdateWeekProgress();
   const { uploadImage, uploading } = useImageUpload();
 
   const [taskResponses, setTaskResponses] = useState<Record<string, string>>({});
@@ -62,6 +65,9 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
         media_url: mediaUrl
       });
       
+      // Update week progress after task submission
+      updateWeekProgress.mutate({ weekId: weekData.id });
+      
       setTaskResponses(prev => ({ ...prev, [taskId]: '' }));
       setTaskFiles(prev => ({ ...prev, [taskId]: null }));
       toast.success('Task submitted successfully!');
@@ -91,6 +97,9 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
         media_url: mediaUrl
       });
       
+      // Update week progress after assignment submission
+      updateWeekProgress.mutate({ weekId: weekData.id });
+      
       setAssignmentResponses(prev => ({ ...prev, [assignmentId]: '' }));
       setAssignmentFiles(prev => ({ ...prev, [assignmentId]: null }));
       toast.success('Assignment submitted successfully!');
@@ -106,6 +115,10 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
         completed,
         weekId: weekData.id
       });
+      
+      // Update week progress after step completion
+      updateWeekProgress.mutate({ weekId: weekData.id });
+      
       toast.success(completed ? 'Step marked as complete!' : 'Step marked as incomplete');
     } catch (error) {
       toast.error('Failed to update step progress');
@@ -172,7 +185,11 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
                         <Button
                           variant={completed ? 'secondary' : 'default'}
                           disabled={completed || toggleModuleProgress.isPending}
-                          onClick={() => toggleModuleProgress.mutate({ weekModuleId: module.id, completed: true })}
+                          onClick={async () => {
+                            await toggleModuleProgress.mutateAsync({ weekModuleId: module.id, completed: true });
+                            // Update week progress after module completion
+                            updateWeekProgress.mutate({ weekId: weekData.id });
+                          }}
                         >
                           {completed ? 'Completed' : 'Mark as complete'}
                         </Button>
@@ -371,10 +388,20 @@ export const WeekContentTabs: React.FC<WeekContentTabsProps> = ({ weekData }) =>
       </Tabs>
 
       {allComplete && nextWeekId && (
-        <div className="mt-6">
-          <Button className="w-full" onClick={() => navigate(`/learn/${nextWeekId}`)}>
-            Proceed to Week {weekData.week_number + 1}
-          </Button>
+        <div className="mt-8 p-6 bg-success/10 border border-success/20 rounded-lg">
+          <div className="text-center space-y-3">
+            <CheckCircle className="h-8 w-8 text-success mx-auto" />
+            <h3 className="text-lg font-semibold text-success">Week Completed!</h3>
+            <p className="text-muted-foreground">
+              Congratulations! You've completed all activities for Week {weekData.week_number}.
+            </p>
+            <Button 
+              className="w-full max-w-sm" 
+              onClick={() => navigate(`/weeks/${nextWeekId}`)}
+            >
+              Proceed to Week {weekData.week_number + 1}
+            </Button>
+          </div>
         </div>
       )}
     </div>
