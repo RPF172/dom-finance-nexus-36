@@ -81,22 +81,42 @@ export const PeerDiscussion: React.FC<PeerDiscussionProps> = ({
   const fetchDiscussions = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      // First get discussions
+      const { data: discussionsData, error: discussionsError } = await supabase
         .from('peer_discussions')
-        .select(`
-          *,
-          profiles!inner(
-            display_name,
-            avatar_url,
-            is_premium,
-            premium_color
-          )
-        `)
+        .select('*')
         .eq('content_type', contentType)
         .eq('content_id', contentId)
         .order('updated_at', { ascending: false });
 
-      if (error) throw error;
+      if (discussionsError) throw discussionsError;
+
+      // Get user profiles for discussions
+      const userIds = [...new Set(discussionsData?.map(d => d.user_id) || [])];
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, avatar_url, is_premium, premium_color')
+        .in('user_id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Create profiles map
+      const profilesMap = new Map(
+        profilesData?.map(p => [p.user_id, p]) || []
+      );
+
+      // Combine discussions with profiles
+      const data = discussionsData?.map(discussion => ({
+        ...discussion,
+        content_type: discussion.content_type as 'week' | 'lesson' | 'chapter',
+        profiles: profilesMap.get(discussion.user_id) || {
+          display_name: 'Anonymous User',
+          avatar_url: null,
+          is_premium: false,
+          premium_color: null
+        }
+      })) || [];
+
 
         // Check which discussions the user has liked
         if (currentUserId && data) {
@@ -114,9 +134,9 @@ export const PeerDiscussion: React.FC<PeerDiscussionProps> = ({
             user_has_liked: likedIds.has(discussion.id)
           }));
 
-          setDiscussions(discussionsWithLikes as Discussion[]);
+          setDiscussions(discussionsWithLikes);
         } else {
-          setDiscussions((data || []) as Discussion[]);
+          setDiscussions(data);
         }
     } catch (error) {
       console.error('Error fetching discussions:', error);
@@ -132,22 +152,41 @@ export const PeerDiscussion: React.FC<PeerDiscussionProps> = ({
 
   const fetchReplies = async (discussionId: string) => {
     try {
-      const { data, error } = await supabase
+      // Get replies
+      const { data: repliesData, error: repliesError } = await supabase
         .from('discussion_replies')
-        .select(`
-          *,
-          profiles!inner(
-            display_name,
-            avatar_url,
-            is_premium,
-            premium_color
-          )
-        `)
+        .select('*')
         .eq('discussion_id', discussionId)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
-      setReplies((data || []) as DiscussionReply[]);
+      if (repliesError) throw repliesError;
+
+      // Get user profiles for replies
+      const userIds = [...new Set(repliesData?.map(r => r.user_id) || [])];
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, avatar_url, is_premium, premium_color')
+        .in('user_id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Create profiles map
+      const profilesMap = new Map(
+        profilesData?.map(p => [p.user_id, p]) || []
+      );
+
+      // Combine replies with profiles
+      const replies = repliesData?.map(reply => ({
+        ...reply,
+        profiles: profilesMap.get(reply.user_id) || {
+          display_name: 'Anonymous User',
+          avatar_url: null,
+          is_premium: false,
+          premium_color: null
+        }
+      })) || [];
+
+      setReplies(replies);
     } catch (error) {
       console.error('Error fetching replies:', error);
     }

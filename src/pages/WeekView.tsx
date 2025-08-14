@@ -228,12 +228,7 @@ const WeekView: React.FC = () => {
         {/* Week Content */}
         <Card>
           <CardContent className="p-6">
-            <WeekContentTabs 
-              weekId={week.id} 
-              currentUserId={isAdmin ? 'admin' : undefined}
-              weekTitle={week.title}
-              onProgressUpdate={() => window.location.reload()}
-            />
+            <WeekContentTabs weekData={week} weekProgress={progress} />
           </CardContent>
         </Card>
       </div>

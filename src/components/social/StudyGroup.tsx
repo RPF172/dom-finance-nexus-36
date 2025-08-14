@@ -52,37 +52,57 @@ export const StudyGroup: React.FC<StudyGroupProps> = ({ weekId, currentUserId })
 
   const fetchStudyGroups = async () => {
     try {
-      let query = supabase
+      // Get study groups
+      let groupsQuery = supabase
         .from('study_groups')
-        .select(`
-          *,
-          study_group_members!inner(
-            user_id,
-            joined_at,
-            profiles!inner(
-              display_name,
-              avatar_url,
-              is_premium
-            )
-          )
-        `)
+        .select('*')
         .eq('is_active', true);
 
       if (weekId) {
-        query = query.eq('week_id', weekId);
+        groupsQuery = groupsQuery.eq('week_id', weekId);
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
+      const { data: groupsData, error: groupsError } = await groupsQuery;
+      if (groupsError) throw groupsError;
 
-      // Process the data to group members properly
-      const processedGroups = data?.map(group => ({
-        ...group,
-        members: group.study_group_members || [],
-        current_members: group.study_group_members?.length || 0
-      })) || [];
+      // For each group, get its members
+      const processedGroups = await Promise.all((groupsData || []).map(async (group) => {
+        // Get members for this group
+        const { data: membersData } = await supabase
+          .from('study_group_members')
+          .select('user_id, joined_at')
+          .eq('study_group_id', group.id);
 
-      setStudyGroups((processedGroups || []) as StudyGroup[]);
+        // Get profiles for members
+        const memberUserIds = membersData?.map(m => m.user_id) || [];
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('user_id, display_name, avatar_url, is_premium')
+          .in('user_id', memberUserIds);
+
+        // Create profiles map
+        const profilesMap = new Map(
+          profilesData?.map(p => [p.user_id, p]) || []
+        );
+
+        // Combine members with profiles
+        const members = membersData?.map(member => ({
+          ...member,
+          profiles: profilesMap.get(member.user_id) || {
+            display_name: 'Anonymous User',
+            avatar_url: null,
+            is_premium: false
+          }
+        })) || [];
+
+        return {
+          ...group,
+          members,
+          current_members: members.length
+        };
+      }));
+
+      setStudyGroups(processedGroups);
     } catch (error) {
       console.error('Error fetching study groups:', error);
       toast({
