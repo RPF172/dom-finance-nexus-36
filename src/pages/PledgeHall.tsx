@@ -14,6 +14,7 @@ import ObedienceLeaderboardCard from '@/components/gamification/ObedienceLeaderb
 import { LearningProgressWidget } from '@/components/dashboard/LearningProgressWidget';
 import { PersonalizedRecommendations } from '@/components/dashboard/PersonalizedRecommendations';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import DailyCheckinCard from '@/components/gamification/DailyCheckinCard';
 
 interface UserProfile {
   id: string;
@@ -135,6 +136,9 @@ const PledgeHall: React.FC = () => {
               </Badge>
             </div>
           </div>
+
+          {/* Daily Check-in */}
+          <DailyCheckinCard />
 
           {/* Smart Dashboard Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

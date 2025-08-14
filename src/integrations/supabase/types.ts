@@ -457,6 +457,33 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_checkins: {
+        Row: {
+          check_in_date: string
+          created_at: string
+          id: string
+          points_awarded: number
+          streak_day: number
+          user_id: string
+        }
+        Insert: {
+          check_in_date?: string
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          streak_day?: number
+          user_id: string
+        }
+        Update: {
+          check_in_date?: string
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          streak_day?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       discussion_likes: {
         Row: {
           created_at: string
@@ -1838,6 +1865,14 @@ export type Database = {
       get_user_premium_status: {
         Args: { user_id: string }
         Returns: boolean
+      }
+      handle_daily_checkin: {
+        Args: { _user_id: string }
+        Returns: {
+          is_new_checkin: boolean
+          points_awarded: number
+          streak_day: number
+        }[]
       }
       has_role: {
         Args: {
