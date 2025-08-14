@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -229,6 +229,47 @@ export type Database = {
           },
         ]
       }
+      challenge_participants: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          created_at: string
+          current_progress: number
+          id: string
+          joined_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          created_at?: string
+          current_progress?: number
+          id?: string
+          joined_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string
+          current_progress?: number
+          id?: string
+          joined_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "community_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chapters: {
         Row: {
           body_text: string | null
@@ -293,6 +334,51 @@ export type Database = {
           created_at?: string
           id?: string
           registered?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_challenges: {
+        Row: {
+          created_at: string
+          description: string
+          difficulty: string
+          end_date: string
+          id: string
+          is_active: boolean
+          reward_points: number
+          start_date: string
+          target_value: number
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          difficulty?: string
+          end_date: string
+          id?: string
+          is_active?: boolean
+          reward_points?: number
+          start_date?: string
+          target_value?: number
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          difficulty?: string
+          end_date?: string
+          id?: string
+          is_active?: boolean
+          reward_points?: number
+          start_date?: string
+          target_value?: number
+          title?: string
+          type?: string
           updated_at?: string
         }
         Relationships: []
@@ -1652,7 +1738,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_activities: {
+        Row: {
+          activity_type: string | null
+          description: string | null
+          id: string | null
+          metadata: string | null
+          occurred_at: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       are_users_connected: {
@@ -1661,13 +1758,13 @@ export type Database = {
       }
       award_op: {
         Args: {
-          _user_id: string
-          _action_type: string
           _action_key: string
+          _action_type: string
           _base_points: number
           _limit_per_day?: number
-          _window_hours?: number
           _metadata?: Json
+          _user_id: string
+          _window_hours?: number
         }
         Returns: number
       }
@@ -1686,52 +1783,52 @@ export type Database = {
       get_application_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
-          total_count: number
-          pending_count: number
           approved_count: number
+          pending_count: number
           rejected_count: number
+          total_count: number
         }[]
       }
       get_learning_insights: {
-        Args: { _user_id: string; _days_back?: number }
+        Args: { _days_back?: number; _user_id: string }
         Returns: {
-          total_sessions: number
-          total_minutes: number
-          avg_session_duration: number
           avg_focus_score: number
-          most_active_day: string
+          avg_session_duration: number
           completion_rate: number
+          most_active_day: string
+          total_minutes: number
+          total_sessions: number
           weekly_progress: Json
         }[]
       }
       get_profile_overview: {
         Args: { _target_user_id: string; _viewer_user_id?: string }
         Returns: {
-          user_id: string
-          display_name: string
           avatar_url: string
-          cover_photo_url: string
-          is_premium: boolean
-          premium_color: string
-          joined_at: string
-          posts_count: number
-          likes_received_count: number
           comments_received_count: number
+          cover_photo_url: string
+          display_name: string
+          is_premium: boolean
+          joined_at: string
           lessons_completed_count: number
+          likes_received_count: number
+          posts_count: number
+          premium_color: string
+          user_id: string
         }[]
       }
       get_recent_activity: {
         Args: {
+          _limit?: number
           _target_user_id: string
           _viewer_user_id?: string
-          _limit?: number
         }
         Returns: {
           activity_type: string
+          description: string
           id: string
           occurred_at: string
           title: string
-          description: string
         }[]
       }
       get_tier_for_points: {
@@ -1744,32 +1841,32 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
       is_lesson_unlocked: {
         Args: {
-          _user_id: string
           _lesson_id: string
           _module_id: string
+          _user_id: string
           _year_id: string
         }
         Returns: boolean
       }
       is_lesson_unlocked_new: {
-        Args: { _user_id: string; _lesson_id: string }
+        Args: { _lesson_id: string; _user_id: string }
         Returns: boolean
       }
       track_learning_session: {
         Args: {
+          _activities_completed?: number
+          _device_type?: string
+          _duration_minutes: number
+          _focus_score?: number
           _user_id: string
           _week_id: string
-          _duration_minutes: number
-          _activities_completed?: number
-          _focus_score?: number
-          _device_type?: string
         }
         Returns: string
       }

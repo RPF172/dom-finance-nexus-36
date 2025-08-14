@@ -7,146 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatDistanceToNow } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useObedienceLeaderboard } from '@/hooks/useLeaderboard';
-
-interface RealCommunityChallenge {
-  id: string;
-  title: string;
-  description: string;
-  type: 'weekly' | 'monthly' | 'special';
-  difficulty: 'easy' | 'medium' | 'hard';
-  startDate: Date;
-  endDate: Date;
-  participants: number;
-  maxParticipants?: number;
-  progress: number;
-  target: number;
-  unit: string;
-  reward: {
-    points: number;
-    badge?: string;
-    title?: string;
-  };
-  isParticipating: boolean;
-  leaderboard: Array<{
-    rank: number;
-    userId: string;
-    name: string;
-    avatar?: string;
-    progress: number;
-    points: number;
-  }>;
-}
-
-export const useRealCommunityChallenges = () => {
-  const { data: currentUser } = useCurrentUser();
-  const { data: leaderboardData } = useObedienceLeaderboard(5);
-
-  return useQuery({
-    queryKey: ['community-challenges', currentUser?.id],
-    queryFn: (): RealCommunityChallenge[] => {
-      // Generate challenges based on real user data
-      const now = new Date();
-      
-      const challenges: RealCommunityChallenge[] = [
-        {
-          id: 'weekly-learning',
-          title: 'Weekly Learning Sprint',
-          description: 'Complete lessons and earn OP to climb the leaderboard',
-          type: 'weekly',
-          difficulty: 'medium',
-          startDate: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-          endDate: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
-          participants: 25 + Math.floor(Math.random() * 50),
-          maxParticipants: 100,
-          progress: Math.floor(Math.random() * 10),
-          target: 10,
-          unit: 'activities',
-          reward: {
-            points: 250,
-            badge: 'Speed Learner',
-            title: 'Sprint Master'
-          },
-          isParticipating: true,
-          leaderboard: leaderboardData?.map((user, index) => ({
-            rank: index + 1,
-            userId: user.user_id,
-            name: user.display_name || 'Anonymous',
-            avatar: user.avatar_url || undefined,
-            progress: Math.max(0, 10 - index * 2),
-            points: user.total_points
-          })) || []
-        },
-        {
-          id: 'perfectionist',
-          title: 'Perfectionist Challenge',
-          description: 'Build up your knowledge with consistent learning',
-          type: 'special',
-          difficulty: 'hard',
-          startDate: new Date(now.getTime() - 24 * 60 * 60 * 1000), // yesterday
-          endDate: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000), // 2 weeks
-          participants: 15 + Math.floor(Math.random() * 25),
-          progress: Math.floor(Math.random() * 5),
-          target: 5,
-          unit: 'achievements',
-          reward: {
-            points: 500,
-            badge: 'Perfectionist',
-            title: 'Master Scholar'
-          },
-          isParticipating: false,
-          leaderboard: leaderboardData?.slice(0, 3).map((user, index) => ({
-            rank: index + 1,
-            userId: user.user_id,
-            name: user.display_name || 'Anonymous',
-            avatar: user.avatar_url || undefined,
-            progress: 5 - index,
-            points: user.total_points + (5 - index) * 100
-          })) || []
-        }
-      ];
-
-      return challenges;
-    },
-    enabled: !!currentUser,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-};
-
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  type: 'weekly' | 'monthly' | 'special';
-  difficulty: 'easy' | 'medium' | 'hard';
-  startDate: Date;
-  endDate: Date;
-  participants: number;
-  maxParticipants?: number;
-  progress: number;
-  target: number;
-  unit: string;
-  reward: {
-    points: number;
-    badge?: string;
-    title?: string;
-  };
-  isParticipating: boolean;
-  leaderboard: Array<{
-    rank: number;
-    userId: string;
-    name: string;
-    avatar?: string;
-    progress: number;
-    points: number;
-  }>;
-}
+import { useRealCommunityChallenges } from '@/hooks/useRealCommunityChallenges';
 
 const CommunityChallenge: React.FC = () => {
-  const { data: challenges, isLoading } = useRealCommunityChallenges();
+  const { challenges, isLoading, joinChallenge, leaveChallenge, isJoiningChallenge, isLeavingChallenge } = useRealCommunityChallenges();
   const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
 
   useEffect(() => {
@@ -179,27 +43,31 @@ const CommunityChallenge: React.FC = () => {
     );
   }
 
-  const getDifficultyColor = (difficulty: Challenge['difficulty']) => {
+  const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'hard': return 'bg-red-500';
+      case 'beginner': return 'bg-green-500';
+      case 'intermediate': return 'bg-yellow-500';
+      case 'advanced': return 'bg-red-500';
       default: return 'bg-muted';
     }
   };
 
-  const getTypeIcon = (type: Challenge['type']) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'weekly': return <Calendar className="h-4 w-4" />;
-      case 'monthly': return <Clock className="h-4 w-4" />;
-      case 'special': return <Star className="h-4 w-4" />;
+      case 'engagement': return <Users className="h-4 w-4" />;
+      case 'learning': return <Calendar className="h-4 w-4" />;
+      case 'social': return <Clock className="h-4 w-4" />;
+      case 'submission': return <Star className="h-4 w-4" />;
       default: return <Target className="h-4 w-4" />;
     }
   };
 
-  const joinChallenge = (challengeId: string) => {
-    // In a real app, this would make an API call
-    console.log('Joining challenge:', challengeId);
+  const handleJoinLeave = (challengeId: string, isJoined: boolean) => {
+    if (isJoined) {
+      leaveChallenge(challengeId);
+    } else {
+      joinChallenge(challengeId);
+    }
   };
 
   const selectedChallengeData = challenges.find(c => c.id === selectedChallenge);
@@ -216,11 +84,11 @@ const CommunityChallenge: React.FC = () => {
       </div>
 
       <Tabs value={selectedChallenge || undefined} onValueChange={setSelectedChallenge} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
-          {challenges.map((challenge) => (
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+          {challenges.slice(0, 4).map((challenge) => (
             <TabsTrigger key={challenge.id} value={challenge.id} className="flex items-center gap-2">
               {getTypeIcon(challenge.type)}
-              <span className="hidden sm:inline">{challenge.title}</span>
+              <span className="hidden sm:inline truncate">{challenge.title}</span>
               <span className="sm:hidden">{challenge.type}</span>
             </TabsTrigger>
           ))}
@@ -247,7 +115,7 @@ const CommunityChallenge: React.FC = () => {
                         </Badge>
                         <Badge variant="outline" className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
-                          {challenge.participants.toLocaleString()} joined
+                          {challenge.participant_count} joined
                         </Badge>
                       </div>
                     </div>
@@ -261,11 +129,11 @@ const CommunityChallenge: React.FC = () => {
                     <div className="flex items-center justify-between text-sm">
                       <span>Progress</span>
                       <span className="font-medium">
-                        {challenge.progress} / {challenge.target} {challenge.unit}
+                        {challenge.user_progress} / {challenge.target_value}
                       </span>
                     </div>
                     <Progress 
-                      value={(challenge.progress / challenge.target) * 100} 
+                      value={(challenge.user_progress / challenge.target_value) * 100} 
                       className="h-2"
                     />
                   </div>
@@ -274,41 +142,43 @@ const CommunityChallenge: React.FC = () => {
                     <div>
                       <p className="text-muted-foreground">Ends in</p>
                       <p className="font-medium">
-                        {formatDistanceToNow(challenge.endDate)}
+                        {formatDistanceToNow(new Date(challenge.end_date))}
                       </p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">Reward</p>
                       <p className="font-medium text-primary">
-                        {challenge.reward.points} OP
+                        {challenge.reward_points} OP
                       </p>
                     </div>
                   </div>
 
-                  {challenge.reward.badge && (
-                    <div className="p-3 bg-gradient-primary/10 rounded-lg border">
-                      <div className="flex items-center gap-2">
-                        <Medal className="h-5 w-5 text-yellow-500" />
-                        <div>
-                          <p className="font-medium">Unlock: {challenge.reward.badge}</p>
-                          {challenge.reward.title && (
-                            <p className="text-sm text-muted-foreground">
-                              Title: {challenge.reward.title}
-                            </p>
-                          )}
-                        </div>
+                  <div className="p-3 bg-gradient-primary/10 rounded-lg border">
+                    <div className="flex items-center gap-2">
+                      <Medal className="h-5 w-5 text-yellow-500" />
+                      <div>
+                        <p className="font-medium">Challenge Reward</p>
+                        <p className="text-sm text-muted-foreground">
+                          Earn {challenge.reward_points} OP for completion
+                        </p>
                       </div>
                     </div>
-                  )}
+                  </div>
 
-                  {!challenge.isParticipating ? (
-                    <Button 
-                      onClick={() => joinChallenge(challenge.id)}
-                      className="w-full"
-                    >
-                      Join Challenge
-                    </Button>
-                  ) : (
+                  <Button 
+                    onClick={() => handleJoinLeave(challenge.id, challenge.is_joined)}
+                    className="w-full"
+                    disabled={isJoiningChallenge || isLeavingChallenge}
+                  >
+                    {isJoiningChallenge || isLeavingChallenge 
+                      ? 'Processing...' 
+                      : challenge.is_joined 
+                        ? 'Leave Challenge' 
+                        : 'Join Challenge'
+                    }
+                  </Button>
+
+                  {challenge.is_joined && (
                     <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
                       <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
                         <Award className="h-4 w-4" />
@@ -329,34 +199,38 @@ const CommunityChallenge: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {challenge.leaderboard.map((entry) => (
-                      <div 
-                        key={entry.userId}
-                        className={`flex items-center gap-3 p-3 rounded-lg ${
-                          entry.userId === 'me' ? 'bg-primary/10 border border-primary/20' : 'bg-muted/30'
-                        }`}
-                      >
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted font-bold text-sm">
-                          {entry.rank === 1 && <span className="text-yellow-500">🥇</span>}
-                          {entry.rank === 2 && <span className="text-gray-400">🥈</span>}
-                          {entry.rank === 3 && <span className="text-orange-500">🥉</span>}
-                          {entry.rank > 3 && entry.rank}
+                    {challenge.leaderboard.length > 0 ? (
+                      challenge.leaderboard.map((entry, index) => (
+                        <div 
+                          key={entry.user_id}
+                          className="flex items-center gap-3 p-3 rounded-lg bg-muted/30"
+                        >
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted font-bold text-sm">
+                            {index + 1 === 1 && <span className="text-yellow-500">🥇</span>}
+                            {index + 1 === 2 && <span className="text-gray-400">🥈</span>}
+                            {index + 1 === 3 && <span className="text-orange-500">🥉</span>}
+                            {index + 1 > 3 && (index + 1)}
+                          </div>
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={entry.avatar_url} />
+                            <AvatarFallback>{entry.display_name[0]}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <p className={`font-medium text-sm ${entry.is_premium ? 'text-yellow-500' : ''}`}>
+                              {entry.display_name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {entry.progress} points
+                            </p>
+                          </div>
                         </div>
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={entry.avatar} />
-                          <AvatarFallback>{entry.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">{entry.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {entry.progress} {challenge.unit}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-sm">{entry.points} OP</p>
-                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-4 text-muted-foreground">
+                        <Trophy className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                        <p>No participants yet. Be the first to join!</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </CardContent>
               </Card>
