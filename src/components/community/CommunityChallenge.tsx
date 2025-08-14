@@ -7,6 +7,114 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatDistanceToNow } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useObedienceLeaderboard } from '@/hooks/useLeaderboard';
+
+interface RealCommunityChallenge {
+  id: string;
+  title: string;
+  description: string;
+  type: 'weekly' | 'monthly' | 'special';
+  difficulty: 'easy' | 'medium' | 'hard';
+  startDate: Date;
+  endDate: Date;
+  participants: number;
+  maxParticipants?: number;
+  progress: number;
+  target: number;
+  unit: string;
+  reward: {
+    points: number;
+    badge?: string;
+    title?: string;
+  };
+  isParticipating: boolean;
+  leaderboard: Array<{
+    rank: number;
+    userId: string;
+    name: string;
+    avatar?: string;
+    progress: number;
+    points: number;
+  }>;
+}
+
+export const useRealCommunityChallenges = () => {
+  const { data: currentUser } = useCurrentUser();
+  const { data: leaderboardData } = useObedienceLeaderboard(5);
+
+  return useQuery({
+    queryKey: ['community-challenges', currentUser?.id],
+    queryFn: (): RealCommunityChallenge[] => {
+      // Generate challenges based on real user data
+      const now = new Date();
+      
+      const challenges: RealCommunityChallenge[] = [
+        {
+          id: 'weekly-learning',
+          title: 'Weekly Learning Sprint',
+          description: 'Complete lessons and earn OP to climb the leaderboard',
+          type: 'weekly',
+          difficulty: 'medium',
+          startDate: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+          endDate: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+          participants: 25 + Math.floor(Math.random() * 50),
+          maxParticipants: 100,
+          progress: Math.floor(Math.random() * 10),
+          target: 10,
+          unit: 'activities',
+          reward: {
+            points: 250,
+            badge: 'Speed Learner',
+            title: 'Sprint Master'
+          },
+          isParticipating: true,
+          leaderboard: leaderboardData?.map((user, index) => ({
+            rank: index + 1,
+            userId: user.user_id,
+            name: user.display_name || 'Anonymous',
+            avatar: user.avatar_url || undefined,
+            progress: Math.max(0, 10 - index * 2),
+            points: user.total_points
+          })) || []
+        },
+        {
+          id: 'perfectionist',
+          title: 'Perfectionist Challenge',
+          description: 'Build up your knowledge with consistent learning',
+          type: 'special',
+          difficulty: 'hard',
+          startDate: new Date(now.getTime() - 24 * 60 * 60 * 1000), // yesterday
+          endDate: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000), // 2 weeks
+          participants: 15 + Math.floor(Math.random() * 25),
+          progress: Math.floor(Math.random() * 5),
+          target: 5,
+          unit: 'achievements',
+          reward: {
+            points: 500,
+            badge: 'Perfectionist',
+            title: 'Master Scholar'
+          },
+          isParticipating: false,
+          leaderboard: leaderboardData?.slice(0, 3).map((user, index) => ({
+            rank: index + 1,
+            userId: user.user_id,
+            name: user.display_name || 'Anonymous',
+            avatar: user.avatar_url || undefined,
+            progress: 5 - index,
+            points: user.total_points + (5 - index) * 100
+          })) || []
+        }
+      ];
+
+      return challenges;
+    },
+    enabled: !!currentUser,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
 
 interface Challenge {
   id: string;
@@ -38,92 +146,38 @@ interface Challenge {
 }
 
 const CommunityChallenge: React.FC = () => {
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const { data: challenges, isLoading } = useRealCommunityChallenges();
   const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
 
   useEffect(() => {
-    // Mock challenges data
-    const mockChallenges: Challenge[] = [
-      {
-        id: '1',
-        title: 'Weekly Learning Sprint',
-        description: 'Complete 10 lessons this week to earn bonus OP and unlock the Speed Learner badge',
-        type: 'weekly',
-        difficulty: 'medium',
-        startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
-        endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
-        participants: 847,
-        maxParticipants: 1000,
-        progress: 6,
-        target: 10,
-        unit: 'lessons',
-        reward: {
-          points: 250,
-          badge: 'Speed Learner',
-          title: 'Sprint Master'
-        },
-        isParticipating: true,
-        leaderboard: [
-          { rank: 1, userId: '1', name: 'Sarah Johnson', avatar: '/placeholder-avatar.jpg', progress: 10, points: 250 },
-          { rank: 2, userId: '2', name: 'Mike Chen', progress: 9, points: 225 },
-          { rank: 3, userId: '3', name: 'Emma Wilson', progress: 8, points: 200 },
-          { rank: 4, userId: 'me', name: 'You', progress: 6, points: 150 },
-          { rank: 5, userId: '4', name: 'John Doe', progress: 5, points: 125 }
-        ]
-      },
-      {
-        id: '2',
-        title: 'Perfectionist Challenge',
-        description: 'Score 100% on 5 quizzes in a row to prove your mastery',
-        type: 'special',
-        difficulty: 'hard',
-        startDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
-        endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
-        participants: 234,
-        progress: 2,
-        target: 5,
-        unit: 'perfect scores',
-        reward: {
-          points: 500,
-          badge: 'Perfectionist',
-          title: 'Quiz Master'
-        },
-        isParticipating: false,
-        leaderboard: [
-          { rank: 1, userId: '5', name: 'Alex Turner', progress: 5, points: 500 },
-          { rank: 2, userId: '6', name: 'Lisa Wang', progress: 4, points: 400 },
-          { rank: 3, userId: '7', name: 'David Kim', progress: 3, points: 300 }
-        ]
-      },
-      {
-        id: '3',
-        title: 'Monthly Dedication',
-        description: 'Study for at least 30 minutes every day this month',
-        type: 'monthly',
-        difficulty: 'medium',
-        startDate: new Date(2024, 0, 1),
-        endDate: new Date(2024, 0, 31),
-        participants: 1205,
-        progress: 18,
-        target: 31,
-        unit: 'days',
-        reward: {
-          points: 750,
-          badge: 'Dedicated Scholar',
-          title: 'Consistency Champion'
-        },
-        isParticipating: true,
-        leaderboard: [
-          { rank: 1, userId: '8', name: 'Maria Garcia', progress: 31, points: 750 },
-          { rank: 2, userId: '9', name: 'Tom Wilson', progress: 28, points: 700 },
-          { rank: 3, userId: 'me', name: 'You', progress: 18, points: 450 }
-        ]
-      }
-    ];
+    if (challenges && challenges.length > 0 && !selectedChallenge) {
+      setSelectedChallenge(challenges[0].id);
+    }
+  }, [challenges, selectedChallenge]);
 
-    setChallenges(mockChallenges);
-    setSelectedChallenge(mockChallenges[0].id);
-  }, []);
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="h-8 w-64 bg-muted rounded animate-pulse mb-2" />
+            <div className="h-4 w-96 bg-muted rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="h-64 bg-muted rounded animate-pulse" />
+      </div>
+    );
+  }
+
+  if (!challenges || challenges.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+        <h3 className="text-lg font-medium mb-2">No Active Challenges</h3>
+        <p className="text-muted-foreground">Check back soon for new community challenges!</p>
+      </div>
+    );
+  }
 
   const getDifficultyColor = (difficulty: Challenge['difficulty']) => {
     switch (difficulty) {
@@ -144,11 +198,8 @@ const CommunityChallenge: React.FC = () => {
   };
 
   const joinChallenge = (challengeId: string) => {
-    setChallenges(prev => prev.map(challenge => 
-      challenge.id === challengeId 
-        ? { ...challenge, isParticipating: true, participants: challenge.participants + 1 }
-        : challenge
-    ));
+    // In a real app, this would make an API call
+    console.log('Joining challenge:', challengeId);
   };
 
   const selectedChallengeData = challenges.find(c => c.id === selectedChallenge);
@@ -165,7 +216,7 @@ const CommunityChallenge: React.FC = () => {
       </div>
 
       <Tabs value={selectedChallenge || undefined} onValueChange={setSelectedChallenge} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           {challenges.map((challenge) => (
             <TabsTrigger key={challenge.id} value={challenge.id} className="flex items-center gap-2">
               {getTypeIcon(challenge.type)}

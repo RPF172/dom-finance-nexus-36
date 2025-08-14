@@ -28,11 +28,13 @@ interface LearningStats {
 interface LearningAnalyticsProps {
   stats: LearningStats;
   onSetWeeklyGoal: (minutes: number) => void;
+  isLoading?: boolean;
 }
 
 export const LearningAnalytics: React.FC<LearningAnalyticsProps> = ({
   stats,
-  onSetWeeklyGoal
+  onSetWeeklyGoal,
+  isLoading = false
 }) => {
   const [selectedTimeframe, setSelectedTimeframe] = useState<'week' | 'month' | 'all'>('week');
   
@@ -87,6 +89,24 @@ export const LearningAnalytics: React.FC<LearningAnalyticsProps> = ({
 
   const weeklyDistribution = getWeeklyDistribution();
   const insights = getProductivityInsights();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {/* Loading skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <div className="h-16 bg-muted rounded animate-pulse" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="h-64 bg-muted rounded animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
