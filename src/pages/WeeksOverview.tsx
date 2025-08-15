@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { EnhancedWeekCard } from '@/components/EnhancedWeekCard';
@@ -10,13 +10,17 @@ import { useWeeks } from '@/hooks/useWeeks';
 import { useAllWeekProgress, useWeekPrerequisites, useWeekProgressStats } from '@/hooks/useWeekProgress';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { TrendingUp, Clock, Trophy, BookOpen, Target, BarChart3 } from 'lucide-react';
+import { TrendingUp, Clock, Trophy, BookOpen, Target, BarChart3, Plus } from 'lucide-react';
+import { useAdminCheck } from '@/hooks/useAdminCheck';
+import ComprehensiveWeekCreatorModal from '@/components/admin/ComprehensiveWeekCreatorModal';
 
 export default function WeeksOverview() {
   const navigate = useNavigate();
-  const { data: weeks, isLoading: weeksLoading, error: weeksError } = useWeeks();
+  const { data: weeks, isLoading: weeksLoading, error: weeksError, refetch: refetchWeeks } = useWeeks();
   const { data: allProgress } = useAllWeekProgress();
   const { data: stats } = useWeekProgressStats();
+  const { data: isAdmin = false } = useAdminCheck();
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   if (weeksLoading) {
     return (
@@ -160,7 +164,15 @@ export default function WeeksOverview() {
 
         {/* All Weeks Grid */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">All Weeks</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">All Weeks</h2>
+            {isAdmin && (
+              <Button onClick={() => setShowCreateModal(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Week
+              </Button>
+            )}
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {weeks?.map(week => (
               <WeekCardWithPrerequisites
@@ -172,6 +184,16 @@ export default function WeeksOverview() {
             ))}
           </div>
         </div>
+        
+        {/* Admin Create Week Modal */}
+        <ComprehensiveWeekCreatorModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreated={() => {
+            refetchWeeks();
+            setShowCreateModal(false);
+          }}
+        />
       </div>
     </AppLayout>
   );
