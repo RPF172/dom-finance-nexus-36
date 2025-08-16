@@ -9,7 +9,9 @@ import {
   User, 
   DollarSign,
   Shield,
-  Trophy
+  Trophy,
+  Calendar,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,8 +27,10 @@ const navigationItems: NavItem[] = [
   // Main Dashboard
   { path: '/pledgehall', icon: Home, label: 'Dashboard', description: 'Your Hub', category: 'main' },
   
-  // Learning Hub (unified)
-  { path: '/learning-hub', icon: BookOpen, label: 'Learning Hub', description: 'Training & Stories', category: 'learning' },
+  // Learning Hub (updated with slide experience)
+  { path: '/modules', icon: Zap, label: 'Interactive Modules', description: 'Slide-based Training', category: 'learning' },
+  { path: '/learn', icon: Calendar, label: 'Training Weeks', description: 'Structured Learning', category: 'learning' },
+  { path: '/learning-hub', icon: BookOpen, label: 'Learning Hub', description: 'All Training Content', category: 'learning' },
   
   // Community  
   { path: '/social', icon: MessageSquare, label: 'Community', description: 'Social Feed', category: 'social' },

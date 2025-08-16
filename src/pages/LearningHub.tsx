@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Clock, BookOpen, Users, Calendar, TrendingUp, Award, ChevronRight, Play, Target, GraduationCap, Trophy } from 'lucide-react';
+import { Clock, BookOpen, Users, Calendar, TrendingUp, Award, ChevronRight, Play, Target, GraduationCap, Trophy, Zap } from 'lucide-react';
 import { useContentSequence, useFallbackMixedContent } from '@/hooks/useContentSequence';
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { useWeeks } from '@/hooks/useWeeks';
@@ -112,8 +112,55 @@ const LearningHub = () => {
                 </h1>
               </div>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Your unified learning experience - training weeks, story chapters, and progress tracking
+                Choose your training path: Interactive slide experiences or structured weekly learning
               </p>
+              
+              {/* Quick Navigation Cards */}
+              <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-8">
+                <Card 
+                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-destructive/50"
+                  onClick={() => navigate('/modules')}
+                >
+                  <CardHeader className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-destructive to-destructive/80 rounded-full flex items-center justify-center">
+                      <Zap className="h-8 w-8 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-institutional uppercase">
+                      Interactive Modules
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center space-y-4">
+                    <p className="text-muted-foreground">
+                      Experience immersive slide-based indoctrination with TikTok-style vertical scrolling, interactive tasks, and progress tracking.
+                    </p>
+                    <Badge variant="destructive" className="font-institutional uppercase">
+                      NEW SLIDE EXPERIENCE
+                    </Badge>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50"
+                  onClick={() => navigate('/learn')}
+                >
+                  <CardHeader className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center">
+                      <Calendar className="h-8 w-8 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-institutional uppercase">
+                      Training Weeks
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center space-y-4">
+                    <p className="text-muted-foreground">
+                      Follow structured weekly programs with modules, tasks, assignments, and review steps for comprehensive learning.
+                    </p>
+                    <Badge variant="secondary" className="font-institutional uppercase">
+                      STRUCTURED LEARNING
+                    </Badge>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
 
             {/* Learning Progress Overview Cards */}
@@ -313,7 +360,63 @@ const LearningHub = () => {
                   ))}
                   
                   {isChaptersLoadingMore && (
-                    <div className="space-y-8">
+        <div className="space-y-8">
+          {/* Hero Section with Navigation */}
+          <div className="text-center space-y-6">
+            <h1 className="text-4xl lg:text-5xl font-institutional uppercase tracking-wide bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+              Learning Hub
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Choose your training path: Interactive slide experiences or structured weekly learning
+            </p>
+            
+            {/* Quick Navigation Cards */}
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <Card 
+                className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-destructive/50"
+                onClick={() => navigate('/modules')}
+              >
+                <CardHeader className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-destructive to-destructive/80 rounded-full flex items-center justify-center">
+                    <Zap className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-2xl font-institutional uppercase">
+                    Interactive Modules
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center space-y-4">
+                  <p className="text-muted-foreground">
+                    Experience immersive slide-based indoctrination with TikTok-style vertical scrolling, interactive tasks, and progress tracking.
+                  </p>
+                  <Badge variant="destructive" className="font-institutional uppercase">
+                    NEW SLIDE EXPERIENCE
+                  </Badge>
+                </CardContent>
+              </Card>
+              
+              <Card 
+                className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50"
+                onClick={() => navigate('/learn')}
+              >
+                <CardHeader className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center">
+                    <Calendar className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-2xl font-institutional uppercase">
+                    Training Weeks
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center space-y-4">
+                  <p className="text-muted-foreground">
+                    Follow structured weekly programs with modules, tasks, assignments, and review steps for comprehensive learning.
+                  </p>
+                  <Badge variant="secondary" className="font-institutional uppercase">
+                    STRUCTURED LEARNING
+                  </Badge>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
                       {Array.from({ length: 3 }).map((_, index) => (
                         <ChapterSkeleton key={`skeleton-${index}`} />
                       ))}

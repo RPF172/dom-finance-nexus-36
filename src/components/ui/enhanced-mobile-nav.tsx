@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Users, Gamepad2, Menu, Bell, Search, User } from 'lucide-react';
+import { Home, BookOpen, Users, Gamepad2, Calendar, Menu, Bell, Search, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,7 +21,8 @@ interface NavItem {
 
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
   { href: '/pledgehall', icon: Home, label: 'Dashboard' },
-  { href: '/learning-hub', icon: BookOpen, label: 'Learning', gradient: true },
+  { href: '/modules', icon: BookOpen, label: 'Modules', gradient: true },
+  { href: '/learn', icon: Calendar, label: 'Weeks' },
   { href: '/community', icon: Users, label: 'Community' },
   { href: '/compete', icon: Gamepad2, label: 'Games' },
 ];
