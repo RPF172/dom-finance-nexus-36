@@ -12,6 +12,9 @@ import { useAdminCheck } from '@/hooks/useAdminCheck';
 import WeekEditorModal from './WeekEditorModal';
 import { SlideBuilder } from './SlideBuilder';
 import { useWeekSlides } from '@/hooks/useWeekSlides';
+import { useWeeks } from '@/hooks/useWeeks';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface AdminWeekSlideFABProps {
@@ -24,7 +27,22 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
   onWeekCreated,
 }) => {
   const { data: isAdmin } = useAdminCheck();
-  const { data: weeks } = useWeekSlides();
+  const { data: weeksWithSlides } = useWeekSlides();
+  const { data: allWeeks } = useWeeks();
+  
+  // Get available modules for slide editing
+  const { data: availableModules } = useQuery({
+    queryKey: ['available-modules-for-slides'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('modules')
+        .select('id, title, slug, has_slide_experience')
+        .eq('published', true);
+      
+      if (error) throw error;
+      return data;
+    }
+  });
   const [showWeekEditor, setShowWeekEditor] = useState(false);
   const [showSlideBuilder, setShowSlideBuilder] = useState(false);
   const [selectedWeekId, setSelectedWeekId] = useState<string>('');
@@ -32,8 +50,8 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
 
   if (!isAdmin) return null;
 
-  const selectedWeek = weeks?.find(w => w.id === selectedWeekId);
-  const availableModules = selectedWeek?.modules || [];
+  const selectedWeek = allWeeks?.find(w => w.id === selectedWeekId);
+  const linkedModules = weeksWithSlides?.find(w => w.id === selectedWeekId)?.modules || [];
 
   const handleSlideBuilderOpen = () => {
     if (currentModuleId) {
@@ -48,7 +66,7 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
     }
   };
 
-  const canShowSlideBuilder = currentModuleId || (selectedWeekId && selectedModuleId);
+  const canShowSlideBuilder = currentModuleId || (selectedModuleId && availableModules && availableModules.length > 0);
 
   return (
     <>
@@ -104,7 +122,7 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
                     <SelectValue placeholder="Select Week" />
                   </SelectTrigger>
                   <SelectContent className="bg-card border border-border">
-                    {weeks?.map(week => (
+                    {allWeeks?.map(week => (
                       <SelectItem key={week.id} value={week.id}>
                         Week {week.week_number}: {week.title}
                       </SelectItem>
@@ -112,20 +130,18 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
                   </SelectContent>
                 </Select>
 
-                {selectedWeekId && (
-                  <Select value={selectedModuleId} onValueChange={setSelectedModuleId}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue placeholder="Select Module" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-card border border-border">
-                      {availableModules.map(module => (
-                        <SelectItem key={module.id} value={module.id}>
-                          {module.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+                <Select value={selectedModuleId} onValueChange={setSelectedModuleId}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Select Module" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border border-border">
+                    {availableModules?.map(module => (
+                      <SelectItem key={module.id} value={module.id}>
+                        {module.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             )}
 
@@ -138,7 +154,10 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
 
             {!canShowSlideBuilder && !currentModuleId && (
               <div className="flex-1 flex items-center justify-center p-8 text-muted-foreground">
-                Please select a week and module to edit slides.
+                {!availableModules || availableModules.length === 0 
+                  ? "No modules with slide experience available. Create a module with slide experience enabled first."
+                  : "Please select a module to edit slides."
+                }
               </div>
             )}
           </div>
