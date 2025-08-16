@@ -74,15 +74,11 @@ export const EnhancedWeekSlideExperience: React.FC = () => {
           finalizeModule(moduleId);
         });
         
+        // Show completion message but don't auto-navigate
         toast({
           title: "Week Completed!",
           description: `Congratulations! You've completed ${currentWeek?.title || 'this week'}.`,
         });
-        
-        // Navigate back to learning hub
-        setTimeout(() => {
-          navigate('/learn');
-        }, 2000);
       }, 1500);
     }
   };

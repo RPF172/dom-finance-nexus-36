@@ -56,10 +56,7 @@ export const useCompleteSlide = () => {
     },
     onSuccess: (_, { moduleId }) => {
       queryClient.invalidateQueries({ queryKey: ['slide-progress', moduleId] });
-      toast({
-        title: "Progress Saved",
-        description: "Your progress has been recorded.",
-      });
+      // Silent progress saving - no toast to avoid interrupting the experience
     },
     onError: (error) => {
       toast({
