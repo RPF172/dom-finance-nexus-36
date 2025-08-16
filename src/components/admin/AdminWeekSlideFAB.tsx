@@ -112,13 +112,13 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
 
       {/* Slide Builder Modal */}
       <Dialog open={showSlideBuilder} onOpenChange={setShowSlideBuilder}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
-          <div className="flex flex-col h-full">
+        <DialogContent className="w-[95vw] max-w-6xl h-[95vh] max-h-[95vh] overflow-hidden p-0 md:p-6">
+          <div className="flex flex-col h-full p-4 md:p-0">
             {/* Module Selection (only if not pre-selected) */}
             {!currentModuleId && (
-              <div className="flex gap-4 mb-4 p-4 border-b">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4 p-2 sm:p-4 border-b">
                 <Select value={selectedWeekId} onValueChange={setSelectedWeekId}>
-                  <SelectTrigger className="w-48">
+                  <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="Select Week" />
                   </SelectTrigger>
                   <SelectContent className="bg-card border border-border">
@@ -131,7 +131,7 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
                 </Select>
 
                 <Select value={selectedModuleId} onValueChange={setSelectedModuleId}>
-                  <SelectTrigger className="w-48">
+                  <SelectTrigger className="w-full sm:w-48">
                     <SelectValue placeholder="Select Module" />
                   </SelectTrigger>
                   <SelectContent className="bg-card border border-border">
@@ -147,13 +147,13 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
 
             {/* Slide Builder */}
             {canShowSlideBuilder && (
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 overflow-auto">
                 <SlideBuilder moduleId={selectedModuleId} />
               </div>
             )}
 
             {!canShowSlideBuilder && !currentModuleId && (
-              <div className="flex-1 flex items-center justify-center p-8 text-muted-foreground">
+              <div className="flex-1 flex items-center justify-center p-4 sm:p-8 text-muted-foreground text-center text-sm sm:text-base">
                 {!availableModules || availableModules.length === 0 
                   ? "No modules with slide experience available. Create a module with slide experience enabled first."
                   : "Please select a module to edit slides."
