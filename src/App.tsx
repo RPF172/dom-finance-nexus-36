@@ -10,7 +10,8 @@ import Auth from "./pages/Auth";
 import PledgeHall from "./pages/PledgeHall";
 import BookReader from "./pages/BookReader";
 import ReadChapters from "./pages/ReadChapters";
-import LearnLessons from "./pages/LearnLessons";
+import { WeekBasedLearning } from "@/pages/WeekBasedLearning";
+import { WeekSlideExperience } from "@/pages/WeekSlideExperience";
 import LearningHub from "./pages/LearningHub";
 import WeeksOverview from "./pages/WeeksOverview";
 import WeekView from "./pages/WeekView";
@@ -49,9 +50,8 @@ const App = () => (
                 <Route path="/learning-hub" element={<ProtectedRoute><LearningHub /></ProtectedRoute>} />
                 <Route path="/doctrine" element={<ProtectedRoute><BookReader /></ProtectedRoute>} />
                 <Route path="/read" element={<ProtectedRoute><ReadChapters /></ProtectedRoute>} />
-                <Route path="/learn" element={<ProtectedRoute><WeeksOverview /></ProtectedRoute>} />
-                <Route path="/learn-lessons" element={<ProtectedRoute><LearnLessons /></ProtectedRoute>} />
-                <Route path="/modules" element={<ProtectedRoute><LearnLessons /></ProtectedRoute>} />
+                <Route path="/learn" element={<ProtectedRoute><WeekBasedLearning /></ProtectedRoute>} />
+        <Route path="/week/:weekId/experience" element={<ProtectedRoute><WeekSlideExperience /></ProtectedRoute>} />
                 <Route path="/learn/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
                 <Route path="/weeks/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
                 <Route path="/analytics" element={<ProtectedRoute><LearningAnalytics /></ProtectedRoute>} />

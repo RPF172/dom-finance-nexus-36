@@ -224,6 +224,13 @@ export type Database = {
             foreignKeyName: "assignments_week_id_fkey"
             columns: ["week_id"]
             isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["week_id"]
+          },
+          {
+            foreignKeyName: "assignments_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
             referencedRelation: "weeks"
             referencedColumns: ["id"]
           },
@@ -311,6 +318,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "modules"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chapters_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["module_id"]
           },
         ]
       }
@@ -415,6 +429,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "modules"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_sequence_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["module_id"]
           },
         ]
       }
@@ -729,6 +750,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "modules"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lessons_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["module_id"]
           },
         ]
       }
@@ -1224,6 +1252,13 @@ export type Database = {
             foreignKeyName: "review_steps_week_id_fkey"
             columns: ["week_id"]
             isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["week_id"]
+          },
+          {
+            foreignKeyName: "review_steps_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
             referencedRelation: "weeks"
             referencedColumns: ["id"]
           },
@@ -1457,6 +1492,13 @@ export type Database = {
             foreignKeyName: "submissions_week_id_fkey"
             columns: ["week_id"]
             isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["week_id"]
+          },
+          {
+            foreignKeyName: "submissions_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
             referencedRelation: "weeks"
             referencedColumns: ["id"]
           },
@@ -1536,6 +1578,13 @@ export type Database = {
           week_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "tasks_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["week_id"]
+          },
           {
             foreignKeyName: "tasks_week_id_fkey"
             columns: ["week_id"]
@@ -1720,6 +1769,33 @@ export type Database = {
         }
         Relationships: []
       }
+      week_module_links: {
+        Row: {
+          created_at: string
+          id: string
+          module_id: string
+          order_index: number
+          updated_at: string
+          week_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          module_id: string
+          order_index?: number
+          updated_at?: string
+          week_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          module_id?: string
+          order_index?: number
+          updated_at?: string
+          week_id?: string
+        }
+        Relationships: []
+      }
       week_modules: {
         Row: {
           content: string
@@ -1749,6 +1825,13 @@ export type Database = {
           week_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "week_modules_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["week_id"]
+          },
           {
             foreignKeyName: "week_modules_week_id_fkey"
             columns: ["week_id"]
@@ -1808,6 +1891,13 @@ export type Database = {
           week_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "week_progress_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "week_slides_view"
+            referencedColumns: ["week_id"]
+          },
           {
             foreignKeyName: "week_progress_week_id_fkey"
             columns: ["week_id"]
@@ -1885,6 +1975,27 @@ export type Database = {
           occurred_at: string | null
           title: string | null
           user_id: string | null
+        }
+        Relationships: []
+      }
+      week_slides_view: {
+        Row: {
+          module_id: string | null
+          module_order: number | null
+          module_slug: string | null
+          module_title: string | null
+          slide_body: string | null
+          slide_id: string | null
+          slide_interactive_config: Json | null
+          slide_media_url: string | null
+          slide_order: number | null
+          slide_required: boolean | null
+          slide_title: string | null
+          slide_type: string | null
+          week_description: string | null
+          week_id: string | null
+          week_number: number | null
+          week_title: string | null
         }
         Relationships: []
       }

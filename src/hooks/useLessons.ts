@@ -23,6 +23,8 @@ export interface Module {
   year_id: string;
   order_index: number;
   published: boolean;
+  completion_points?: number;
+  has_slide_experience?: boolean;
 }
 
 export interface Quiz {
