@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useWeekSlides } from '@/hooks/useWeekSlides';
-import { SlideRenderer } from '@/components/slides/SlideRenderer';
-import { OBEYButton } from '@/components/slides/OBEYButton';
+import { SlideScrollRenderer } from '@/components/slides/SlideScrollRenderer';
 import { SideProgressBar } from '@/components/slides/SideProgressBar';
+import { AdminWeekSlideFAB } from '@/components/admin/AdminWeekSlideFAB';
 import { useSlideProgress, useCompleteSlide } from '@/hooks/useSlideProgress';
 import { useSlideSubmission } from '@/hooks/useSlideSubmission';
 import { useFinalizeModule } from '@/hooks/useFinalizeModule';
@@ -17,57 +17,19 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 export const WeekSlideExperience: React.FC = () => {
   const { weekId } = useParams<{ weekId: string }>();
   const navigate = useNavigate();
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [canProceed, setCanProceed] = useState(false);
-  const [hasSubmittedInteractive, setHasSubmittedInteractive] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
 
   const { data: weeks, isLoading: weeksLoading } = useWeekSlides();
   const { data: slideProgress } = useSlideProgress(weekId || '');
-  const { mutate: completeSlide } = useCompleteSlide();
   const { mutate: submitSlide } = useSlideSubmission();
-  const { mutate: finalizeModule, isPending: isFinalizing } = useFinalizeModule();
 
   const currentWeek = weeks?.find(w => w.id === weekId);
   const allSlides = currentWeek?.modules.flatMap(m => m.slides) || [];
-  const currentSlide = allSlides[currentSlideIndex];
+  const moduleIds = currentWeek?.modules.map(m => m.id) || [];
 
   // Calculate progress
   const completedSlides = slideProgress?.filter(p => p.completed).length || 0;
   const progressPercentage = allSlides.length > 0 ? (completedSlides / allSlides.length) * 100 : 0;
-
-  // Check if user can proceed based on slide type and interaction
-  useEffect(() => {
-    if (!currentSlide) {
-      setCanProceed(false);
-      return;
-    }
-
-    const isCompleted = slideProgress?.some(p => p.slide_id === currentSlide.id && p.completed);
-    
-    if (isCompleted) {
-      setCanProceed(true);
-      return;
-    }
-
-    switch (currentSlide.type) {
-      case 'interactive':
-        setCanProceed(hasSubmittedInteractive);
-        break;
-      case 'command':
-      case 'visual':
-      case 'instruction':
-      case 'checkpoint':
-        // Auto-enable after a short delay
-        setTimeout(() => setCanProceed(true), 2000);
-        break;
-      case 'final':
-        setCanProceed(true);
-        break;
-      default:
-        setCanProceed(true);
-    }
-  }, [currentSlide, hasSubmittedInteractive, slideProgress]);
 
   // Hide intro animation
   useEffect(() => {
@@ -75,58 +37,14 @@ export const WeekSlideExperience: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if ((e.code === 'Space' || e.code === 'Enter') && canProceed) {
-        e.preventDefault();
-        handleNext();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [canProceed, currentSlideIndex]);
-
   const handleSubmission = (data: any) => {
-    if (!currentSlide) return;
-
     submitSlide({
-      moduleId: currentSlide.module_id,
-      slideId: currentSlide.id,
+      moduleId: data.moduleId,
+      slideId: data.slideId,
       textResponse: data.textResponse,
       mediaFile: data.mediaFile,
       metadata: data.metadata,
     });
-
-    setHasSubmittedInteractive(true);
-  };
-
-  const handleNext = () => {
-    if (!currentSlide || !canProceed) return;
-
-    // Mark current slide as complete
-    completeSlide({
-      moduleId: currentSlide.module_id,
-      slideId: currentSlide.id,
-    });
-
-    // Check if this is the last slide
-    if (currentSlideIndex >= allSlides.length - 1) {
-      // Finalize the modules in this week
-      const moduleIds = currentWeek?.modules.map(m => m.id) || [];
-      moduleIds.forEach(moduleId => {
-        finalizeModule(moduleId);
-      });
-      
-      navigate('/learn');
-      return;
-    }
-
-    // Move to next slide
-    setCurrentSlideIndex(prev => prev + 1);
-    setCanProceed(false);
-    setHasSubmittedInteractive(false);
   };
 
   const handleBack = () => {
@@ -200,38 +118,30 @@ export const WeekSlideExperience: React.FC = () => {
         <div className="flex items-center space-x-2 text-sm">
           <span className="text-muted-foreground">Week {currentWeek.week_number}</span>
           <Progress value={progressPercentage} className="w-32" />
-          <span className="text-muted-foreground">
-            {currentSlideIndex + 1}/{allSlides.length}
-          </span>
+           <span className="text-muted-foreground">
+             1/{allSlides.length}
+           </span>
         </div>
       </div>
 
       {/* Side Progress Bar */}
       <SideProgressBar
-        currentSlide={currentSlideIndex + 1}
+        currentSlide={1}
         totalSlides={allSlides.length}
       />
 
-      {/* Slide Content */}
-      {currentSlide && (
-        <SlideRenderer
-          slide={currentSlide}
+      {/* Scroll-based Slide Content */}
+      <div className="absolute inset-0 pt-16">
+        <SlideScrollRenderer
+          slides={allSlides}
+          moduleIds={moduleIds}
           onSubmission={handleSubmission}
-          currentIndex={currentSlideIndex}
-          totalSlides={allSlides.length}
+          weekTitle={currentWeek?.title}
         />
-      )}
+      </div>
 
-      {/* OBEY Button */}
-      {currentSlide && currentSlide.type !== 'final' && (
-        <div className="absolute bottom-8 right-8 z-40">
-          <OBEYButton
-            onClick={handleNext}
-            disabled={!canProceed || isFinalizing}
-            isLoading={isFinalizing}
-          />
-        </div>
-      )}
+      {/* Admin FAB */}
+      <AdminWeekSlideFAB currentModuleId={allSlides[0]?.module_id} />
     </div>
   );
 };
