@@ -110,7 +110,12 @@ const LearnLessons = () => {
 
   // Handle content click
   const handleContentClick = (item: any) => {
-    navigate(`/lesson/${item.content.id}`);
+    // Check if module has slide experience
+    if (item.content.has_slide_experience) {
+      navigate(`/modules/${item.content.id}/experience`);
+    } else {
+      navigate(`/lesson/${item.content.id}`);
+    }
   };
 
   // Admin: handle edit click

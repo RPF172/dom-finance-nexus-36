@@ -762,10 +762,54 @@ export type Database = {
         }
         Relationships: []
       }
+      module_slides: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          interactive_config: Json | null
+          media_url: string | null
+          module_id: string
+          order_index: number
+          required: boolean
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          interactive_config?: Json | null
+          media_url?: string | null
+          module_id: string
+          order_index?: number
+          required?: boolean
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          interactive_config?: Json | null
+          media_url?: string | null
+          module_id?: string
+          order_index?: number
+          required?: boolean
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       modules: {
         Row: {
+          completion_points: number | null
           created_at: string | null
           description: string | null
+          has_slide_experience: boolean | null
           id: string
           order_index: number
           published: boolean
@@ -775,8 +819,10 @@ export type Database = {
           year_id: string
         }
         Insert: {
+          completion_points?: number | null
           created_at?: string | null
           description?: string | null
+          has_slide_experience?: boolean | null
           id?: string
           order_index?: number
           published?: boolean
@@ -786,8 +832,10 @@ export type Database = {
           year_id: string
         }
         Update: {
+          completion_points?: number | null
           created_at?: string | null
           description?: string | null
+          has_slide_experience?: boolean | null
           id?: string
           order_index?: number
           published?: boolean
@@ -1180,6 +1228,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      slide_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          module_id: string
+          slide_id: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          module_id: string
+          slide_id: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          module_id?: string
+          slide_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      slide_submissions: {
+        Row: {
+          id: string
+          media_url: string | null
+          metadata: Json | null
+          module_id: string
+          slide_id: string
+          submitted_at: string
+          text_response: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          media_url?: string | null
+          metadata?: Json | null
+          module_id: string
+          slide_id: string
+          submitted_at?: string
+          text_response?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          media_url?: string | null
+          metadata?: Json | null
+          module_id?: string
+          slide_id?: string
+          submitted_at?: string
+          text_response?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       step_progress: {
         Row: {
@@ -1806,6 +1917,10 @@ export type Database = {
       check_week_prerequisites: {
         Args: { _user_id: string; _week_id: string }
         Returns: boolean
+      }
+      finalize_module_completion: {
+        Args: { _module_id: string; _user_id: string }
+        Returns: number
       }
       get_application_stats: {
         Args: Record<PropertyKey, never>
