@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 interface WeekEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreated: () => void;
+  onCreated: (weekId: string) => void;
 }
 
 const WeekEditorModal: React.FC<WeekEditorModalProps> = ({ isOpen, onClose, onCreated }) => {
@@ -32,11 +32,15 @@ const WeekEditorModal: React.FC<WeekEditorModalProps> = ({ isOpen, onClose, onCr
 
     setLoading(true);
     try {
-      const { error } = await supabase.from('weeks').insert({
-        week_number: weekNumber,
-        title: title.trim(),
-        description: description.trim(),
-      });
+      const { data, error } = await supabase
+        .from('weeks')
+        .insert({
+          week_number: weekNumber,
+          title: title.trim(),
+          description: description.trim(),
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
@@ -45,7 +49,7 @@ const WeekEditorModal: React.FC<WeekEditorModalProps> = ({ isOpen, onClose, onCr
         description: `Week ${weekNumber}: ${title} has been created successfully.`,
       });
 
-      onCreated();
+      onCreated(data.id);
       onClose();
       
       // Reset form

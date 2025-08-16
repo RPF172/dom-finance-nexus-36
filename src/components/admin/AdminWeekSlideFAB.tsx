@@ -82,9 +82,13 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
       <WeekEditorModal
         isOpen={showWeekEditor}
         onClose={() => setShowWeekEditor(false)}
-        onCreated={() => {
+        onCreated={(weekId) => {
           setShowWeekEditor(false);
           onWeekCreated?.();
+          // Auto-open slide builder with the newly created week
+          setSelectedWeekId(weekId);
+          setSelectedModuleId('');
+          setShowSlideBuilder(true);
         }}
       />
 
