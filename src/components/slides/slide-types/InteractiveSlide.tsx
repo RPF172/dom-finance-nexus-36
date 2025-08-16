@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ModuleSlide } from '@/hooks/useModuleSlides';
+import { SlideStage } from '../SlideStage';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ export const InteractiveSlide: React.FC<InteractiveSlideProps> = ({
   
   const config = slide.interactive_config;
   const taskType = config.task;
+  const mediaAspectRatio = config.aspectRatio || 'auto';
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -36,6 +38,8 @@ export const InteractiveSlide: React.FC<InteractiveSlideProps> = ({
     
     try {
       await onSubmission?.({
+        moduleId: slide.module_id,
+        slideId: slide.id,
         textResponse: textResponse || undefined,
         mediaFile: selectedFile || undefined,
         metadata: { taskType, config },
@@ -55,27 +59,48 @@ export const InteractiveSlide: React.FC<InteractiveSlideProps> = ({
     switch (taskType) {
       case 'repeat_text':
         return (
-          <div className="space-y-4">
-            <p className="text-lg text-muted-foreground text-center">
+          <div className="space-y-6">
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-xl text-muted-foreground text-center"
+            >
               Write "{config.text}" {config.times} times:
-            </p>
-            <Textarea
-              value={textResponse}
-              onChange={(e) => setTextResponse(e.target.value)}
-              placeholder={`${config.text}\n`.repeat(config.times)}
-              rows={Math.min(config.times + 2, 10)}
-              className="w-full text-lg resize-none"
-            />
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Textarea
+                value={textResponse}
+                onChange={(e) => setTextResponse(e.target.value)}
+                placeholder={`${config.text}\n`.repeat(config.times)}
+                rows={Math.min(config.times + 2, 10)}
+                className="w-full text-lg resize-none bg-background/80 backdrop-blur-sm"
+              />
+            </motion.div>
           </div>
         );
         
       case 'photo_upload':
         return (
-          <div className="space-y-4">
-            <p className="text-lg text-muted-foreground text-center">
+          <div className="space-y-6">
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-xl text-muted-foreground text-center"
+            >
               Upload proof of your obedience:
-            </p>
-            <div className="flex flex-col items-center space-y-4">
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-col items-center space-y-4"
+            >
               <input
                 type="file"
                 accept="image/*"
@@ -85,33 +110,41 @@ export const InteractiveSlide: React.FC<InteractiveSlideProps> = ({
               />
               <label
                 htmlFor="photo-upload"
-                className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-accent/20 transition-colors"
+                className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-accent/20 transition-all duration-300 bg-background/80 backdrop-blur-sm"
               >
                 {selectedFile ? (
                   <div className="text-center">
-                    <Camera className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <p className="text-sm font-medium">{selectedFile.name}</p>
+                    <Camera className="h-10 w-10 text-primary mx-auto mb-3" />
+                    <p className="text-base font-medium">{selectedFile.name}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Click to change</p>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Click to upload photo</p>
+                    <Upload className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-base text-muted-foreground">Click to upload photo</p>
+                    <p className="text-sm text-muted-foreground/70 mt-1">JPEG, PNG, or WebP</p>
                   </div>
                 )}
               </label>
-            </div>
+            </motion.div>
           </div>
         );
         
       default:
         return (
-          <Textarea
-            value={textResponse}
-            onChange={(e) => setTextResponse(e.target.value)}
-            placeholder="Enter your response..."
-            rows={6}
-            className="w-full text-lg"
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <Textarea
+              value={textResponse}
+              onChange={(e) => setTextResponse(e.target.value)}
+              placeholder="Enter your response..."
+              rows={6}
+              className="w-full text-lg bg-background/80 backdrop-blur-sm"
+            />
+          </motion.div>
         );
     }
   };
@@ -130,13 +163,20 @@ export const InteractiveSlide: React.FC<InteractiveSlideProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-8">
-      <div className="max-w-2xl w-full">
+    <SlideStage
+      mediaUrl={slide.media_url}
+      mediaAspectRatio={mediaAspectRatio}
+      backgroundType={slide.media_url ? "blur" : "solid"}
+      overlayIntensity={slide.media_url ? "medium" : "none"}
+      animation="slide"
+      className="w-full h-full"
+    >
+      <div className="max-w-3xl w-full">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-4xl md:text-6xl font-institutional font-bold uppercase tracking-wider text-destructive text-center mb-8"
+          className="text-3xl md:text-5xl lg:text-6xl font-institutional font-bold uppercase tracking-wider text-destructive text-center mb-6"
         >
           {slide.title}
         </motion.h1>
@@ -145,33 +185,33 @@ export const InteractiveSlide: React.FC<InteractiveSlideProps> = ({
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-xl text-foreground/80 text-center mb-8"
+            transition={{ delay: 0.3 }}
+            className="text-lg md:text-xl text-foreground/90 text-center mb-8 max-w-2xl mx-auto"
           >
             {slide.body}
           </motion.p>
         )}
         
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="space-y-6"
-        >
+        <div className="space-y-8">
           {renderTaskInput()}
           
-          <div className="flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="flex justify-center"
+          >
             <Button
               onClick={handleSubmit}
               disabled={!isValid() || isSubmitting}
               size="lg"
-              className="px-8 py-3 text-lg font-institutional uppercase tracking-wider"
+              className="px-8 py-4 text-lg font-institutional uppercase tracking-wider min-w-[200px]"
             >
               {isSubmitting ? 'Submitting...' : 'Submit Response'}
             </Button>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </SlideStage>
   );
 };
