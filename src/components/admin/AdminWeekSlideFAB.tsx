@@ -52,12 +52,12 @@ export const AdminWeekSlideFAB: React.FC<AdminWeekSlideFABProps> = ({
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-24 right-6 z-60 md:bottom-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               size="lg"
-              className="rounded-full w-14 h-14 shadow-lg bg-card border border-border hover:bg-accent z-50"
+              className="rounded-full w-14 h-14 shadow-lg bg-card border border-border hover:bg-accent"
             >
               <Plus className="w-6 h-6" />
             </Button>
