@@ -45,6 +45,8 @@ export const useCompleteSlide = () => {
           slide_id: slideId,
           completed: true,
           completed_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id,slide_id'
         })
         .select()
         .single();
