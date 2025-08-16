@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 interface WeekEditorModalProps {
   isOpen: boolean;
@@ -14,48 +18,101 @@ const WeekEditorModal: React.FC<WeekEditorModalProps> = ({ isOpen, onClose, onCr
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleCreate = async () => {
+    if (!title.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a title for the week.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
-    setError(null);
-    const { error } = await supabase.from('weeks').insert({
-      week_number: weekNumber,
-      title,
-      description,
-    });
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-    } else {
+    try {
+      const { error } = await supabase.from('weeks').insert({
+        week_number: weekNumber,
+        title: title.trim(),
+        description: description.trim(),
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Week Created",
+        description: `Week ${weekNumber}: ${title} has been created successfully.`,
+      });
+
       onCreated();
       onClose();
+      
+      // Reset form
+      setWeekNumber(1);
+      setTitle('');
+      setDescription('');
+    } catch (error: any) {
+      toast({
+        title: "Creation Failed",
+        description: error.message || "Failed to create week. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create New Week</DialogTitle>
+          <DialogTitle className="text-xl font-institutional uppercase tracking-wider">
+            Create New Week
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <label className="block mb-1 font-medium">Week Number</label>
-            <input type="number" min={1} value={weekNumber} onChange={e => setWeekNumber(Number(e.target.value))} className="input" />
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="weekNumber">Week Number</Label>
+            <Input
+              id="weekNumber"
+              type="number"
+              min={1}
+              value={weekNumber}
+              onChange={(e) => setWeekNumber(parseInt(e.target.value) || 1)}
+              placeholder="1"
+            />
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Title</label>
-            <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="input" />
+          
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter week title..."
+            />
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Description</label>
-            <textarea value={description} onChange={e => setDescription(e.target.value)} className="input" />
+          
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter week description..."
+              rows={3}
+            />
           </div>
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-          <Button onClick={handleCreate} disabled={loading} className="w-full">
-            {loading ? 'Creating...' : 'Create Week'}
-          </Button>
+          
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button variant="outline" onClick={onClose} disabled={loading}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreate} disabled={loading}>
+              {loading ? 'Creating...' : 'Create Week'}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -26,19 +26,29 @@ const navigationItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "Applications",
-    url: "/admin/applications",
+    title: "Week & Slides",
+    url: "/admin/week-slides",
+    icon: BookOpen,
+  },
+  {
+    title: "Week-Module Links",
+    url: "/admin/week-modules",
+    icon: FileText,
+  },
+  {
+    title: "Content",
+    url: "/admin/content",
+    icon: BookOpen,
+  },
+  {
+    title: "Modules",
+    url: "/admin/content/modules",
     icon: FileText,
   },
   {
     title: "Students",
     url: "/admin/students",
     icon: Users,
-  },
-  {
-    title: "Content",
-    url: "/admin/content",
-    icon: BookOpen,
   },
   {
     title: "Tributes",

@@ -7,6 +7,7 @@ import AdminDashboard from "@/components/admin/AdminDashboard";
 import LessonList from "@/components/admin/content/LessonList";
 import LessonEditor from "@/components/admin/content/LessonEditor";
 import { WeekModuleManager } from '@/components/admin/WeekModuleManager';
+import { WeekSlideManager } from '@/components/admin/WeekSlideManager';
 import ModuleManager from "@/components/admin/content/ModuleManager";
 
 const Admin = () => {
@@ -77,6 +78,7 @@ const Admin = () => {
     <AdminLayout>
       <Routes>
         <Route index element={<AdminDashboard />} />
+        <Route path="week-slides" element={<WeekSlideManager />} />
         <Route path="week-modules" element={<WeekModuleManager />} />
         <Route path="content" element={<LessonList />} />
         <Route path="content/new" element={<LessonEditor />} />

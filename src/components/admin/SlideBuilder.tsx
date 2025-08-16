@@ -70,7 +70,52 @@ const slideTypeTemplates = {
 export const SlideBuilder: React.FC<SlideBuilderProps> = ({ moduleId, onSave }) => {
   const [slides, setSlides] = useState<SlideData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSlides, setIsLoadingSlides] = useState(true);
   const { toast } = useToast();
+
+  // Load existing slides when component mounts
+  React.useEffect(() => {
+    const loadExistingSlides = async () => {
+      if (!moduleId) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('module_slides')
+          .select('*')
+          .eq('module_id', moduleId)
+          .order('order_index');
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          const loadedSlides: SlideData[] = data.map(slide => ({
+            id: slide.id,
+            type: slide.type as SlideData['type'],
+            title: slide.title,
+            body: slide.body || '',
+            media_url: slide.media_url || '',
+            interactive_config: (typeof slide.interactive_config === 'object' && slide.interactive_config !== null) 
+              ? slide.interactive_config as Record<string, any>
+              : {},
+            required: slide.required,
+            order_index: slide.order_index,
+          }));
+          setSlides(loadedSlides);
+        }
+      } catch (error) {
+        console.error('Error loading slides:', error);
+        toast({
+          title: "Loading Error",
+          description: "Failed to load existing slides.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingSlides(false);
+      }
+    };
+
+    loadExistingSlides();
+  }, [moduleId, toast]);
 
   const addSlide = (type: keyof typeof slideTypeTemplates) => {
     const template = slideTypeTemplates[type];
@@ -184,179 +229,188 @@ export const SlideBuilder: React.FC<SlideBuilderProps> = ({ moduleId, onSave }) 
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-institutional uppercase tracking-wider">
-          Slide Builder
-        </h2>
-        <div className="flex items-center space-x-2">
-          <Button onClick={saveSlides} disabled={isLoading} size="sm">
-            <Save className="h-4 w-4 mr-2" />
-            {isLoading ? 'Saving...' : 'Save All Slides'}
-          </Button>
+      {isLoadingSlides ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground mt-2">Loading existing slides...</p>
         </div>
-      </div>
-
-      {/* Add Slide Templates */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Add New Slide</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {Object.entries(slideTypeTemplates).map(([type, template]) => (
-              <Button
-                key={type}
-                variant="outline"
-                size="sm"
-                onClick={() => addSlide(type as keyof typeof slideTypeTemplates)}
-                className="h-auto p-3 flex flex-col items-start"
-              >
-                <Badge variant="secondary" className="mb-1 text-xs">
-                  {type}
-                </Badge>
-                <span className="text-xs text-left font-normal">
-                  {template.title.substring(0, 30)}...
-                </span>
+      ) : (
+        <>
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-institutional uppercase tracking-wider">
+              Slide Builder
+            </h2>
+            <div className="flex items-center space-x-2">
+              <Button onClick={saveSlides} disabled={isLoading} size="sm">
+                <Save className="h-4 w-4 mr-2" />
+                {isLoading ? 'Saving...' : 'Save All Slides'}
               </Button>
+            </div>
+          </div>
+
+          {/* Add Slide Templates */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Add New Slide</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {Object.entries(slideTypeTemplates).map(([type, template]) => (
+                  <Button
+                    key={type}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addSlide(type as keyof typeof slideTypeTemplates)}
+                    className="h-auto p-3 flex flex-col items-start"
+                  >
+                    <Badge variant="secondary" className="mb-1 text-xs">
+                      {type}
+                    </Badge>
+                    <span className="text-xs text-left font-normal">
+                      {template.title.substring(0, 30)}...
+                    </span>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Slides List */}
+          <div className="space-y-4">
+            {slides.map((slide, index) => (
+              <motion.div
+                key={slide.id || index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <GripVertical className="h-4 w-4 text-muted-foreground cursor-move" />
+                        <Badge variant={slide.type === 'final' ? 'destructive' : 'secondary'}>
+                          {slide.type}
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">
+                          Slide {index + 1}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeSlide(index)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label>Title</Label>
+                      <Input
+                        value={slide.title}
+                        onChange={(e) => updateSlide(index, { title: e.target.value })}
+                        placeholder="Slide title..."
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Content</Label>
+                      <Textarea
+                        value={slide.body}
+                        onChange={(e) => updateSlide(index, { body: e.target.value })}
+                        placeholder="Slide content..."
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Media URL (optional)</Label>
+                      <Input
+                        value={slide.media_url}
+                        onChange={(e) => updateSlide(index, { media_url: e.target.value })}
+                        placeholder="https://..."
+                      />
+                    </div>
+
+                    {slide.type === 'interactive' && (
+                      <div className="border-t pt-4">
+                        <Label className="text-sm font-medium">Interactive Configuration</Label>
+                        <div className="grid grid-cols-2 gap-3 mt-2">
+                          <div>
+                            <Label className="text-xs">Task Type</Label>
+                            <Select
+                              value={slide.interactive_config.task || 'repeat_text'}
+                              onValueChange={(value) => updateSlide(index, {
+                                interactive_config: { ...slide.interactive_config, task: value }
+                              })}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="repeat_text">Repeat Text</SelectItem>
+                                <SelectItem value="photo_upload">Photo Upload</SelectItem>
+                                <SelectItem value="free_response">Free Response</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          {slide.interactive_config.task === 'repeat_text' && (
+                            <>
+                              <div>
+                                <Label className="text-xs">Text to Repeat</Label>
+                                <Input
+                                  value={slide.interactive_config.text || ''}
+                                  onChange={(e) => updateSlide(index, {
+                                    interactive_config: { ...slide.interactive_config, text: e.target.value }
+                                  })}
+                                  placeholder="I am property"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Repetitions</Label>
+                                <Input
+                                  type="number"
+                                  value={slide.interactive_config.times || 1}
+                                  onChange={(e) => updateSlide(index, {
+                                    interactive_config: { ...slide.interactive_config, times: parseInt(e.target.value) }
+                                  })}
+                                  min={1}
+                                  max={50}
+                                />
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={slide.required}
+                        onCheckedChange={(checked) => updateSlide(index, { required: checked })}
+                      />
+                      <Label className="text-sm">Required for progression</Label>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Slides List */}
-      <div className="space-y-4">
-        {slides.map((slide, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <GripVertical className="h-4 w-4 text-muted-foreground cursor-move" />
-                    <Badge variant={slide.type === 'final' ? 'destructive' : 'secondary'}>
-                      {slide.type}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">
-                      Slide {index + 1}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeSlide(index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Title</Label>
-                  <Input
-                    value={slide.title}
-                    onChange={(e) => updateSlide(index, { title: e.target.value })}
-                    placeholder="Slide title..."
-                  />
-                </div>
-                
-                <div>
-                  <Label>Content</Label>
-                  <Textarea
-                    value={slide.body}
-                    onChange={(e) => updateSlide(index, { body: e.target.value })}
-                    placeholder="Slide content..."
-                    rows={4}
-                  />
-                </div>
-                
-                <div>
-                  <Label>Media URL (optional)</Label>
-                  <Input
-                    value={slide.media_url}
-                    onChange={(e) => updateSlide(index, { media_url: e.target.value })}
-                    placeholder="https://..."
-                  />
-                </div>
-
-                {slide.type === 'interactive' && (
-                  <div className="border-t pt-4">
-                    <Label className="text-sm font-medium">Interactive Configuration</Label>
-                    <div className="grid grid-cols-2 gap-3 mt-2">
-                      <div>
-                        <Label className="text-xs">Task Type</Label>
-                        <Select
-                          value={slide.interactive_config.task || 'repeat_text'}
-                          onValueChange={(value) => updateSlide(index, {
-                            interactive_config: { ...slide.interactive_config, task: value }
-                          })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="repeat_text">Repeat Text</SelectItem>
-                            <SelectItem value="photo_upload">Photo Upload</SelectItem>
-                            <SelectItem value="free_response">Free Response</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {slide.interactive_config.task === 'repeat_text' && (
-                        <>
-                          <div>
-                            <Label className="text-xs">Text to Repeat</Label>
-                            <Input
-                              value={slide.interactive_config.text || ''}
-                              onChange={(e) => updateSlide(index, {
-                                interactive_config: { ...slide.interactive_config, text: e.target.value }
-                              })}
-                              placeholder="I am property"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Repetitions</Label>
-                            <Input
-                              type="number"
-                              value={slide.interactive_config.times || 1}
-                              onChange={(e) => updateSlide(index, {
-                                interactive_config: { ...slide.interactive_config, times: parseInt(e.target.value) }
-                              })}
-                              min={1}
-                              max={50}
-                            />
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    checked={slide.required}
-                    onCheckedChange={(checked) => updateSlide(index, { required: checked })}
-                  />
-                  <Label className="text-sm">Required for progression</Label>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {slides.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <Eye className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p className="text-lg">No slides created yet</p>
-          <p className="text-sm">Use the templates above to create your first slide</p>
-        </div>
+          {slides.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              <Eye className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p className="text-lg">No slides created yet</p>
+              <p className="text-sm">Use the templates above to create your first slide</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
