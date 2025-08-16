@@ -1,26 +1,36 @@
 import React, { useState } from 'react';
-import { Plus, Settings, Eye, Trash2 } from 'lucide-react';
+import { Plus, Settings, Eye, Trash2, ArrowUp, ArrowDown, Link, Unlink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useWeeks } from '@/hooks/useWeeks';
-import { useWeekModuleLinks } from '@/hooks/useWeekModuleLinks';
+import { useWeekModuleLinks, useCreateWeekModuleLink, useDeleteWeekModuleLink, useUpdateWeekModuleLinkOrder } from '@/hooks/useWeekModuleLinks';
 import { useModules } from '@/hooks/useLessons';
 import { useModuleSlides } from '@/hooks/useModuleSlides';
 import { SlideBuilder } from './SlideBuilder';
 import WeekEditorModal from './WeekEditorModal';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useToast } from '@/hooks/use-toast';
 
 export const WeekSlideManager: React.FC = () => {
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [showWeekModal, setShowWeekModal] = useState(false);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [selectedModuleForLink, setSelectedModuleForLink] = useState<string>('');
   const [activeTab, setActiveTab] = useState('weeks');
 
   const { data: weeks, refetch: refetchWeeks } = useWeeks();
   const { data: modules } = useModules();
   const { data: weekModuleLinks } = useWeekModuleLinks(selectedWeek || undefined);
   const { data: moduleSlides } = useModuleSlides(selectedModule || '');
+  const { mutate: createLink, isPending: creating } = useCreateWeekModuleLink();
+  const { mutate: deleteLink } = useDeleteWeekModuleLink();
+  const { mutate: updateOrder } = useUpdateWeekModuleLinkOrder();
+  const { toast } = useToast();
 
   const linkedModules = weekModuleLinks?.map(link => 
     modules?.find(module => module.id === link.module_id)
@@ -29,6 +39,39 @@ export const WeekSlideManager: React.FC = () => {
   const handleWeekCreated = () => {
     refetchWeeks();
     setShowWeekModal(false);
+  };
+
+  const handleCreateLink = () => {
+    if (!selectedWeek || !selectedModuleForLink) {
+      toast({
+        title: "Missing Selection",
+        description: "Please select a module to link.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const nextOrder = weekModuleLinks?.length || 0;
+    createLink({ 
+      weekId: selectedWeek, 
+      moduleId: selectedModuleForLink, 
+      orderIndex: nextOrder 
+    });
+
+    setSelectedModuleForLink('');
+    setShowLinkDialog(false);
+  };
+
+  const handleMoveUp = (linkId: string, currentOrder: number) => {
+    if (currentOrder > 0) {
+      updateOrder({ linkId, orderIndex: currentOrder - 1 });
+    }
+  };
+
+  const handleMoveDown = (linkId: string, currentOrder: number, maxOrder: number) => {
+    if (currentOrder < maxOrder) {
+      updateOrder({ linkId, orderIndex: currentOrder + 1 });
+    }
   };
 
   return (
@@ -65,9 +108,9 @@ export const WeekSlideManager: React.FC = () => {
                     <CardTitle className="text-lg">
                       Week {week.week_number}
                     </CardTitle>
-                    <Badge variant="outline">
-                      {weekModuleLinks?.length || 0} modules
-                    </Badge>
+                     <Badge variant="outline">
+                       {selectedWeek === week.id ? weekModuleLinks?.length || 0 : 0} modules
+                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -122,50 +165,123 @@ export const WeekSlideManager: React.FC = () => {
                 <h2 className="text-xl font-semibold">
                   Modules for Week {weeks?.find(w => w.id === selectedWeek)?.week_number}
                 </h2>
+                <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Link Module
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Link Module to Week</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium">Select Module</label>
+                        <Select value={selectedModuleForLink} onValueChange={setSelectedModuleForLink}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Choose a module..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {modules?.filter(m => m.published && m.has_slide_experience && !weekModuleLinks?.some(l => l.module_id === m.id)).map((module) => (
+                              <SelectItem key={module.id} value={module.id}>
+                                {module.title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setShowLinkDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleCreateLink} disabled={creating}>
+                          {creating ? <LoadingSpinner size="sm" /> : <Link className="w-4 h-4 mr-2" />}
+                          Link Module
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
               
-              <div className="grid gap-4">
-                {linkedModules.map((module) => (
-                  <Card key={module?.id}>
-                    <CardContent className="py-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{module?.title}</h3>
+              <div className="space-y-2">
+                {weekModuleLinks?.map((link, index) => {
+                  const module = modules?.find(m => m.id === link.module_id);
+                  if (!module) return null;
+
+                  return (
+                    <div
+                      key={link.id}
+                      className="flex items-center justify-between p-4 bg-muted/50 rounded-lg"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="outline" className="w-8 text-center">
+                          {index + 1}
+                        </Badge>
+                        <div>
+                          <h3 className="font-semibold">{module.title}</h3>
                           <p className="text-sm text-muted-foreground">
-                            {module?.description}
+                            {module.description}
                           </p>
-                          <div className="flex items-center mt-2 space-x-2">
-                            <Badge variant={module?.has_slide_experience ? 'default' : 'secondary'}>
-                              {module?.has_slide_experience ? 'Has Slides' : 'No Slides'}
+                          <div className="flex items-center mt-1 space-x-2">
+                            <Badge variant={module.has_slide_experience ? 'default' : 'secondary'}>
+                              {module.has_slide_experience ? 'Has Slides' : 'No Slides'}
                             </Badge>
                             <Badge variant="outline">
-                              {module?.completion_points} points
+                              {module.completion_points} OP
                             </Badge>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedModule(module?.id || null);
-                              setActiveTab('slides');
-                            }}
-                          >
-                            <Settings className="h-4 w-4 mr-1" />
-                            Edit Slides
-                          </Button>
-                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
+
+                      <div className="flex items-center space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleMoveUp(link.id, link.order_index)}
+                          disabled={index === 0}
+                        >
+                          <ArrowUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleMoveDown(link.id, link.order_index, (weekModuleLinks?.length || 1) - 1)}
+                          disabled={index === (weekModuleLinks?.length || 1) - 1}
+                        >
+                          <ArrowDown className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedModule(module.id);
+                            setActiveTab('slides');
+                          }}
+                        >
+                          <Settings className="h-4 w-4 mr-1" />
+                          Edit Slides
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteLink(link.id)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Unlink className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
                 
-                {linkedModules.length === 0 && (
+                {(!weekModuleLinks || weekModuleLinks.length === 0) && (
                   <Card>
                     <CardContent className="py-8 text-center">
                       <p className="text-muted-foreground">
-                        No modules linked to this week yet. Use the Week-Module Manager to add modules.
+                        No modules linked to this week yet. Click "Link Module" to add one.
                       </p>
                     </CardContent>
                   </Card>
