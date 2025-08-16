@@ -27,9 +27,8 @@ const navigationItems: NavItem[] = [
   // Main Dashboard
   { path: '/pledgehall', icon: Home, label: 'Dashboard', description: 'Your Hub', category: 'main' },
   
-  // Learning Hub (updated with slide experience)
-  { path: '/modules', icon: Zap, label: 'Interactive Modules', description: 'Slide-based Training', category: 'learning' },
-  { path: '/learn', icon: Calendar, label: 'Training Weeks', description: 'Structured Learning', category: 'learning' },
+  // Learning Hub (consolidated slide experience)
+  { path: '/learn', icon: Calendar, label: 'Learning Path', description: 'Week-based Training', category: 'learning' },
   { path: '/learning-hub', icon: BookOpen, label: 'Learning Hub', description: 'All Training Content', category: 'learning' },
   
   // Community  

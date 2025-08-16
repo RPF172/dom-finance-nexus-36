@@ -21,8 +21,7 @@ interface NavItem {
 
 const getNavItems = (isAuthenticated: boolean): NavItem[] => [
   { href: '/pledgehall', icon: Home, label: 'Dashboard' },
-  { href: '/modules', icon: BookOpen, label: 'Modules', gradient: true },
-  { href: '/learn', icon: Calendar, label: 'Weeks' },
+  { href: '/learn', icon: BookOpen, label: 'Learn' },
   { href: '/community', icon: Users, label: 'Community' },
   { href: '/compete', icon: Gamepad2, label: 'Games' },
 ];

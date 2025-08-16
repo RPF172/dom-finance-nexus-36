@@ -13,11 +13,8 @@ import ReadChapters from "./pages/ReadChapters";
 import { WeekBasedLearning } from "@/pages/WeekBasedLearning";
 import { WeekSlideExperience } from "@/pages/WeekSlideExperience";
 import LearningHub from "./pages/LearningHub";
-import WeeksOverview from "./pages/WeeksOverview";
-import WeekView from "./pages/WeekView";
 import LearningAnalytics from "./pages/LearningAnalytics";
 import LessonView from "./pages/LessonView";
-import ModuleExperience from "./pages/ModuleExperience";
 import { ChapterView } from "./pages/ChapterView";
 import Assignments from "./pages/Assignments";
 import Tribute from "./pages/Tribute";
@@ -51,12 +48,9 @@ const App = () => (
                 <Route path="/doctrine" element={<ProtectedRoute><BookReader /></ProtectedRoute>} />
                 <Route path="/read" element={<ProtectedRoute><ReadChapters /></ProtectedRoute>} />
                 <Route path="/learn" element={<ProtectedRoute><WeekBasedLearning /></ProtectedRoute>} />
-        <Route path="/week/:weekId/experience" element={<ProtectedRoute><WeekSlideExperience /></ProtectedRoute>} />
-                <Route path="/learn/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
-                <Route path="/weeks/:weekId" element={<ProtectedRoute><WeekView /></ProtectedRoute>} />
+                <Route path="/week/:weekId/experience" element={<ProtectedRoute><WeekSlideExperience /></ProtectedRoute>} />
                 <Route path="/analytics" element={<ProtectedRoute><LearningAnalytics /></ProtectedRoute>} />
                 <Route path="/lesson/:id" element={<ProtectedRoute><LessonView /></ProtectedRoute>} />
-                <Route path="/modules/:moduleId/experience" element={<ProtectedRoute><ModuleExperience /></ProtectedRoute>} />
                 <Route path="/chapter/:chapterId" element={<ProtectedRoute><ChapterView /></ProtectedRoute>} />
                 <Route path="/assignments" element={<ProtectedRoute><Assignments /></ProtectedRoute>} />
                 <Route path="/tribute" element={<ProtectedRoute><Tribute /></ProtectedRoute>} />

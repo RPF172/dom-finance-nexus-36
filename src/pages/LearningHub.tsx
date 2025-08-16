@@ -8,7 +8,6 @@ import { useContentSequence, useFallbackMixedContent } from '@/hooks/useContentS
 import { useAllUserProgress } from '@/hooks/useProgress';
 import { useWeeks } from '@/hooks/useWeeks';
 import { ContentCard } from '@/components/ContentCard';
-import { WeekCard } from '@/components/WeekCard';
 import { ChapterSkeleton } from '@/components/ChapterSkeleton';
 import { useInfiniteChapters } from '@/hooks/useInfiniteChapters';
 import { ContentManagerFAB } from '@/components/admin/ContentManagerFAB';
@@ -117,25 +116,25 @@ const LearningHub = () => {
               
               {/* Quick Navigation Cards */}
               <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-8">
-                <Card 
-                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-destructive/50"
-                  onClick={() => navigate('/modules')}
-                >
+                  <Card 
+                    className="group cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50"
+                    onClick={() => navigate('/learn')}
+                  >
                   <CardHeader className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-destructive to-destructive/80 rounded-full flex items-center justify-center">
-                      <Zap className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="text-2xl font-institutional uppercase">
-                      Interactive Modules
-                    </CardTitle>
+                      <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center">
+                        <Calendar className="h-8 w-8 text-white" />
+                      </div>
+                      <CardTitle className="text-2xl font-institutional uppercase">
+                        Learning Path
+                      </CardTitle>
                   </CardHeader>
                   <CardContent className="text-center space-y-4">
-                    <p className="text-muted-foreground">
-                      Experience immersive slide-based indoctrination with TikTok-style vertical scrolling, interactive tasks, and progress tracking.
-                    </p>
-                    <Badge variant="destructive" className="font-institutional uppercase">
-                      NEW SLIDE EXPERIENCE
-                    </Badge>
+                      <p className="text-muted-foreground">
+                        Experience immersive slide-based indoctrination with week-structured content, interactive tasks, and comprehensive progress tracking.
+                      </p>
+                      <Badge variant="default" className="font-institutional uppercase">
+                        SLIDE EXPERIENCE
+                      </Badge>
                   </CardContent>
                 </Card>
                 
@@ -238,7 +237,7 @@ const LearningHub = () => {
                       <p className="font-medium">{nextWeek.title}</p>
                       <p className="text-sm text-muted-foreground">{nextWeek.objective || 'Continue your training'}</p>
                       <button
-                        onClick={() => navigate(`/learn/${nextWeek.id}`)}
+                        onClick={() => navigate(`/week/${nextWeek.id}/experience`)}
                         className="w-full bg-primary text-primary-foreground py-2 rounded-md hover:bg-primary/90 transition-colors font-medium"
                       >
                         Continue Week {nextWeek.week_number}
@@ -295,12 +294,28 @@ const LearningHub = () => {
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Recent Training</h3>
                     {weeks?.slice(0, 3).map((week) => (
-                      <WeekCard
+                      <Card 
                         key={week.id}
-                        week={week}
-                        onClick={() => navigate(`/learn/${week.id}`)}
-                        className="hover:border-primary/50"
-                      />
+                        className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-primary/50"
+                        onClick={() => navigate(`/week/${week.id}/experience`)}
+                      >
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <Badge variant="secondary" className="text-xs font-mono">
+                              Week {week.week_number}
+                            </Badge>
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                          <CardTitle className="text-lg font-institutional uppercase">
+                            {week.title}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {week.description}
+                          </p>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
 
@@ -325,12 +340,28 @@ const LearningHub = () => {
               <TabsContent value="training" className="space-y-6 mt-6">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {weeks?.map((week) => (
-                    <WeekCard
+                    <Card 
                       key={week.id}
-                      week={week}
-                      onClick={() => navigate(`/learn/${week.id}`)}
-                      className="hover:border-primary/50"
-                    />
+                      className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-primary/50"
+                      onClick={() => navigate(`/week/${week.id}/experience`)}
+                    >
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <Badge variant="secondary" className="text-xs font-mono">
+                            Week {week.week_number}
+                          </Badge>
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <CardTitle className="text-lg font-institutional uppercase">
+                          {week.title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {week.description}
+                        </p>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
 

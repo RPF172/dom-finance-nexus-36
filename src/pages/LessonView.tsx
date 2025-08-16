@@ -9,7 +9,6 @@ import { useLesson, useQuizzes } from '@/hooks/useLessons';
 import { useUserProgress, useUpdateProgress } from '@/hooks/useProgress';
 import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/layout/AppLayout';
-import { LessonReader } from '@/components/LessonReader';
 
 interface Progress {
   lesson_id: string;
@@ -66,59 +65,79 @@ const LessonView = () => {
     );
   }
 
-  const handleProgressUpdate = (newProgress: Progress) => {
-    updateProgress.mutate(newProgress);
-  };
-
   const handleBack = () => {
-    navigate('/read-chapters');
+    navigate('/read');
   };
 
   return (
     <AppLayout>
-      {activeView === 'reader' ? (
-        <LessonReader
-          lesson={lesson}
-          progress={progress as any || null}
-          onBack={handleBack}
-          onProgressUpdate={handleProgressUpdate}
-        />
-      ) : (
-        <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-4 py-6">
-            <div className="max-w-4xl mx-auto">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setActiveView('reader')}
-                className="mb-6"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Reader
-              </Button>
-              
-              <Card>
-                <CardHeader>
-                  <h1 className="text-2xl font-institutional uppercase tracking-wide">
-                    {activeView === 'quiz' && 'Knowledge Test'}
-                    {activeView === 'assignment' && 'Assignment Submission'}
-                    {activeView === 'ritual' && 'Ritual Completion'}
-                  </h1>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-12">
-                    <div className="text-lg text-muted-foreground">
-                      {activeView === 'quiz' && 'Quiz functionality coming soon...'}
-                      {activeView === 'assignment' && 'Assignment submission coming soon...'}
-                      {activeView === 'ritual' && 'Ritual completion coming soon...'}
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6">
+          <div className="max-w-4xl mx-auto">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBack}
+              className="mb-6"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Chapters
+            </Button>
+            
+            <Card>
+              <CardHeader>
+                <h1 className="text-2xl font-institutional uppercase tracking-wide">
+                  {lesson.title}
+                </h1>
+                <div className="flex items-center gap-4 mt-4">
+                  <Badge variant="secondary">
+                    <Clock className="h-3 w-3 mr-1" />
+                    {lesson.estimated_time || 45} min
+                  </Badge>
+                  <Badge variant="outline">
+                    <BookOpen className="h-3 w-3 mr-1" />
+                    Lesson
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="prose prose-lg max-w-none">
+                  {lesson.body_text ? (
+                    <div dangerouslySetInnerHTML={{ __html: lesson.body_text }} />
+                  ) : (
+                    <p className="text-muted-foreground">No content available for this lesson.</p>
+                  )}
+                </div>
+
+                {/* Progress Tracking */}
+                <div className="mt-8 pt-6 border-t">
+                  <h3 className="text-lg font-semibold mb-4">Complete this lesson:</h3>
+                  <div className="grid gap-3">
+                    <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                      <span>Read Content</span>
+                      <CheckCircle className="h-5 w-5 text-primary" />
                     </div>
+                    
+                    {lesson.assignment_text && (
+                      <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                        <span>Complete Assignment</span>
+                        <div className="text-sm text-muted-foreground">Coming Soon</div>
+                      </div>
+                    )}
+                    
+                    {lesson.ritual_text && (
+                      <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                        <span>Complete Ritual</span>
+                        <div className="text-sm text-muted-foreground">Coming Soon</div>
+                      </div>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      )}
+      </div>
     </AppLayout>
   );
 };
