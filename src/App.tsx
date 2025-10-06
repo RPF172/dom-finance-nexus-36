@@ -28,6 +28,7 @@ import Compete from "./pages/Compete";
 import TypingTrial from "./pages/games/TypingTrial";
 import { LearningExperience } from "./pages/LearningExperience";
 import CommunityHub from "./pages/CommunityHub";
+import { FieldManual } from "./pages/FieldManual";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
                 <Route path="/learning-experience" element={<ProtectedRoute><LearningExperience /></ProtectedRoute>} />
                 <Route path="/learning-experience/:id" element={<ProtectedRoute><LearningExperience /></ProtectedRoute>} />
                 <Route path="/community" element={<ProtectedRoute><CommunityHub /></ProtectedRoute>} />
+                <Route path="/field-manual" element={<FieldManual />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rakkas&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -60,6 +61,13 @@
     --obsidian-grey: 0 0% 8%;
     --steel-silver: 0 0% 85%;
     --ritual-crimson: 356 80% 50%;
+    
+    /* Field Manual Colors */
+    --alpha-black: 0 0% 4%;
+    --ritual-khaki: 38 18% 41%;
+    --bronze: 30 57% 50%;
+    --shame-red: 0 100% 35%;
+    --concrete-gray: 0 0% 80%;
 
     /* Enhanced Gradients */
     --obsidian-gradient: linear-gradient(135deg, hsl(0 0% 12%) 0%, hsl(0 0% 3%) 100%);
