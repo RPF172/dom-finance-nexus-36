@@ -7,6 +7,7 @@ import HeroRevamp from '@/components/landing/HeroRevamp';
 import SocialProofSection from '@/components/landing/SocialProofSection';
 import FeaturesShowcase from '@/components/landing/FeaturesShowcase';
 import LearningPreview from '@/components/landing/LearningPreview';
+import { FieldManualPreview } from '@/components/landing/FieldManualPreview';
 import ProcessRoadmap from '@/components/landing/ProcessRoadmap';
 import EnhancedFAQSection from '@/components/landing/EnhancedFAQSection';
 import ConversionCTA from '@/components/landing/ConversionCTA';
@@ -74,6 +75,7 @@ const Index = () => {
         <SocialProofSection />
         <FeaturesShowcase />
         <LearningPreview />
+        <FieldManualPreview />
         <ProcessRoadmap />
         <EnhancedFAQSection />
         <ConversionCTA />
