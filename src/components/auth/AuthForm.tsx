@@ -211,7 +211,29 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
               .update({ registered: true })
               .eq('collar_id', formData.collarId);
           }
-          
+
+          // Insert profile data into profiles table
+          if (data.user) {
+            const profileInsert = {
+              user_id: data.user.id,
+              collar_id: formData.collarId,
+              display_name: formData.collarName,
+              email: formData.email,
+              created_at: new Date().toISOString(),
+              terms_accepted: true
+            };
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .insert(profileInsert);
+            if (profileError) {
+              toast({
+                title: "Profile creation failed",
+                description: profileError.message,
+                variant: "destructive",
+              });
+            }
+          }
+
           toast({
             title: "Begin processing",
             description: "Check your email to confirm your commitment to the Institution.",

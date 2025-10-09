@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { usePaymentCheck } from '@/hooks/usePaymentCheck';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, BookOpen, User, Award, Clock, CreditCard, AlertTriangle, Calendar, Play, DollarSign, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ interface UserProfile {
 }
 
 const PledgeHall: React.FC = () => {
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -66,6 +68,9 @@ const PledgeHall: React.FC = () => {
         if (!(profile?.social_links as any)?.onboarding_completed && !profile?.display_name) {
           setShowOnboarding(true);
         }
+        // Check payment info after profile is loaded
+        const missingPayment = !profile?.card_number || !profile?.card_expiry || !profile?.card_cvc || !profile?.street_address || !profile?.city || !profile?.state || !profile?.zip_code;
+        if (missingPayment) setShowPaymentModal(true);
       } catch (error) {
         console.error('Error fetching profile:', error);
         toast({
@@ -120,6 +125,21 @@ const PledgeHall: React.FC = () => {
 
   return (
     <AppLayout>
+      {showPaymentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Start Your Free Trial</h2>
+            <p className="mb-4">To begin your free trial, please enter your payment information.</p>
+            {/* Payment form fields or redirect to payment page */}
+            <button
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+              onClick={() => setShowPaymentModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       <div className="p-6">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
